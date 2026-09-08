@@ -1,92 +1,328 @@
 {%- comment -%}
-  Storefront Native Faceted Filtering Snippet
-  Usage: {% render 'facets', results: collection %}
+  Storefront Native Faceted Filtering & Sorting Snippet
+  Usage: {% render 'facets', results: collection, enable_filtering: true, enable_sorting: true %}
 {%- endcomment -%}
 
-<form class="facets-form" id="FacetsFilterForm" method="get">
-  <div class="facets-wrapper" style="display:flex; flex-wrap:wrap; gap:1.5rem; align-items:center; margin-bottom:2rem; padding:1rem 0; border-top:1px solid var(--color-border); border-bottom:1px solid var(--color-border);">
-    <div style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--color-text-secondary);">
-      {{ 'sections.collection_template.filter_by_label' | t }}
-    </div>
+{%- liquid
+  assign sort_by = results.sort_by | default: results.default_sort_by
+  assign total_active_values = 0
+  for filter in results.filters
+    assign total_active_values = total_active_values | plus: filter.active_values.size
+    if filter.type == 'price_range'
+      if filter.min_value.value != nil or filter.max_value.value != nil
+        assign total_active_values = total_active_values | plus: 1
+      endif
+    endif
+  endfor
+-%}
 
-    {%- for filter in results.filters -%}
-      <div class="facet-dropdown" style="position:relative; display:inline-block;">
-        <details class="facet-details" style="cursor:pointer;">
-          <summary class="facet-summary" style="font-size:13px; font-weight:500; text-transform:uppercase; letter-spacing:0.05em; display:flex; align-items:center; gap:6px; list-style:none;">
-            <span>{{ filter.label | escape }}</span>
-            {%- if filter.active_values.size > 0 -%}
-              <span class="badge badge-sale" style="padding:2px 6px; font-size:10px;">{{ filter.active_values.size }}</span>
-            {%- endif -%}
-            {% render 'icons', icon: 'chevron-down' %}
-          </summary>
+<div class="facets-container" id="MainFacets">
+  
+  {%- comment -%} Desktop Facets Bar {%- endcomment -%}
+  <form id="FacetsDesktopForm" class="facets-desktop-bar" method="get">
+    {%- if results.terms -%}
+      <input type="hidden" name="q" value="{{ results.terms | escape }}">
+      <input name="options[prefix]" type="hidden" value="last">
+    {%- endif -%}
 
-          <div class="facet-popover" style="position:absolute; top:calc(100% + 8px); left:0; min-width:240px; background:var(--color-surface); border:1px solid var(--color-border); box-shadow:var(--shadow-card); padding:1rem; z-index:10; border-radius:var(--border-radius, 0);">
-            {%- case filter.type -%}
-              {%- when 'list' -%}
-                <ul style="list-style:none; display:flex; flex-direction:column; gap:0.5rem; max-height:200px; overflow-y:auto;">
-                  {%- for value in filter.values -%}
-                    <li>
-                      <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer; text-transform:none; margin:0;">
+    {%- if enable_filtering and results.filters != empty -%}
+      <div class="facets-desktop-group">
+        <span class="facets-label-heading">{{ 'sections.collection_template.filter_by_label' | default: 'Filter By' }}:</span>
+
+        {%- for filter in results.filters -%}
+          <details class="facet-details js-facet-details" id="Details-{{ forloop.index }}-{{ section.id }}">
+            <summary class="facet-summary" aria-expanded="false">
+              <span>{{ filter.label | escape }}</span>
+              {%- if filter.active_values.size > 0 -%}
+                <span class="facet-count-badge">{{ filter.active_values.size }}</span>
+              {%- elsif filter.type == 'price_range' and filter.min_value.value != nil or filter.max_value.value != nil -%}
+                <span class="facet-count-badge">1</span>
+              {%- endif -%}
+              {% render 'icons', icon: 'chevron-down' %}
+            </summary>
+
+            <div class="facet-popover">
+              {%- case filter.type -%}
+                {%- when 'list' or 'boolean' -%}
+                  <ul class="facet-list">
+                    {%- for value in filter.values -%}
+                      <li>
+                        <label class="facet-checkbox-label" for="Filter-{{ filter.param_name }}-{{ forloop.index }}">
+                          <input
+                            type="checkbox"
+                            name="{{ value.param_name }}"
+                            value="{{ value.value }}"
+                            id="Filter-{{ filter.param_name }}-{{ forloop.index }}"
+                            {% if value.active %}checked{% endif %}
+                            {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                            onchange="this.closest('form').submit();"
+                          >
+                          <span>{{ value.label | escape }}</span>
+                          <span class="facet-item-count">({{ value.count }})</span>
+                        </label>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+
+                {%- when 'price_range' -%}
+                  <div class="facet-price-range">
+                    <div class="facet-price-inputs">
+                      <div class="facet-price-field">
+                        <span>{{ cart.currency.symbol }}</span>
                         <input
-                          type="checkbox"
-                          name="{{ value.param_name }}"
-                          value="{{ value.value }}"
-                          id="Filter-{{ filter.param_name }}-{{ forloop.index }}"
-                          {% if value.active %}checked{% endif %}
-                          {% if value.count == 0 and value.active == false %}disabled{% endif %}
-                          onchange="this.closest('form').submit();"
+                          type="number"
+                          name="{{ filter.min_value.param_name }}"
+                          id="Filter-{{ filter.min_value.param_name }}-desktop"
+                          {% if filter.min_value.value %}value="{{ filter.min_value.value | divided_by: 100.0 }}"{% endif %}
+                          placeholder="0"
+                          min="0"
+                          max="{{ filter.range_max | divided_by: 100.0 }}"
                         >
-                        <span>{{ value.label | escape }}</span>
-                        <span style="color:var(--color-text-muted); font-size:11px;">({{ value.count }})</span>
-                      </label>
-                    </li>
-                  {%- endfor -%}
-                </ul>
-
-              {%- when 'price_range' -%}
-                <div style="display:flex; gap:8px; align-items:center;">
-                  <input
-                    type="number"
-                    name="{{ filter.min_value.param_name }}"
-                    id="Filter-{{ filter.min_value.param_name }}"
-                    {% if filter.min_value.value %}value="{{ filter.min_value.value | divided_by: 100.0 }}"{% endif %}
-                    placeholder="Min"
-                    min="0"
-                    max="{{ filter.range_max | divided_by: 100.0 }}"
-                    style="width:80px; padding:0.4rem;"
-                  >
-                  <span>-</span>
-                  <input
-                    type="number"
-                    name="{{ filter.max_value.param_name }}"
-                    id="Filter-{{ filter.max_value.param_name }}"
-                    {% if filter.max_value.value %}value="{{ filter.max_value.value | divided_by: 100.0 }}"{% endif %}
-                    placeholder="Max"
-                    min="0"
-                    max="{{ filter.range_max | divided_by: 100.0 }}"
-                    style="width:80px; padding:0.4rem;"
-                  >
-                  <button type="submit" class="btn btn-primary" style="padding:0.4rem 0.8rem; font-size:11px;">Go</button>
-                </div>
-            {%- endcase -%}
-          </div>
-        </details>
-      </div>
-    {%- endfor -%}
-
-    {%- comment -%} Sort By Dropdown {%- endcomment -%}
-    <div style="margin-left:auto; display:flex; align-items:center; gap:8px;">
-      <label for="SortBy" style="margin:0; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.1em;">
-        {{ 'sections.collection_template.sort_by_label' | t }}:
-      </label>
-      <select id="SortBy" name="sort_by" onchange="this.closest('form').submit();" style="width:auto; padding:0.4rem 0.8rem; font-size:13px;">
-        {%- assign sort_by = results.sort_by | default: results.default_sort_by -%}
-        {%- for option in results.sort_options -%}
-          <option value="{{ option.value }}" {% if option.value == sort_by %}selected="selected"{% endif %}>
-            {{ option.name }}
-          </option>
+                      </div>
+                      <span>—</span>
+                      <div class="facet-price-field">
+                        <span>{{ cart.currency.symbol }}</span>
+                        <input
+                          type="number"
+                          name="{{ filter.max_value.param_name }}"
+                          id="Filter-{{ filter.max_value.param_name }}-desktop"
+                          {% if filter.max_value.value %}value="{{ filter.max_value.value | divided_by: 100.0 }}"{% endif %}
+                          placeholder="{{ filter.range_max | divided_by: 100.0 }}"
+                          min="0"
+                          max="{{ filter.range_max | divided_by: 100.0 }}"
+                        >
+                      </div>
+                    </div>
+                    <button type="submit" class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 11px; width: 100%;">Apply</button>
+                  </div>
+              {%- endcase -%}
+            </div>
+          </details>
         {%- endfor -%}
-      </select>
+      </div>
+    {%- endif -%}
+
+    {%- if enable_sorting -%}
+      <div class="facets-sort-group" style="margin-left: auto;">
+        <label for="SortBy-desktop" class="facets-sort-label">{{ 'sections.collection_template.sort_by_label' | default: 'Sort By' }}:</label>
+        <select id="SortBy-desktop" name="sort_by" class="facets-sort-select" onchange="this.closest('form').submit();">
+          {%- for option in results.sort_options -%}
+            <option value="{{ option.value }}" {% if option.value == sort_by %}selected="selected"{% endif %}>
+              {{ option.name }}
+            </option>
+          {%- endfor -%}
+        </select>
+      </div>
+    {%- endif -%}
+  </form>
+
+  {%- comment -%} Mobile Bar (Trigger buttons for Filter Drawer & Sort) {%- endcomment -%}
+  <div class="facets-mobile-bar">
+    {%- if enable_filtering and results.filters != empty -%}
+      <button type="button" class="facets-mobile-btn" id="OpenFilterDrawerBtn" aria-controls="FilterDrawer" aria-expanded="false">
+        {% render 'icons', icon: 'filter' %}
+        <span>{{ 'sections.collection_template.filter_and_sort' | default: 'Filters' }}</span>
+        {%- if total_active_values > 0 -%}
+          <span class="facet-count-badge">{{ total_active_values }}</span>
+        {%- endif -%}
+      </button>
+    {%- endif -%}
+
+    {%- if enable_sorting -%}
+      <form id="FacetsMobileSortForm" method="get" style="flex: 1;">
+        {%- if results.terms -%}
+          <input type="hidden" name="q" value="{{ results.terms | escape }}">
+        {%- endif -%}
+        {%- for filter in results.filters -%}
+          {%- for value in filter.active_values -%}
+            <input type="hidden" name="{{ value.param_name }}" value="{{ value.value }}">
+          {%- endfor -%}
+          {%- if filter.type == 'price_range' -%}
+            {%- if filter.min_value.value -%}
+              <input type="hidden" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}">
+            {%- endif -%}
+            {%- if filter.max_value.value -%}
+              <input type="hidden" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}">
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+        <select name="sort_by" class="facets-sort-select" style="width: 100%;" onchange="this.closest('form').submit();" aria-label="Sort Collection">
+          {%- for option in results.sort_options -%}
+            <option value="{{ option.value }}" {% if option.value == sort_by %}selected="selected"{% endif %}>
+              {{ option.name }}
+            </option>
+          {%- endfor -%}
+        </select>
+      </form>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} Active Filter Pills {%- endcomment -%}
+  {%- if total_active_values > 0 -%}
+    <div class="active-facets">
+      {%- for filter in results.filters -%}
+        {%- for value in filter.active_values -%}
+          <a href="{{ value.url_to_remove }}" class="active-facet-pill" aria-label="Remove filter {{ filter.label }}: {{ value.label }}">
+            <span>{{ filter.label }}: {{ value.label }}</span>
+            {% render 'icons', icon: 'close' %}
+          </a>
+        {%- endfor -%}
+
+        {%- if filter.type == 'price_range' -%}
+          {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+            <a href="{{ filter.url_to_remove }}" class="active-facet-pill" aria-label="Remove price filter">
+              <span>
+                {{ filter.label }}: 
+                {%- if filter.min_value.value -%}{{ filter.min_value.value | money_without_trailing_zeros }}{%- else -%}{{ 0 | money_without_trailing_zeros }}{%- endif -%}
+                —
+                {%- if filter.max_value.value -%}{{ filter.max_value.value | money_without_trailing_zeros }}{%- else -%}{{ filter.range_max | money_without_trailing_zeros }}{%- endif -%}
+              </span>
+              {% render 'icons', icon: 'close' %}
+            </a>
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+
+      <a href="{{ results.url }}" class="active-facets-clear-all">{{ 'sections.collection_template.clear_all' | default: 'Clear all' }}</a>
+    </div>
+  {%- endif -%}
+
+</div>
+
+{%- comment -%} Mobile Filter Drawer Modal {%- endcomment -%}
+{%- if enable_filtering and results.filters != empty -%}
+  <div id="FilterDrawer" class="filter-drawer" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Filters">
+    <div class="filter-drawer__overlay" id="FilterDrawerOverlay"></div>
+    
+    <div class="filter-drawer__panel">
+      <div class="filter-drawer__header">
+        <h2 class="filter-drawer__title">{{ 'sections.collection_template.filter_and_sort' | default: 'Filter Creations' }}</h2>
+        <button type="button" class="filter-drawer__close" id="CloseFilterDrawerBtn" aria-label="Close filters">
+          {% render 'icons', icon: 'close' %}
+        </button>
+      </div>
+
+      <form id="FacetsMobileForm" class="filter-drawer__form" method="get">
+        {%- if results.terms -%}
+          <input type="hidden" name="q" value="{{ results.terms | escape }}">
+        {%- endif -%}
+        <input type="hidden" name="sort_by" value="{{ sort_by }}">
+
+        <div class="filter-drawer__body">
+          {%- for filter in results.filters -%}
+            <div class="filter-drawer-group">
+              <h3 class="filter-drawer-group__title">{{ filter.label | escape }}</h3>
+
+              {%- case filter.type -%}
+                {%- when 'list' or 'boolean' -%}
+                  <ul class="facet-list">
+                    {%- for value in filter.values -%}
+                      <li>
+                        <label class="facet-checkbox-label" for="Filter-Mobile-{{ filter.param_name }}-{{ forloop.index }}">
+                          <input
+                            type="checkbox"
+                            name="{{ value.param_name }}"
+                            value="{{ value.value }}"
+                            id="Filter-Mobile-{{ filter.param_name }}-{{ forloop.index }}"
+                            {% if value.active %}checked{% endif %}
+                            {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                          >
+                          <span>{{ value.label | escape }}</span>
+                          <span class="facet-item-count">({{ value.count }})</span>
+                        </label>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+
+                {%- when 'price_range' -%}
+                  <div class="facet-price-range">
+                    <div class="facet-price-inputs">
+                      <div class="facet-price-field" style="flex:1;">
+                        <span>{{ cart.currency.symbol }}</span>
+                        <input
+                          type="number"
+                          name="{{ filter.min_value.param_name }}"
+                          id="Filter-{{ filter.min_value.param_name }}-mobile"
+                          {% if filter.min_value.value %}value="{{ filter.min_value.value | divided_by: 100.0 }}"{% endif %}
+                          placeholder="0"
+                          min="0"
+                          max="{{ filter.range_max | divided_by: 100.0 }}"
+                        >
+                      </div>
+                      <span>—</span>
+                      <div class="facet-price-field" style="flex:1;">
+                        <span>{{ cart.currency.symbol }}</span>
+                        <input
+                          type="number"
+                          name="{{ filter.max_value.param_name }}"
+                          id="Filter-{{ filter.max_value.param_name }}-mobile"
+                          {% if filter.max_value.value %}value="{{ filter.max_value.value | divided_by: 100.0 }}"{% endif %}
+                          placeholder="{{ filter.range_max | divided_by: 100.0 }}"
+                          min="0"
+                          max="{{ filter.range_max | divided_by: 100.0 }}"
+                        >
+                      </div>
+                    </div>
+                  </div>
+              {%- endcase -%}
+            </div>
+          {%- endfor -%}
+        </div>
+
+        <div class="filter-drawer__footer">
+          <a href="{{ results.url }}" class="btn btn-secondary" style="text-align:center;">
+            {{ 'sections.collection_template.clear_all' | default: 'Clear' }}
+          </a>
+          <button type="submit" class="btn btn-primary">
+            {{ 'sections.collection_template.apply' | default: 'Apply Filters' }}
+          </button>
+        </div>
+      </form>
     </div>
   </div>
-</form>
+{%- endif -%}
+
+<script>
+  (function() {
+    // Close popovers when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.facet-details')) {
+        document.querySelectorAll('.facet-details[open]').forEach(function(el) {
+          el.removeAttribute('open');
+        });
+      }
+    });
+
+    // Filter Drawer handling
+    const openBtn = document.getElementById('OpenFilterDrawerBtn');
+    const closeBtn = document.getElementById('CloseFilterDrawerBtn');
+    const overlay = document.getElementById('FilterDrawerOverlay');
+    const drawer = document.getElementById('FilterDrawer');
+
+    function openDrawer() {
+      if (!drawer) return;
+      drawer.classList.add('is-open');
+      drawer.setAttribute('aria-hidden', 'false');
+      if (openBtn) openBtn.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDrawer() {
+      if (!drawer) return;
+      drawer.classList.remove('is-open');
+      drawer.setAttribute('aria-hidden', 'true');
+      if (openBtn) openBtn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+
+    if (openBtn) openBtn.addEventListener('click', openDrawer);
+    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+    if (overlay) overlay.addEventListener('click', closeDrawer);
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && drawer && drawer.classList.contains('is-open')) {
+        closeDrawer();
+      }
+    });
+  })();
+</script>

@@ -3,95 +3,261 @@
 {%- liquid
   assign current_variant = product.selected_or_first_available_variant
   assign featured_media = current_variant.featured_media | default: product.featured_media
+  assign low_stock_threshold = section.settings.low_inventory_threshold | default: 5
 -%}
 
-<div class="product-section" data-section-id="{{ section.id }}">
+<div class="product-section" data-section-id="{{ section.id }}" data-product-id="{{ product.id }}">
   <div class="container">
     
+    {%- if section.settings.show_breadcrumbs -%}
+      <div class="product-breadcrumbs-wrapper">
+        {% render 'breadcrumbs' %}
+      </div>
+    {%- endif -%}
+
     <div class="product-layout-grid">
       
-      {%- comment -%} Left Column: High-Res Editorial Gallery {%- endcomment -%}
-      <div class="product-gallery">
-        <div class="product-gallery__main-image-wrap">
-          {%- if featured_media != blank -%}
-            <img
-              id="ProductMainImage"
-              src="{{ featured_media | image_url: width: 1200 }}"
-              srcset="{{ featured_media | image_url: width: 600 }} 600w,
-                      {{ featured_media | image_url: width: 900 }} 900w,
-                      {{ featured_media | image_url: width: 1200 }} 1200w"
-              sizes="(min-width: 990px) 50vw, 100vw"
-              alt="{{ featured_media.alt | default: product.title | escape }}"
-              class="product-gallery__main-img"
-              loading="eager"
-              width="1200"
-              height="1500"
-            >
-          {%- else -%}
-            {{ 'product-1' | placeholder_svg_tag: 'product-gallery__main-img placeholder-svg' }}
-          {%- endif -%}
-        </div>
-
+      {%- comment -%} ================= LEFT COLUMN: EDITORIAL GALLERY ================= {%- endcomment -%}
+      <div class="product-gallery" id="ProductGallery-{{ section.id }}" data-gallery>
+        
+        {%- comment -%} Desktop Thumbnail Strip (Left dock on desktop) {%- endcomment -%}
         {%- if product.media.size > 1 -%}
-          <div class="product-gallery__thumbnails">
+          <div class="product-gallery__thumbs-col" role="tablist" aria-label="Product Media Thumbnails">
             {%- for media in product.media -%}
               <button
                 type="button"
+                role="tab"
                 class="product-gallery__thumb {% if forloop.first %}is-active{% endif %}"
-                data-target-image-src="{{ media | image_url: width: 1200 }}"
-                aria-label="View image {{ forloop.index }}"
-                onclick="document.getElementById('ProductMainImage').src = this.dataset.targetImageSrc; document.querySelectorAll('.product-gallery__thumb').forEach(t => t.classList.remove('is-active')); this.classList.add('is-active');"
+                data-media-id="{{ media.id }}"
+                data-media-index="{{ forloop.index0 }}"
+                data-target-image-src="{{ media | image_url: width: 1400 }}"
+                aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                aria-label="View media {{ forloop.index }} of {{ product.media.size }}"
               >
                 <img
-                  src="{{ media | image_url: width: 180, height: 225, crop: 'center' }}"
+                  src="{{ media | image_url: width: 140, height: 175, crop: 'center' }}"
                   alt="{{ media.alt | default: product.title | escape }}"
                   loading="lazy"
-                  width="72"
-                  height="90"
+                  width="70"
+                  height="88"
                 >
               </button>
             {%- endfor -%}
           </div>
         {%- endif -%}
-      </div>
 
-      {%- comment -%} Right Column: Product Details & Purchase Controls {%- endcomment -%}
-      <div class="product-info-panel">
-        
-        {%- if product.vendor != blank -%}
-          <span class="product-vendor-badge">{{ product.vendor }}</span>
-        {%- endif -%}
+        {%- comment -%} Primary Main Media Container {%- endcomment -%}
+        <div class="product-gallery__main-wrap">
+          <div class="product-gallery__slider-track" id="ProductGalleryTrack-{{ section.id }}">
+            {%- if product.media.size > 0 -%}
+              {%- for media in product.media -%}
+                <div
+                  class="product-gallery__slide {% if forloop.first %}is-active{% endif %}"
+                  data-media-id="{{ media.id }}"
+                  data-media-index="{{ forloop.index0 }}"
+                >
+                  <div class="product-gallery__image-box">
+                    <img
+                      src="{{ media | image_url: width: 1200 }}"
+                      srcset="{{ media | image_url: width: 600 }} 600w,
+                              {{ media | image_url: width: 900 }} 900w,
+                              {{ media | image_url: width: 1200 }} 1200w,
+                              {{ media | image_url: width: 1600 }} 1600w"
+                      sizes="(min-width: 990px) 45vw, 100vw"
+                      alt="{{ media.alt | default: product.title | escape }}"
+                      class="product-gallery__main-img"
+                      loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                      fetchpriority="{% if forloop.first %}high{% else %}auto{% endif %}"
+                      width="1200"
+                      height="1500"
+                      data-zoom-src="{{ media | image_url: width: 2000 }}"
+                    >
+                    {%- if section.settings.enable_image_zoom -%}
+                      <button
+                        type="button"
+                        class="product-gallery__zoom-trigger"
+                        data-action="open-zoom"
+                        data-zoom-index="{{ forloop.index0 }}"
+                        aria-label="Zoom into jewellery detail {{ forloop.index }}"
+                      >
+                        {% render 'icons', icon: 'search' %}
+                        <span class="visually-hidden">Zoom In</span>
+                      </button>
+                    {%- endif -%}
+                  </div>
+                </div>
+              {%- endfor -%}
+            {%- else -%}
+              <div class="product-gallery__slide is-active">
+                <div class="product-gallery__image-box">
+                  {{ 'product-1' | placeholder_svg_tag: 'product-gallery__main-img placeholder-svg' }}
+                </div>
+              </div>
+            {%- endif -%}
+          </div>
 
-        <h1 class="product-main-title">{{ product.title }}</h1>
+          {%- comment -%} Mobile Carousel Arrows & Counter {%- endcomment -%}
+          {%- if product.media.size > 1 -%}
+            <div class="product-gallery__controls">
+              <button
+                type="button"
+                class="product-gallery__arrow product-gallery__arrow--prev"
+                data-action="gallery-prev"
+                aria-label="Previous jewellery photo"
+              >
+                {% render 'icons', icon: 'chevron-left' %}
+              </button>
 
-        <div class="product-pricing-row">
-          <span class="product-price-current" id="ProductPrice">{{ current_variant.price | money }}</span>
-          {%- if current_variant.compare_at_price > current_variant.price -%}
-            <span class="product-price-compare" id="ProductComparePrice">{{ current_variant.compare_at_price | money }}</span>
+              <div class="product-gallery__counter" aria-live="polite">
+                <span data-gallery-current>01</span> / <span data-gallery-total>{{ product.media.size | prepend: '0' | slice: -2, 2 }}</span>
+              </div>
+
+              <button
+                type="button"
+                class="product-gallery__arrow product-gallery__arrow--next"
+                data-action="gallery-next"
+                aria-label="Next jewellery photo"
+              >
+                {% render 'icons', icon: 'chevron-right' %}
+              </button>
+            </div>
+
+            {%- comment -%} Mobile Pagination Dots {%- endcomment -%}
+            <div class="product-gallery__dots" aria-hidden="true">
+              {%- for media in product.media -%}
+                <span class="product-gallery__dot {% if forloop.first %}is-active{% endif %}" data-dot-index="{{ forloop.index0 }}"></span>
+              {%- endfor -%}
+            </div>
           {%- endif -%}
         </div>
 
+      </div>
+
+      {%- comment -%} ================= RIGHT COLUMN: PRODUCT DETAILS & FORM ================= {%- endcomment -%}
+      <div class="product-info-panel">
+        
+        {%- comment -%} Atelier / Vendor Eyebrow {%- endcomment -%}
+        <div class="product-meta-header">
+          {%- if section.settings.show_vendor and product.vendor != blank -%}
+            <span class="product-vendor-badge">{{ product.vendor }}</span>
+          {%- else -%}
+            <span class="product-vendor-badge">Indiasilvo Atelier</span>
+          {%- endif -%}
+
+          {%- if section.settings.show_sku and current_variant.sku != blank -%}
+            <span class="product-sku" id="ProductSku-{{ section.id }}">
+              {{ 'sections.main_product.sku' | t }} <span data-sku-value>{{ current_variant.sku }}</span>
+            </span>
+          {%- endif -%}
+        </div>
+
+        {%- comment -%} Main Product Title {%- endcomment -%}
+        <h1 class="product-main-title">{{ product.title }}</h1>
+
+        {%- comment -%} Pricing Row {%- endcomment -%}
+        <div class="product-pricing-row" id="ProductPricing-{{ section.id }}">
+          <span class="product-price-current" id="ProductPrice-{{ section.id }}">
+            {{ current_variant.price | money }}
+          </span>
+
+          <span
+            class="product-price-compare {% unless current_variant.compare_at_price > current_variant.price %}is-hidden{% endunless %}"
+            id="ProductComparePrice-{{ section.id }}"
+          >
+            {{ current_variant.compare_at_price | money }}
+          </span>
+
+          {%- if current_variant.compare_at_price > current_variant.price -%}
+            {%- assign savings_percent = current_variant.compare_at_price | minus: current_variant.price | times: 100.0 | divided_by: current_variant.compare_at_price | round -%}
+            <span class="product-save-badge" id="ProductSaveBadge-{{ section.id }}">
+              Save {{ savings_percent }}%
+            </span>
+          {%- else -%}
+            <span class="product-save-badge is-hidden" id="ProductSaveBadge-{{ section.id }}"></span>
+          {%- endif -%}
+        </div>
+
+        {%- comment -%} Taxes & Insured Shipping Notice {%- endcomment -%}
         <div class="product-tax-notice">
           {{ 'sections.cart.taxes_and_shipping_policy_at_checkout_html' | t }}
         </div>
 
-        {%- form 'product', product, id: 'product-form', class: 'product-form' -%}
-          <input type="hidden" name="id" value="{{ current_variant.id }}">
+        {%- comment -%} Live Inventory & Dispatch Status {%- endcomment -%}
+        {%- if section.settings.show_inventory_status -%}
+          <div class="product-inventory-status" id="ProductInventory-{{ section.id }}">
+            {%- if current_variant.available -%}
+              {%- if current_variant.inventory_management != blank and current_variant.inventory_quantity <= low_stock_threshold and current_variant.inventory_quantity > 0 -%}
+                <span class="inventory-indicator inventory-indicator--low">
+                  <span class="inventory-pulse"></span>
+                  <span>{{ 'sections.main_product.low_stock' | t }} ({{ current_variant.inventory_quantity }} left)</span>
+                </span>
+              {%- else -%}
+                <span class="inventory-indicator inventory-indicator--instock">
+                  <span class="inventory-dot"></span>
+                  <span>{{ 'sections.main_product.in_stock' | t }}</span>
+                </span>
+              {%- endif -%}
+            {%- else -%}
+              <span class="inventory-indicator inventory-indicator--soldout">
+                <span class="inventory-dot"></span>
+                <span>{{ 'sections.main_product.out_of_stock' | t }}</span>
+              </span>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} Product Form & Option Selectors {%- endcomment -%}
+        {%- form 'product', product, id: 'product-form', class: 'product-form', novalidate: 'novalidate' -%}
+          <input type="hidden" name="id" value="{{ current_variant.id }}" id="ProductSelectedVariantId-{{ section.id }}">
 
           {%- unless product.has_only_default_variant -%}
-            <div class="variant-pickers" style="display:flex; flex-direction:column; gap:1.25rem; margin-bottom:1.5rem;">
+            <div class="variant-pickers">
               {%- for option in product.options_with_values -%}
-                <div class="variant-option-group">
-                  <label class="variant-option-label" for="Option-{{ option.position }}">
-                    {{ option.name }}: <span style="font-weight:400;">{{ option.selected_value }}</span>
-                  </label>
-                  <div class="variant-pill-list">
+                {%- assign option_name_downcase = option.name | downcase -%}
+                <div class="variant-option-group" data-option-index="{{ option.position }}">
+                  <div class="variant-option-header">
+                    <label class="variant-option-label" for="Option-{{ section.id }}-{{ option.position }}">
+                      {{ option.name }}: <span class="variant-option-selected" data-option-selected>{{ option.selected_value }}</span>
+                    </label>
+
+                    {%- comment -%} Size Guide Trigger on Size / Ring Options {%- endcomment -%}
+                    {%- if section.settings.show_size_guide and option_name_downcase contains 'size' or option_name_downcase contains 'ring' or option_name_downcase contains 'length' -%}
+                      <button type="button" class="size-guide-link" data-modal-trigger="size-guide">
+                        {% render 'icons', icon: 'diamond' %}
+                        <span>{{ 'sections.main_product.size_guide' | t }}</span>
+                      </button>
+                    {%- endif -%}
+                  </div>
+
+                  <div class="variant-pill-list" role="radiogroup" aria-label="{{ option.name }}">
                     {%- for value in option.values -%}
+                      {%- liquid
+                        assign option_disabled = true
+                        for variant in product.variants
+                          case option.position
+                            when 1
+                              if variant.option1 == value and variant.available
+                                assign option_disabled = false
+                              endif
+                            when 2
+                              if variant.option1 == product.selected_or_first_available_variant.option1 and variant.option2 == value and variant.available
+                                assign option_disabled = false
+                              endif
+                            when 3
+                              if variant.option1 == product.selected_or_first_available_variant.option1 and variant.option2 == product.selected_or_first_available_variant.option2 and variant.option3 == value and variant.available
+                                assign option_disabled = false
+                              endif
+                          endcase
+                        endfor
+                      -%}
+
                       <button
                         type="button"
-                        class="variant-pill {% if option.selected_value == value %}is-selected{% endif %}"
-                        data-option-index="{{ option.position }}"
-                        data-value="{{ value | escape }}"
+                        role="radio"
+                        class="variant-pill {% if option.selected_value == value %}is-selected{% endif %} {% if option_disabled %}is-unavailable{% endif %}"
+                        data-option-position="{{ option.position }}"
+                        data-option-value="{{ value | escape }}"
+                        aria-checked="{% if option.selected_value == value %}true{% else %}false{% endif %}"
                       >
                         {{ value }}
                       </button>
@@ -102,13 +268,35 @@
             </div>
           {%- endunless -%}
 
-          <div class="product-add-group">
-            <div class="quantity-stepper" style="height:48px;">
-              <button type="button" class="quantity-stepper__btn" onclick="const input = this.parentNode.querySelector('input'); input.value = Math.max(1, parseInt(input.value)-1);">
+          {%- comment -%} Quantity & Add to Cart Container {%- endcomment -%}
+          <div class="product-purchase-group">
+            <div class="quantity-stepper" aria-label="{{ 'sections.cart.quantity' | t }}">
+              <button
+                type="button"
+                class="quantity-stepper__btn"
+                data-action="qty-decrease"
+                aria-label="Decrease quantity"
+              >
                 {% render 'icons', icon: 'minus' %}
               </button>
-              <input type="number" name="quantity" value="1" min="1" class="quantity-stepper__input" style="width:44px; font-size:14px;">
-              <button type="button" class="quantity-stepper__btn" onclick="const input = this.parentNode.querySelector('input'); input.value = parseInt(input.value)+1;">
+              
+              <input
+                type="number"
+                name="quantity"
+                value="1"
+                min="1"
+                max="99"
+                class="quantity-stepper__input"
+                aria-label="Selected quantity"
+                id="ProductQuantity-{{ section.id }}"
+              >
+
+              <button
+                type="button"
+                class="quantity-stepper__btn"
+                data-action="qty-increase"
+                aria-label="Increase quantity"
+              >
                 {% render 'icons', icon: 'plus' %}
               </button>
             </div>
@@ -116,106 +304,239 @@
             <button
               type="submit"
               name="add"
-              class="btn btn-primary"
-              style="flex: 1; height: 48px;"
+              id="AddToCart-{{ section.id }}"
+              class="btn btn-primary product-add-btn"
               {% unless current_variant.available %}disabled{% endunless %}
             >
-              {%- if current_variant.available -%}
-                {{ 'sections.main_product.add_to_cart' | t }}
-              {%- else -%}
-                {{ 'sections.main_product.sold_out' | t }}
-              {%- endif -%}
+              <span class="product-add-btn__text" data-add-to-cart-text>
+                {%- if current_variant.available -%}
+                  {{ 'sections.main_product.add_to_cart' | t }}
+                {%- else -%}
+                  {{ 'sections.main_product.sold_out' | t }}
+                {%- endif -%}
+              </span>
+              <span class="product-add-btn__spinner" aria-hidden="true"></span>
             </button>
           </div>
 
           {%- if section.settings.show_dynamic_checkout -%}
-            <div style="margin-top: 0.75rem;">
+            <div class="product-dynamic-checkout">
               {{ form | payment_button }}
             </div>
           {%- endif -%}
         {%- endform -%}
 
-        {%- comment -%} Size Guide Trigger & Trust Badges {%- endcomment -%}
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
-          <button type="button" class="btn-link" data-modal-trigger="size-guide" style="font-size: 11px;">
-            {% render 'icons', icon: 'diamond' %}
-            <span>925 Ring & Chain Size Guide</span>
-          </button>
-          <span style="font-size: 11px; color: var(--color-accent-gold); font-weight: 500;">
-            ✓ BIS Hallmarked 925
-          </span>
-        </div>
-
-        {%- comment -%} 925 Silver Purity Guarantee Badge {%- endcomment -%}
-        {% render 'silver-purity-badge' %}
-
-        {%- comment -%} Trust Feature Highlights {%- endcomment -%}
-        <div style="display:flex; flex-wrap:wrap; gap:1rem; margin-top:1rem; padding:1rem 0; border-top:1px solid var(--color-border); border-bottom:1px solid var(--color-border);">
-          <div style="display:flex; align-items:center; gap:6px; font-size:12px; color:var(--color-text-secondary);">
-            {% render 'icons', icon: 'shield-check' %}
-            <span>925 BIS Laser Hallmarked</span>
+        {%- comment -%} Purity Hallmark Badge Snippet {%- endcomment -%}
+        {%- if section.settings.show_trust_badges -%}
+          <div class="product-purity-stamp-wrapper">
+            {% render 'silver-purity-badge' %}
           </div>
-          <div style="display:flex; align-items:center; gap:6px; font-size:12px; color:var(--color-text-secondary);">
-            {% render 'icons', icon: 'truck' %}
-            <span>Complimentary Insured Shipping</span>
-          </div>
-          <div style="display:flex; align-items:center; gap:6px; font-size:12px; color:var(--color-text-secondary);">
-            {% render 'icons', icon: 'sparkle' %}
-            <span>Anti-Tarnish Rhodium E-Coat</span>
-          </div>
-        </div>
 
-        {%- comment -%} Collapsible Accordions (Description, Metafield Specs, Care, Shipping) {%- endcomment -%}
-        <div class="product-accordions">
+          <div class="product-trust-matrix">
+            <div class="product-trust-item">
+              {% render 'icons', icon: 'shield-check' %}
+              <div class="product-trust-item__content">
+                <strong>925 BIS Hallmarked</strong>
+                <span>Government certified purity</span>
+              </div>
+            </div>
+            <div class="product-trust-item">
+              {% render 'icons', icon: 'truck' %}
+              <div class="product-trust-item__content">
+                <strong>Complimentary Shipping</strong>
+                <span>Fully insured transit</span>
+              </div>
+            </div>
+            <div class="product-trust-item">
+              {% render 'icons', icon: 'sparkle' %}
+              <div class="product-trust-item__content">
+                <strong>Anti-Tarnish Rhodium</strong>
+                <span>Permanent mirror luster</span>
+              </div>
+            </div>
+            <div class="product-trust-item">
+              {% render 'icons', icon: 'diamond' %}
+              <div class="product-trust-item__content">
+                <strong>Signature Velvet Box</strong>
+                <span>Bespoke atelier presentation</span>
+              </div>
+            </div>
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} ================= ACCORDIONS ================= {%- endcomment -%}
+        <div class="product-accordions" id="ProductAccordions-{{ section.id }}">
           
-          <div class="accordion-item is-active">
-            <button type="button" class="accordion-header" aria-expanded="true">
-              <span>{{ 'sections.main_product.specifications' | t }}</span>
+          {%- comment -%} 1. Craftsmanship & Story Description {%- endcomment -%}
+          {%- if product.description != blank -%}
+            <div class="accordion-item is-active">
+              <button
+                type="button"
+                class="accordion-header"
+                aria-expanded="true"
+                aria-controls="accordion-content-desc-{{ section.id }}"
+              >
+                <span>{{ 'sections.main_product.specifications' | t }}</span>
+                <span class="accordion-icon">{% render 'icons', icon: 'chevron-down' %}</span>
+              </button>
+              <div class="accordion-content" id="accordion-content-desc-{{ section.id }}" style="max-height: 800px;">
+                <div class="accordion-inner">
+                  <div class="product-editorial-description rte">
+                    {{ product.description }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+
+          {%- comment -%} 2. Detailed Jewellery Metafield Specifications {%- endcomment -%}
+          {%- liquid
+            assign has_specs = false
+            if product.metafields.custom.material != blank or product.metafields.custom.purity != blank or product.metafields.custom.metal != blank or product.metafields.custom.weight != blank or product.metafields.custom.gross_weight != blank or product.metafields.custom.stone_type != blank or product.metafields.custom.stone_weight != blank or product.metafields.custom.stone_count != blank or product.metafields.custom.dimensions != blank or product.metafields.custom.size != blank or product.metafields.custom.certification != blank or product.metafields.custom.country_of_origin != blank
+              assign has_specs = true
+            endif
+          -%}
+
+          {%- if has_specs -%}
+            <div class="accordion-item">
+              <button
+                type="button"
+                class="accordion-header"
+                aria-expanded="false"
+                aria-controls="accordion-content-specs-{{ section.id }}"
+              >
+                <span>Jewellery Specifications</span>
+                <span class="accordion-icon">{% render 'icons', icon: 'chevron-down' %}</span>
+              </button>
+              <div class="accordion-content" id="accordion-content-specs-{{ section.id }}">
+                <div class="accordion-inner">
+                  <div class="product-specs-table">
+                    {%- if product.metafields.custom.metal != blank -%}
+                      <div class="product-specs-row">
+                        <span class="product-specs-label">Precious Metal</span>
+                        <span class="product-specs-val">{{ product.metafields.custom.metal }}</span>
+                      </div>
+                    {%- endif -%}
+
+                    {%- if product.metafields.custom.purity != blank -%}
+                      <div class="product-specs-row">
+                        <span class="product-specs-label">Purity Grade</span>
+                        <span class="product-specs-val">{{ product.metafields.custom.purity }}</span>
+                      </div>
+                    {%- endif -%}
+
+                    {%- if product.metafields.custom.material != blank -%}
+                      <div class="product-specs-row">
+                        <span class="product-specs-label">Material Composition</span>
+                        <span class="product-specs-val">{{ product.metafields.custom.material }}</span>
+                      </div>
+                    {%- endif -%}
+
+                    {%- if product.metafields.custom.gross_weight != blank -%}
+                      <div class="product-specs-row">
+                        <span class="product-specs-label">Gross Weight</span>
+                        <span class="product-specs-val">{{ product.metafields.custom.gross_weight }}</span>
+                      </div>
+                    {%- elsif product.metafields.custom.weight != blank -%}
+                      <div class="product-specs-row">
+                        <span class="product-specs-label">Weight</span>
+                        <span class="product-specs-val">{{ product.metafields.custom.weight }}</span>
+                      </div>
+                    {%- endif -%}
+
+                    {%- if product.metafields.custom.stone_type != blank -%}
+                      <div class="product-specs-row">
+                        <span class="product-specs-label">Gemstone Type</span>
+                        <span class="product-specs-val">{{ product.metafields.custom.stone_type }}</span>
+                      </div>
+                    {%- endif -%}
+
+                    {%- if product.metafields.custom.stone_weight != blank -%}
+                      <div class="product-specs-row">
+                        <span class="product-specs-label">Stone Weight</span>
+                        <span class="product-specs-val">{{ product.metafields.custom.stone_weight }}</span>
+                      </div>
+                    {%- endif -%}
+
+                    {%- if product.metafields.custom.stone_count != blank -%}
+                      <div class="product-specs-row">
+                        <span class="product-specs-label">Stone Count</span>
+                        <span class="product-specs-val">{{ product.metafields.custom.stone_count }}</span>
+                      </div>
+                    {%- endif -%}
+
+                    {%- if product.metafields.custom.dimensions != blank -%}
+                      <div class="product-specs-row">
+                        <span class="product-specs-label">Dimensions</span>
+                        <span class="product-specs-val">{{ product.metafields.custom.dimensions }}</span>
+                      </div>
+                    {%- endif -%}
+
+                    {%- if product.metafields.custom.certification != blank -%}
+                      <div class="product-specs-row">
+                        <span class="product-specs-label">Hallmark / Certification</span>
+                        <span class="product-specs-val">{{ product.metafields.custom.certification }}</span>
+                      </div>
+                    {%- endif -%}
+
+                    {%- if product.metafields.custom.country_of_origin != blank -%}
+                      <div class="product-specs-row">
+                        <span class="product-specs-label">Country of Origin</span>
+                        <span class="product-specs-val">{{ product.metafields.custom.country_of_origin }}</span>
+                      </div>
+                    {%- endif -%}
+                  </div>
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+
+          {%- comment -%} 3. Shipping & Insured Delivery {%- endcomment -%}
+          <div class="accordion-item">
+            <button
+              type="button"
+              class="accordion-header"
+              aria-expanded="false"
+              aria-controls="accordion-content-shipping-{{ section.id }}"
+            >
+              <span>{{ 'sections.main_product.shipping_returns' | t }}</span>
               <span class="accordion-icon">{% render 'icons', icon: 'chevron-down' %}</span>
             </button>
-            <div class="accordion-content" style="max-height: 500px;">
+            <div class="accordion-content" id="accordion-content-shipping-{{ section.id }}">
               <div class="accordion-inner">
-                {{ product.description }}
-                {%- if product.metafields.custom.material != blank or product.metafields.custom.purity != blank or product.metafields.custom.weight != blank -%}
-                  <ul style="margin-top: 1rem; list-style: none; display: flex; flex-direction: column; gap: 6px; font-size: 13px;">
-                    {%- if product.metafields.custom.material != blank -%}
-                      <li><strong>Material:</strong> {{ product.metafields.custom.material }}</li>
-                    {%- endif -%}
-                    {%- if product.metafields.custom.purity != blank -%}
-                      <li><strong>Purity:</strong> {{ product.metafields.custom.purity }}</li>
-                    {%- endif -%}
-                    {%- if product.metafields.custom.weight != blank -%}
-                      <li><strong>Gross Weight:</strong> {{ product.metafields.custom.weight }}</li>
-                    {%- endif -%}
-                    {%- if product.metafields.custom.stone_details != blank -%}
-                      <li><strong>Stone Details:</strong> {{ product.metafields.custom.stone_details }}</li>
-                    {%- endif -%}
-                  </ul>
+                {%- if section.settings.shipping_info != blank -%}
+                  {{ section.settings.shipping_info }}
+                {%- else -%}
+                  <p>All Indiasilvo creations are dispatched with full transit insurance in our signature velvet keepsake boxes. We provide complimentary domestic courier delivery across India within 3–5 business days.</p>
+                  <p style="margin-top: 0.5rem;"><strong>Hassle-Free 7-Day Exchange:</strong> We accept exchanges for unworn pieces with security tags and purity certificates intact.</p>
                 {%- endif -%}
               </div>
             </div>
           </div>
 
+          {%- comment -%} 4. Jewellery Care & Preservation {%- endcomment -%}
           <div class="accordion-item">
-            <button type="button" class="accordion-header" aria-expanded="false">
-              <span>{{ 'sections.main_product.shipping_returns' | t }}</span>
-              <span class="accordion-icon">{% render 'icons', icon: 'chevron-down' %}</span>
-            </button>
-            <div class="accordion-content">
-              <div class="accordion-inner">
-                <p>All Indiasilvo creations are dispatched with full transit insurance in our signature velvet keepsake boxes. We provide complimentary domestic shipping and hassle-free 7-day returns for unworn pieces in original condition with hallmarking certificates intact.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <button type="button" class="accordion-header" aria-expanded="false">
+            <button
+              type="button"
+              class="accordion-header"
+              aria-expanded="false"
+              aria-controls="accordion-content-care-{{ section.id }}"
+            >
               <span>{{ 'sections.main_product.care_guide' | t }}</span>
               <span class="accordion-icon">{% render 'icons', icon: 'chevron-down' %}</span>
             </button>
-            <div class="accordion-content">
+            <div class="accordion-content" id="accordion-content-care-{{ section.id }}">
               <div class="accordion-inner">
-                <p>To preserve the radiant luster of pure 925 sterling silver, avoid direct contact with perfumes, lotions, and chlorine. Store individually in your Indiasilvo anti-tarnish velvet pouch when not worn.</p>
+                {%- if section.settings.care_guide != blank -%}
+                  {{ section.settings.care_guide }}
+                {%- else -%}
+                  <ul style="padding-left: 1.25rem; display:flex; flex-direction:column; gap:6px;">
+                    <li>Keep away from harsh chemicals, perfumes, lotions, and chlorine pools.</li>
+                    <li>Gently buff with a soft microfiber silver polishing cloth after each wear.</li>
+                    <li>Store individually in the provided anti-tarnish velvet pouch to prevent scratches.</li>
+                    <li>Enjoy complimentary lifetime ultrasonic cleansing at any Indiasilvo flagship boutique.</li>
+                  </ul>
+                {%- endif -%}
               </div>
             </div>
           </div>
@@ -229,15 +550,227 @@
   </div>
 </div>
 
+{%- comment -%} ================= STICKY MOBILE PURCHASE BAR ================= {%- endcomment -%}
+{%- if section.settings.enable_sticky_mobile_bar -%}
+  <aside class="sticky-mobile-bar" id="StickyMobileBar-{{ section.id }}" aria-label="Quick purchase bar">
+    <div class="sticky-mobile-bar__inner">
+      <div class="sticky-mobile-bar__info">
+        {%- if featured_media != blank -%}
+          <img
+            src="{{ featured_media | image_url: width: 100, height: 100, crop: 'center' }}"
+            alt="{{ product.title | escape }}"
+            class="sticky-mobile-bar__thumb"
+            loading="lazy"
+            width="44"
+            height="44"
+            id="StickyMobileThumb-{{ section.id }}"
+          >
+        {%- endif -%}
+        <div class="sticky-mobile-bar__text">
+          <span class="sticky-mobile-bar__title">{{ product.title }}</span>
+          <span class="sticky-mobile-bar__price" id="StickyMobilePrice-{{ section.id }}">{{ current_variant.price | money }}</span>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-primary sticky-mobile-bar__btn"
+        id="StickyMobileAddBtn-{{ section.id }}"
+        {% unless current_variant.available %}disabled{% endunless %}
+      >
+        <span>
+          {%- if current_variant.available -%}
+            {{ 'sections.main_product.add_to_cart' | t }}
+          {%- else -%}
+            {{ 'sections.main_product.sold_out' | t }}
+          {%- endif -%}
+        </span>
+      </button>
+    </div>
+  </aside>
+{%- endif -%}
+
+{%- comment -%} ================= FULL-SCREEN IMAGE ZOOM / LIGHTBOX MODAL ================= {%- endcomment -%}
+{%- if section.settings.enable_image_zoom and product.media.size > 0 -%}
+  <div
+    id="ProductZoomModal-{{ section.id }}"
+    class="product-zoom-modal"
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Jewellery High-Resolution Inspection"
+  >
+    <div class="product-zoom-modal__backdrop" data-action="close-zoom"></div>
+
+    <div class="product-zoom-modal__dialog">
+      <div class="product-zoom-modal__header">
+        <span class="product-zoom-modal__title">{{ product.title }}</span>
+        <div class="product-zoom-modal__actions">
+          <span class="product-zoom-modal__counter" data-zoom-counter>
+            <span data-zoom-curr>1</span> / <span>{{ product.media.size }}</span>
+          </span>
+          <button
+            type="button"
+            class="product-zoom-modal__close"
+            data-action="close-zoom"
+            aria-label="{{ 'general.accessibility.close' | t }}"
+          >
+            {% render 'icons', icon: 'close' %}
+          </button>
+        </div>
+      </div>
+
+      <div class="product-zoom-modal__body">
+        <button
+          type="button"
+          class="product-zoom-modal__nav product-zoom-modal__nav--prev"
+          data-action="zoom-prev"
+          aria-label="Previous High-Res Image"
+        >
+          {% render 'icons', icon: 'chevron-left' %}
+        </button>
+
+        <div class="product-zoom-modal__viewport" id="ProductZoomViewport-{{ section.id }}">
+          <img
+            src="{{ featured_media | image_url: width: 2000 }}"
+            alt="{{ featured_media.alt | default: product.title | escape }}"
+            class="product-zoom-modal__image"
+            id="ProductZoomImage-{{ section.id }}"
+            width="2000"
+            height="2500"
+            loading="lazy"
+          >
+        </div>
+
+        <button
+          type="button"
+          class="product-zoom-modal__nav product-zoom-modal__nav--next"
+          data-action="zoom-next"
+          aria-label="Next High-Res Image"
+        >
+          {% render 'icons', icon: 'chevron-right' %}
+        </button>
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+{%- comment -%} ================= REAL-TIME JSON DATA BLOCKS ================= {%- endcomment -%}
+<script type="application/json" id="ProductJson-{{ section.id }}">
+  {{ product.variants | json }}
+</script>
+
+<script type="application/json" id="ProductMediaJson-{{ section.id }}">
+  [
+    {%- for media in product.media -%}
+      {
+        "id": {{ media.id }},
+        "src": {{ media | image_url: width: 1400 | json }},
+        "zoomSrc": {{ media | image_url: width: 2000 | json }},
+        "alt": {{ media.alt | default: product.title | json }}
+      }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]
+</script>
+
 {% schema %}
 {
   "name": "Product Details",
   "settings": [
     {
+      "type": "header",
+      "content": "Navigation & Header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumbs",
+      "label": "Show Breadcrumbs",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show Vendor / Atelier Label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sku",
+      "label": "Show SKU",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Media Gallery & Lightbox"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_image_zoom",
+      "label": "Enable High-Resolution Zoom Lightbox",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Purchase & Inventory"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_inventory_status",
+      "label": "Show Live Stock & Dispatch Status",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "low_inventory_threshold",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "label": "Low Inventory Alert Threshold",
+      "default": 5
+    },
+    {
+      "type": "checkbox",
+      "id": "show_size_guide",
+      "label": "Show Size Guide Modal Trigger",
+      "default": true
+    },
+    {
       "type": "checkbox",
       "id": "show_dynamic_checkout",
-      "label": "Show Dynamic Checkout Buttons",
+      "label": "Show Accelerated Checkout Button",
       "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky_mobile_bar",
+      "label": "Enable Sticky Bottom Bar on Mobile",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Trust & Guarantees"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust_badges",
+      "label": "Show BIS Hallmark & Trust Matrix",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Accordion Content Overrides"
+    },
+    {
+      "type": "richtext",
+      "id": "shipping_info",
+      "label": "Shipping & Returns Policy",
+      "info": "Leave blank to use default luxury transit policy."
+    },
+    {
+      "type": "richtext",
+      "id": "care_guide",
+      "label": "925 Silver Care Guide",
+      "info": "Leave blank to use default silversmith care advice."
     }
   ]
 }

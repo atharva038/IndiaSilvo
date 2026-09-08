@@ -7,7 +7,6 @@
   assign target = product.selected_or_first_available_variant | default: product
   assign compare_at_price = target.compare_at_price
   assign price = target.price | default: 1999
-  assign available = target.available | default: true
   assign on_sale = false
   if compare_at_price > price
     assign on_sale = true

@@ -1,0 +1,126 @@
+{%- comment -%}
+  Breadcrumb Navigation Snippet
+  Usage: {% render 'breadcrumbs' %}
+{%- endcomment -%}
+
+{%- unless template == 'index' or template == 'cart' or template == '404' -%}
+  {%- assign t = template | split: '.' | first -%}
+  <nav class="breadcrumbs" aria-label="{{ 'general.breadcrumbs.title' | default: 'Breadcrumbs' }}">
+    <div class="breadcrumbs__list">
+      <div class="breadcrumbs__item">
+        <a href="{{ routes.root_url }}" class="breadcrumbs__link">{{ 'general.breadcrumbs.home' | default: 'Home' }}</a>
+      </div>
+
+      {%- case t -%}
+        {%- when 'page' -%}
+          <span class="breadcrumbs__separator" aria-hidden="true">/</span>
+          <div class="breadcrumbs__item">
+            <span class="breadcrumbs__current" aria-current="page">{{ page.title | escape }}</span>
+          </div>
+
+        {%- when 'product' -%}
+          {%- if collection.url -%}
+            <span class="breadcrumbs__separator" aria-hidden="true">/</span>
+            <div class="breadcrumbs__item">
+              <a href="{{ collection.url }}" class="breadcrumbs__link">{{ collection.title | escape }}</a>
+            </div>
+          {%- else -%}
+            <span class="breadcrumbs__separator" aria-hidden="true">/</span>
+            <div class="breadcrumbs__item">
+              <a href="{{ routes.all_products_collection_url }}" class="breadcrumbs__link">{{ 'general.breadcrumbs.jewellery' | default: 'Jewellery' }}</a>
+            </div>
+          {%- endif -%}
+          <span class="breadcrumbs__separator" aria-hidden="true">/</span>
+          <div class="breadcrumbs__item">
+            <span class="breadcrumbs__current" aria-current="page">{{ product.title | escape }}</span>
+          </div>
+
+        {%- when 'collection' -%}
+          <span class="breadcrumbs__separator" aria-hidden="true">/</span>
+          <div class="breadcrumbs__item">
+            <a href="{{ routes.all_products_collection_url }}" class="breadcrumbs__link">{{ 'general.breadcrumbs.jewellery' | default: 'Jewellery' }}</a>
+          </div>
+          {%- if current_tags -%}
+            <span class="breadcrumbs__separator" aria-hidden="true">/</span>
+            <div class="breadcrumbs__item">
+              <a href="{{ collection.url }}" class="breadcrumbs__link">{{ collection.title | escape }}</a>
+            </div>
+            <span class="breadcrumbs__separator" aria-hidden="true">/</span>
+            <div class="breadcrumbs__item">
+              <span class="breadcrumbs__current" aria-current="page">{{ current_tags | join: " + " }}</span>
+            </div>
+          {%- else -%}
+            <span class="breadcrumbs__separator" aria-hidden="true">/</span>
+            <div class="breadcrumbs__item">
+              <span class="breadcrumbs__current" aria-current="page">{{ collection.title | escape }}</span>
+            </div>
+          {%- endif -%}
+
+        {%- when 'blog' -%}
+          {%- if current_tags -%}
+            <span class="breadcrumbs__separator" aria-hidden="true">/</span>
+            <div class="breadcrumbs__item">
+              <a href="{{ blog.url }}" class="breadcrumbs__link">{{ blog.title | escape }}</a>
+            </div>
+            <span class="breadcrumbs__separator" aria-hidden="true">/</span>
+            <div class="breadcrumbs__item">
+              <span class="breadcrumbs__current" aria-current="page">{{ current_tags | join: " + " }}</span>
+            </div>
+          {%- else -%}
+            <span class="breadcrumbs__separator" aria-hidden="true">/</span>
+            <div class="breadcrumbs__item">
+              <span class="breadcrumbs__current" aria-current="page">{{ blog.title | escape }}</span>
+            </div>
+          {%- endif -%}
+
+        {%- when 'article' -%}
+          <span class="breadcrumbs__separator" aria-hidden="true">/</span>
+          <div class="breadcrumbs__item">
+            <a href="{{ blog.url }}" class="breadcrumbs__link">{{ blog.title | escape }}</a>
+          </div>
+          <span class="breadcrumbs__separator" aria-hidden="true">/</span>
+          <div class="breadcrumbs__item">
+            <span class="breadcrumbs__current" aria-current="page">{{ article.title | escape }}</span>
+          </div>
+
+        {%- else -%}
+          <span class="breadcrumbs__separator" aria-hidden="true">/</span>
+          <div class="breadcrumbs__item">
+            <span class="breadcrumbs__current" aria-current="page">{{ page_title | escape }}</span>
+          </div>
+      {%- endcase -%}
+    </div>
+  </nav>
+
+  <style>
+    .breadcrumbs {
+      padding: var(--space-sm) 0 var(--space-md);
+      font-size: var(--font-size-2xs);
+      letter-spacing: var(--letter-spacing-wider);
+      text-transform: uppercase;
+    }
+    .breadcrumbs__list {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      color: var(--color-text-muted);
+    }
+    .breadcrumbs__link {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+    .breadcrumbs__link:hover {
+      color: var(--color-accent-gold);
+    }
+    .breadcrumbs__separator {
+      color: var(--color-border);
+      font-size: 10px;
+    }
+    .breadcrumbs__current {
+      color: var(--color-text-primary);
+      font-weight: 500;
+    }
+  </style>
+{%- endunless -%}

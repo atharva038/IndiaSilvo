@@ -1,89 +1,112 @@
-<div class="testimonials-section section-spacing" data-section-id="{{ section.id }}" style="background-color: {{ section.settings.bg_color }};">
-  <div class="container">
-    
-    <div class="section-header">
-      {%- if section.settings.subtitle != blank -%}
-        <span class="section-header__subtitle">{{ section.settings.subtitle | escape }}</span>
-      {%- endif -%}
-      <h2 class="section-header__title h2">{{ section.settings.title | escape }}</h2>
-    </div>
+{%- if section.blocks.size > 0 -%}
+  <section id="Testimonials-{{ section.id }}" class="testimonials-section section-spacing" data-section-id="{{ section.id }}" style="background-color: {{ section.settings.bg_color }};">
+    <div class="container">
+      
+      <div class="section-header">
+        {%- if section.settings.subtitle != blank -%}
+          <span class="section-header__subtitle">{{ section.settings.subtitle | escape }}</span>
+        {%- endif -%}
+        {%- if section.settings.title != blank -%}
+          <h2 class="section-header__title h2">{{ section.settings.title | escape }}</h2>
+        {%- endif -%}
+      </div>
 
-    <div class="testimonials-grid">
-      {%- for block in section.blocks -%}
-        <div class="testimonial-card" {{ block.shopify_attributes }}>
-          <div class="testimonial-stars">
-            {%- for i in (1..5) -%}
-              {% render 'icons', icon: 'star' %}
-            {%- endfor -%}
+      <div class="testimonials-grid">
+        {%- for block in section.blocks -%}
+          <div class="testimonial-card" {{ block.shopify_attributes }}>
+            <div class="testimonial-stars" aria-label="5 out of 5 stars">
+              {%- for i in (1..5) -%}
+                {% render 'icons', icon: 'star' %}
+              {%- endfor -%}
+            </div>
+            <blockquote class="testimonial-quote">
+              "{{ block.settings.quote | escape }}"
+            </blockquote>
+            <div class="testimonial-author">
+              <span class="testimonial-author__name">{{ block.settings.author | escape }}</span>
+              {%- if block.settings.city != blank -%}
+                <span class="testimonial-author__city">{{ block.settings.city | escape }}</span>
+              {%- endif -%}
+              <span class="testimonial-author__badge">Verified 925 Collector</span>
+            </div>
           </div>
-          <blockquote class="testimonial-quote">
-            "{{ block.settings.quote | escape }}"
-          </blockquote>
-          <div class="testimonial-author">
-            <span class="testimonial-author__name">{{ block.settings.author | escape }}</span>
-            {%- if block.settings.city != blank -%}
-              <span class="testimonial-author__city">{{ block.settings.city | escape }}</span>
-            {%- endif -%}
-          </div>
-        </div>
-      {%- endfor -%}
+        {%- endfor -%}
+      </div>
+
     </div>
+  </section>
 
-  </div>
-</div>
-
-<style>
-  .testimonials-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: clamp(1.5rem, 3vw, 2.5rem);
-  }
-  @media (min-width: 768px) {
+  <style>
     .testimonials-grid {
-      grid-template-columns: repeat(3, 1fr);
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(1.5rem, 3vw, 2.5rem);
     }
-  }
-  .testimonial-card {
-    background-color: var(--color-surface);
-    padding: clamp(1.75rem, 3vw, 2.5rem);
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius, 0);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    text-align: center;
-  }
-  .testimonial-stars {
-    display: flex;
-    justify-content: center;
-    gap: 4px;
-    margin-bottom: var(--space-md);
-  }
-  .testimonial-quote {
-    font-family: var(--font-heading);
-    font-size: 1.15rem;
-    font-style: italic;
-    color: var(--color-text-primary);
-    line-height: 1.6;
-    margin-bottom: var(--space-lg);
-  }
-  .testimonial-author {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-  .testimonial-author__name {
-    font-size: var(--font-size-xs);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: var(--letter-spacing-wider);
-    color: var(--color-text-primary);
-  }
-  .testimonial-author__city {
-    font-size: var(--font-size-2xs);
-    color: var(--color-text-muted);
-  }
-</style>
+    @media (min-width: 768px) {
+      .testimonials-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    .testimonial-card {
+      background-color: var(--color-surface);
+      padding: clamp(1.75rem, 3vw, 2.5rem);
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius, 0);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+      transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+    }
+    .testimonial-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-card);
+    }
+    .testimonial-stars {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      margin-bottom: var(--space-md);
+      color: var(--color-accent-gold);
+    }
+    .testimonial-stars svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+    .testimonial-quote {
+      font-family: var(--font-heading);
+      font-size: clamp(1.05rem, 1.25vw, 1.2rem);
+      font-style: italic;
+      color: var(--color-text-primary);
+      line-height: 1.65;
+      margin-bottom: var(--space-lg);
+    }
+    .testimonial-author {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .testimonial-author__name {
+      font-size: var(--font-size-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: var(--letter-spacing-wider);
+      color: var(--color-text-primary);
+    }
+    .testimonial-author__city {
+      font-size: var(--font-size-2xs);
+      color: var(--color-text-muted);
+    }
+    .testimonial-author__badge {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-accent-gold);
+      margin-top: 4px;
+    }
+  </style>
+{%- endif -%}
 
 {% schema %}
 {

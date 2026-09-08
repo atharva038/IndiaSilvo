@@ -22,6 +22,7 @@
     "breadcrumbs": {
       "home": "Home",
       "collections": "Collections",
+      "jewellery": "Jewellery",
       "search": "Search Results"
     }
   },
@@ -53,11 +54,15 @@
     },
     "collection_template": {
       "title": "Collection",
-      "filter_by_label": "Filter:",
+      "filter_by_label": "Filter",
       "sort_by_label": "Sort by",
+      "filter_and_sort": "Filter & Sort",
       "product_count": "{{ count }} piece",
       "product_count_plural": "{{ count }} pieces",
-      "empty": "No pieces matched your selected criteria.",
+      "empty": "No pieces currently available",
+      "empty_subtext": "Our master silversmiths are crafting new 925 silver creations for this series.",
+      "no_results": "No creations match your active filters",
+      "use_fewer_filters": "Try clearing some filters or exploring the entire collection.",
       "clear_all": "Clear All Filters",
       "apply": "Apply Filters"
     },

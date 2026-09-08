@@ -1,4 +1,4 @@
-<div class="brand-story-section section-spacing" data-section-id="{{ section.id }}" style="background-color: {{ section.settings.bg_color }};">
+<section id="BrandStory-{{ section.id }}" class="brand-story-section section-spacing" data-section-id="{{ section.id }}" style="background-color: {{ section.settings.bg_color }};">
   <div class="container">
     <div class="brand-story-grid {% if section.settings.image_position == 'right' %}brand-story-grid--reverse{% endif %}">
       
@@ -18,7 +18,7 @@
           >
         {%- else -%}
           <img
-            src="{{ 'brand-silver-craft.jpg' | asset_url }}"
+            src="{{ 'brand-atelier-heritage.jpg' | asset_url }}"
             alt="Master Silversmith at Indiasilvo Atelier"
             class="brand-story__img"
             loading="lazy"
@@ -33,16 +33,34 @@
         {%- if section.settings.subtitle != blank -%}
           <span class="section-header__subtitle" style="text-align:left;">{{ section.settings.subtitle | escape }}</span>
         {%- endif -%}
+
         <h2 class="brand-story__title h2">{{ section.settings.title | escape }}</h2>
-        <div class="gold-divider" style="margin-left: 0;"></div>
+        <div class="gold-divider" style="margin-left: 0; margin-top: 0.75rem; margin-bottom: 1.25rem;"></div>
         
         <div class="brand-story__text">
           {{ section.settings.text }}
         </div>
 
+        {%- if section.settings.show_details -%}
+          <div class="brand-story-pillars">
+            <div class="brand-story-pillar">
+              <span class="brand-story-pillar__num">92.5%</span>
+              <span class="brand-story-pillar__label">Precious Metal Purity</span>
+            </div>
+            <div class="brand-story-pillar">
+              <span class="brand-story-pillar__num">100%</span>
+              <span class="brand-story-pillar__label">BIS Laser Hallmarked</span>
+            </div>
+            <div class="brand-story-pillar">
+              <span class="brand-story-pillar__num">0%</span>
+              <span class="brand-story-pillar__label">Nickel & Lead Free</span>
+            </div>
+          </div>
+        {%- endif -%}
+
         {%- if section.settings.button_text != blank -%}
           <div style="margin-top: var(--space-xl);">
-            <a href="{{ section.settings.button_url }}" class="btn btn-primary">
+            <a href="{{ section.settings.button_url | default: '/pages/about' }}" class="btn btn-primary">
               {{ section.settings.button_text | escape }}
             </a>
           </div>
@@ -51,7 +69,7 @@
 
     </div>
   </div>
-</div>
+</section>
 
 <style>
   .brand-story-grid {
@@ -67,6 +85,9 @@
     .brand-story-grid--reverse .brand-story__media {
       order: 2;
     }
+    .brand-story-grid--reverse .brand-story__content {
+      order: 1;
+    }
   }
   .brand-story__media {
     position: relative;
@@ -74,11 +95,16 @@
     background-color: var(--color-surface-alt);
     overflow: hidden;
     border-radius: var(--border-radius, 0);
+    box-shadow: var(--shadow-card);
   }
   .brand-story__img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform var(--transition-slow);
+  }
+  .brand-story__media:hover .brand-story__img {
+    transform: scale(1.03);
   }
   .brand-story__content {
     display: flex;
@@ -87,17 +113,44 @@
   }
   .brand-story__title {
     margin-bottom: var(--space-xs);
+    font-size: clamp(1.85rem, 3.2vw, 2.5rem);
+    line-height: 1.25;
   }
   .brand-story__text {
     font-size: var(--font-size-base);
     color: var(--color-text-secondary);
     line-height: 1.8;
   }
+  .brand-story-pillars {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-border);
+  }
+  .brand-story-pillar {
+    display: flex;
+    flex-direction: column;
+  }
+  .brand-story-pillar__num {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--color-accent-gold);
+    line-height: 1;
+  }
+  .brand-story-pillar__label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    margin-top: 4px;
+  }
 </style>
 
 {% schema %}
 {
-  "name": "Brand Story / Editorial",
+  "name": "Brand Story",
   "settings": [
     {
       "type": "color",
@@ -108,7 +161,7 @@
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Editorial Image"
+      "label": "Editorial Atelier Image"
     },
     {
       "type": "select",
@@ -124,25 +177,31 @@
       "type": "text",
       "id": "subtitle",
       "label": "Subtitle",
-      "default": "The Maison Heritage"
+      "default": "The Silversmith Heritage"
     },
     {
       "type": "text",
       "id": "title",
       "label": "Heading",
-      "default": "Centuries of Silversmithing Legacy"
+      "default": "Honoring Pure Sterling Silver"
     },
     {
       "type": "richtext",
       "id": "text",
-      "label": "Narrative Text",
-      "default": "<p>Indiasilvo was born from a singular conviction: that sterling silver possesses a poetic brilliance rivaling any precious metal on Earth. Our master artisans blend centuries-old Indian filigree techniques with contemporary architectural forms.</p><p>Every creation is forged from hallmarked 925 sterling silver, set with hand-selected gemstones, and rigorously tested for purity and longevity.</p>"
+      "label": "Narrative Body",
+      "default": "<p>Indiasilvo was founded on a singular passion: celebrating sterling silver as the ultimate medium of modern fine jewellery. We blend royal Indian silver-craft traditions with architectural minimalism.</p><p>Each creation is cast strictly in BIS hallmarked 925 sterling silver, electro-coated with liquid rhodium for lifetime tarnish resistance, and finished by fifth-generation master artisans.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_details",
+      "label": "Show Craft Metrics (Purity, Hallmark, Quality)",
+      "default": true
     },
     {
       "type": "text",
       "id": "button_text",
       "label": "Button Label",
-      "default": "Read Our Craft Story"
+      "default": "Discover Our Atelier"
     },
     {
       "type": "url",
@@ -152,7 +211,7 @@
   ],
   "presets": [
     {
-      "name": "Brand Story / Editorial"
+      "name": "Brand Story"
     }
   ]
 }

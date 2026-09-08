@@ -1,0 +1,113 @@
+<section id="BrandIntro-{{ section.id }}" class="brand-intro-section section-spacing" data-section-id="{{ section.id }}" style="background-color: {{ section.settings.bg_color }};">
+  <div class="container container-narrow">
+    <div class="brand-intro-box">
+      
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="brand-intro-eyebrow">{{ section.settings.eyebrow | escape }}</span>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h2 class="brand-intro-heading h1">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+
+      <div class="gold-divider" style="margin-top: 1rem; margin-bottom: 1.5rem;"></div>
+
+      {%- if section.settings.description != blank -%}
+        <p class="brand-intro-description">{{ section.settings.description | escape }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.link_text != blank -%}
+        <div style="margin-top: var(--space-xl);">
+          <a href="{{ section.settings.link_url | default: '/pages/about' }}" class="btn-link">
+            <span>{{ section.settings.link_text | escape }}</span>
+            {% render 'icons', icon: 'arrow-right' %}
+          </a>
+        </div>
+      {%- endif -%}
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .brand-intro-section {
+    border-bottom: 1px solid var(--color-border);
+  }
+  .brand-intro-box {
+    text-align: center;
+    max-width: 780px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .brand-intro-eyebrow {
+    display: block;
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-widest);
+    color: var(--color-accent-gold);
+    margin-bottom: var(--space-md);
+    font-weight: 500;
+  }
+  .brand-intro-heading {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 3.8vw, 3.25rem);
+    font-weight: 400;
+    line-height: 1.25;
+    color: var(--color-text-primary);
+    margin-bottom: 0;
+  }
+  .brand-intro-description {
+    font-size: clamp(1rem, 1.3vw, 1.15rem);
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+    margin: 0 auto;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Brand Introduction",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FAF8F5"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Text",
+      "default": "Crafted With Intention"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Editorial Heading",
+      "default": "Fine 925 sterling silver sculpted for your most meaningful moments."
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Supporting Statement",
+      "default": "Every Indiasilvo piece embodies a reverence for purity. Cast strictly from sovereign 925 silver, hand-burnished by master silversmiths, and protected with liquid rhodium for eternal brilliance."
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link Text",
+      "default": "Read Our Craft Story"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Introduction"
+    }
+  ]
+}
+{% endschema %}

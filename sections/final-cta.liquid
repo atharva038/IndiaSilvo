@@ -1,0 +1,265 @@
+<section id="FinalCta-{{ section.id }}" class="final-cta-section {% if section.settings.full_width %}final-cta-section--fullwidth{% endif %}" data-section-id="{{ section.id }}">
+  <div class="final-cta-container">
+    
+    {%- comment -%} Responsive Background Image Handling {%- endcomment -%}
+    <div class="final-cta-media">
+      {%- if section.settings.image != blank -%}
+        <picture>
+          {%- if section.settings.mobile_image != blank -%}
+            <source
+              media="(max-width: 767px)"
+              srcset="{{ section.settings.mobile_image | image_url: width: 450 }} 450w,
+                      {{ section.settings.mobile_image | image_url: width: 750 }} 750w"
+              sizes="100vw"
+            >
+          {%- endif -%}
+          <img
+            src="{{ section.settings.image | image_url: width: 1800 }}"
+            srcset="{{ section.settings.image | image_url: width: 750 }} 750w,
+                    {{ section.settings.image | image_url: width: 1200 }} 1200w,
+                    {{ section.settings.image | image_url: width: 1800 }} 1800w"
+            sizes="100vw"
+            alt="{{ section.settings.image.alt | default: section.settings.heading | escape }}"
+            class="final-cta-img"
+            loading="lazy"
+            width="1800"
+            height="900"
+          >
+        </picture>
+      {%- else -%}
+        <img
+          src="{{ 'cta-silver-jewellery.jpg' | asset_url }}"
+          alt="Indiasilvo 925 Sterling Silver Masterpieces"
+          class="final-cta-img"
+          loading="lazy"
+          width="1800"
+          height="900"
+        >
+      {%- endif -%}
+
+      <div class="final-cta-overlay" style="background-color: {{ section.settings.overlay_color }}; opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+    </div>
+
+    {%- comment -%} Content Box {%- endcomment -%}
+    <div class="container final-cta-content-wrapper">
+      <div class="final-cta-box" style="max-width: {{ section.settings.content_max_width }}px;">
+        
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="final-cta-eyebrow">{{ section.settings.eyebrow | escape }}</span>
+        {%- endif -%}
+
+        {%- if section.settings.heading != blank -%}
+          <h2 class="final-cta-heading display-title">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+
+        {%- if section.settings.description != blank -%}
+          <p class="final-cta-description">{{ section.settings.description | escape }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.button_text != blank -%}
+          <div class="final-cta-action">
+            <a href="{{ section.settings.button_link | default: routes.all_products_collection_url }}" class="btn btn-primary final-cta-btn">
+              {{ section.settings.button_text | escape }}
+            </a>
+          </div>
+        {%- endif -%}
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .final-cta-section {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--color-bg);
+  }
+  .final-cta-section:not(.final-cta-section--fullwidth) {
+    padding-left: var(--container-gutter);
+    padding-right: var(--container-gutter);
+    margin-top: var(--space-2xl);
+    margin-bottom: var(--space-2xl);
+  }
+  .final-cta-section:not(.final-cta-section--fullwidth) .final-cta-container {
+    border-radius: var(--border-radius, 0);
+    overflow: hidden;
+    max-width: var(--container-width);
+    margin: 0 auto;
+  }
+
+  .final-cta-container {
+    position: relative;
+    width: 100%;
+    min-height: clamp(380px, 50vh, 520px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .final-cta-media {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .final-cta-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform var(--transition-slow);
+  }
+  .final-cta-container:hover .final-cta-img {
+    transform: scale(1.03);
+  }
+
+  .final-cta-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .final-cta-content-wrapper {
+    position: relative;
+    z-index: 2;
+    padding-top: clamp(3rem, 6vw, 5rem);
+    padding-bottom: clamp(3rem, 6vw, 5rem);
+    display: flex;
+    justify-content: center;
+  }
+
+  .final-cta-box {
+    text-align: center;
+    color: #FAF8F5;
+  }
+
+  .final-cta-eyebrow {
+    display: inline-block;
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-widest);
+    color: var(--color-accent-gold);
+    margin-bottom: var(--space-sm);
+    font-weight: 500;
+  }
+
+  .final-cta-heading {
+    color: #FAF8F5;
+    font-size: clamp(2rem, 4.2vw, 3.5rem);
+    line-height: 1.18;
+    margin-bottom: var(--space-md);
+    text-shadow: 0 2px 10px rgba(0,0,0,0.25);
+  }
+
+  .final-cta-description {
+    font-size: clamp(0.95rem, 1.3vw, 1.15rem);
+    color: rgba(250, 248, 245, 0.9);
+    line-height: 1.7;
+    margin: 0 auto var(--space-xl) auto;
+  }
+
+  .final-cta-action {
+    display: flex;
+    justify-content: center;
+  }
+
+  .final-cta-btn {
+    min-width: 220px;
+  }
+
+  @media (max-width: 767px) {
+    .final-cta-container {
+      min-height: 420px;
+    }
+    .final-cta-btn {
+      width: 100%;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Final Call To Action",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Desktop Background Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile Background Image (Optional)"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Banner",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Text",
+      "default": "Indiasilvo Atelier"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Editorial Heading",
+      "default": "Discover Your Next Heirloom"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Supporting Statement",
+      "default": "Immerse yourself in authentic 925 sterling silver craftsmanship. Each piece is hallmarked for purity, rhodium-shielded, and packaged in our signature keepsake box."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Label",
+      "default": "Shop The 925 Collection"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "min": 400,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "label": "Content Maximum Width",
+      "default": 680
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Tint Color",
+      "default": "#181615"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 85,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay Opacity",
+      "default": 45
+    }
+  ],
+  "presets": [
+    {
+      "name": "Final Call To Action"
+    }
+  ]
+}
+{% endschema %}

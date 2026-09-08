@@ -1,33 +1,90 @@
-<div class="main-collection-section section-spacing-sm" data-section-id="{{ section.id }}">
+<section id="MainCollection-{{ section.id }}" class="main-collection-section" data-section-id="{{ section.id }}">
   <div class="container">
     
-    <div class="section-header">
-      <h1 class="section-header__title h1">{{ collection.title | escape }}</h1>
-      {%- if collection.description != blank -%}
-        <div class="section-header__description">{{ collection.description }}</div>
-      {%- endif -%}
-      <div style="font-size: 13px; color: var(--color-text-muted); margin-top: 0.5rem;">
-        {{ 'sections.collection_template.product_count_plural' | t: count: collection.products_count }}
-      </div>
-    </div>
+    {%- comment -%} Breadcrumbs {%- endcomment -%}
+    {%- if section.settings.show_breadcrumbs -%}
+      {% render 'breadcrumbs' %}
+    {%- endif -%}
 
+    {%- comment -%} Collection Editorial Header {%- endcomment -%}
+    {%- if section.settings.show_collection_image and collection.image != blank -%}
+      <div class="collection-hero-banner collection-hero-banner--{{ section.settings.image_height }}">
+        <img
+          src="{{ collection.image | image_url: width: 1600 }}"
+          srcset="{{ collection.image | image_url: width: 600 }} 600w,
+                  {{ collection.image | image_url: width: 1200 }} 1200w,
+                  {{ collection.image | image_url: width: 1600 }} 1600w"
+          sizes="100vw"
+          alt="{{ collection.image.alt | default: collection.title | escape }}"
+          class="collection-hero-banner__img"
+          loading="eager"
+          fetchpriority="high"
+          width="1600"
+          height="600"
+        >
+        <div class="collection-hero-banner__overlay"></div>
+        <div class="collection-hero-banner__content">
+          <span class="collection-hero-banner__eyebrow">{{ 'general.breadcrumbs.jewellery' | default: '925 Sterling Silver' }}</span>
+          <h1 class="collection-hero-banner__title display-title">{{ collection.title | escape }}</h1>
+          {%- if section.settings.show_description and collection.description != blank -%}
+            <div class="collection-hero-banner__description">
+              {{ collection.description }}
+            </div>
+          {%- endif -%}
+          {%- if section.settings.show_product_count -%}
+            <div class="collection-hero-banner__count">
+              {{ 'sections.collection_template.product_count_plural' | t: count: collection.products_count | default: collection.products_count }} {{ 'creations' }}
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- else -%}
+      <div class="collection-text-header">
+        <span class="collection-text-header__eyebrow">{{ 'general.breadcrumbs.jewellery' | default: '925 Sterling Silver' }}</span>
+        <h1 class="collection-text-header__title h1">{{ collection.title | escape }}</h1>
+        <div class="gold-divider" style="margin: 0.75rem auto 1.25rem auto;"></div>
+        {%- if section.settings.show_description and collection.description != blank -%}
+          <div class="collection-text-header__description">
+            {{ collection.description }}
+          </div>
+        {%- endif -%}
+        {%- if section.settings.show_product_count -%}
+          <div class="collection-text-header__count">
+            {{ 'sections.collection_template.product_count_plural' | t: count: collection.products_count | default: collection.products_count }} {{ 'creations' }}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Product Grid & Facets {%- endcomment -%}
     {%- paginate collection.products by section.settings.products_per_page -%}
       {%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
-        {% render 'facets', results: collection %}
+        {% render 'facets', results: collection, enable_filtering: section.settings.enable_filtering, enable_sorting: section.settings.enable_sorting %}
       {%- endif -%}
 
-      <div class="product-grid product-grid--{{ section.settings.columns_desktop }}-col">
+      <div class="product-grid product-grid--{{ section.settings.columns_desktop }}-col" id="ProductGridContainer">
         {%- if collection.products.size > 0 -%}
           {%- for product in collection.products -%}
             {% render 'product-card', product: product %}
           {%- endfor -%}
         {%- else -%}
-          <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem;">
-            <h3 class="h3">{{ 'sections.collection_template.empty' | t }}</h3>
-            <p style="margin-bottom: 2rem;">{{ 'sections.collection_template.clear_all' | t }}</p>
-            <a href="{{ collection.url }}" class="btn btn-secondary">
-              {{ 'sections.collection_template.clear_all' | t }}
-            </a>
+          <div class="collection-empty-state">
+            <div class="collection-empty-state__box">
+              {% render 'icons', icon: 'sparkle' %}
+              {%- if collection.all_products_count > 0 -%}
+                <h2 class="collection-empty-state__title h3">{{ 'sections.collection_template.no_results' | default: 'No creations match your active filters' }}</h2>
+                <p class="collection-empty-state__text">{{ 'sections.collection_template.use_fewer_filters' | default: 'Try clearing some filters or exploring the entire collection.' }}</p>
+                <a href="{{ collection.url }}" class="btn btn-primary">
+                  {{ 'sections.collection_template.clear_all' | default: 'Clear All Filters' }}
+                </a>
+              {%- else -%}
+                <h2 class="collection-empty-state__title h3">{{ 'sections.collection_template.empty' | default: 'No pieces currently available' }}</h2>
+                <p class="collection-empty-state__text">{{ 'sections.collection_template.empty_subtext' | default: 'Our master silversmiths are crafting new 925 silver creations for this series.' }}</p>
+                <a href="{{ routes.all_products_collection_url }}" class="btn btn-primary">
+                  {{ 'general.continue_shopping' | default: 'Explore All Collections' }}
+                </a>
+              {%- endif -%}
+            </div>
           </div>
         {%- endif -%}
       </div>
@@ -37,13 +94,227 @@
       {%- endif -%}
     {%- endpaginate -%}
 
+    {%- comment -%} Optional Bottom Craftsmanship Note {%- endcomment -%}
+    {%- if section.settings.show_craft_note -%}
+      <div class="collection-craft-note">
+        <div class="collection-craft-note__box">
+          <span class="collection-craft-note__badge">925 Pure Silver Guarantee</span>
+          <p class="collection-craft-note__text">
+            {{ section.settings.craft_note_text | default: 'Every Indiasilvo jewel is cast in certified 925 sterling silver, electro-plated with liquid rhodium for permanent tarnish resistance, and certified by the Bureau of Indian Standards.' }}
+          </p>
+        </div>
+      </div>
+    {%- endif -%}
+
   </div>
-</div>
+</section>
+
+<style>
+  .main-collection-section {
+    padding-top: var(--space-md);
+    padding-bottom: var(--space-3xl);
+  }
+
+  /* Collection Text Header */
+  .collection-text-header {
+    text-align: center;
+    max-width: 780px;
+    margin: 0 auto var(--space-xl) auto;
+    padding: var(--space-lg) 0;
+  }
+  .collection-text-header__eyebrow {
+    display: block;
+    font-size: var(--font-size-2xs);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-widest);
+    color: var(--color-accent-gold);
+    margin-bottom: var(--space-xs);
+    font-weight: 500;
+  }
+  .collection-text-header__title {
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    margin: 0;
+    line-height: 1.2;
+  }
+  .collection-text-header__description {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.75;
+    margin: 0 auto var(--space-sm) auto;
+  }
+  .collection-text-header__count {
+    font-size: var(--font-size-2xs);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wider);
+    color: var(--color-text-muted);
+  }
+
+  /* Collection Hero Banner */
+  .collection-hero-banner {
+    position: relative;
+    border-radius: var(--border-radius, 0);
+    overflow: hidden;
+    margin-bottom: var(--space-xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .collection-hero-banner--small { min-height: 240px; }
+  .collection-hero-banner--medium { min-height: 340px; }
+  .collection-hero-banner--large { min-height: 440px; }
+
+  .collection-hero-banner__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .collection-hero-banner__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(24,22,21,0.7) 0%, rgba(24,22,21,0.3) 100%);
+  }
+  .collection-hero-banner__content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: #FAF8F5;
+    padding: var(--space-xl) var(--space-md);
+    max-width: 720px;
+  }
+  .collection-hero-banner__eyebrow {
+    display: block;
+    font-size: var(--font-size-2xs);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-widest);
+    color: var(--color-accent-gold);
+    margin-bottom: var(--space-xs);
+  }
+  .collection-hero-banner__title {
+    color: #FAF8F5;
+    margin-bottom: var(--space-sm);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .collection-hero-banner__description {
+    font-size: var(--font-size-sm);
+    color: rgba(250,248,245,0.9);
+    line-height: 1.7;
+    margin-bottom: var(--space-sm);
+  }
+  .collection-hero-banner__count {
+    font-size: var(--font-size-2xs);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wider);
+    color: rgba(250,248,245,0.75);
+  }
+
+  /* Empty State */
+  .collection-empty-state {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    padding: clamp(3rem, 6vw, 5rem) var(--space-md);
+  }
+  .collection-empty-state__box {
+    text-align: center;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .collection-empty-state__box svg {
+    width: 32px;
+    height: 32px;
+    color: var(--color-accent-gold);
+    margin-bottom: var(--space-md);
+  }
+  .collection-empty-state__title {
+    margin-bottom: var(--space-xs);
+  }
+  .collection-empty-state__text {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin-bottom: var(--space-xl);
+  }
+
+  /* Bottom Craftsmanship Note */
+  .collection-craft-note {
+    margin-top: var(--space-3xl);
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    justify-content: center;
+  }
+  .collection-craft-note__box {
+    text-align: center;
+    max-width: 680px;
+  }
+  .collection-craft-note__badge {
+    display: inline-block;
+    font-size: var(--font-size-2xs);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-widest);
+    color: var(--color-accent-gold);
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+  }
+  .collection-craft-note__text {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    line-height: 1.75;
+    margin: 0;
+  }
+</style>
 
 {% schema %}
 {
   "name": "Collection Grid",
   "settings": [
+    {
+      "type": "header",
+      "content": "Navigation & Header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumbs",
+      "label": "Show Breadcrumbs",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_image",
+      "label": "Show Collection Image Banner (if available)",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "image_height",
+      "label": "Banner Height",
+      "options": [
+        { "value": "small", "label": "Compact (240px)" },
+        { "value": "medium", "label": "Medium (340px)" },
+        { "value": "large", "label": "Large (440px)" }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show Collection Description",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_count",
+      "label": "Show Total Product Count",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Layout & Grid"
+    },
     {
       "type": "range",
       "id": "products_per_page",
@@ -64,6 +335,10 @@
       "default": "4"
     },
     {
+      "type": "header",
+      "content": "Filtering & Sorting"
+    },
+    {
       "type": "checkbox",
       "id": "enable_filtering",
       "label": "Enable Faceted Filtering",
@@ -74,6 +349,22 @@
       "id": "enable_sorting",
       "label": "Enable Sorting",
       "default": true
+    },
+    {
+      "type": "header",
+      "content": "Artisanal Guarantee Note"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_craft_note",
+      "label": "Show 925 Hallmark Guarantee Note",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "craft_note_text",
+      "label": "Guarantee Text",
+      "default": "Every Indiasilvo jewel is cast in certified 925 sterling silver, electro-plated with liquid rhodium for permanent tarnish resistance, and certified by the Bureau of Indian Standards."
     }
   ]
 }

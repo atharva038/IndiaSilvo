@@ -1,0 +1,365 @@
+<section id="Hero-{{ section.id }}" class="hero-section hero-section--{{ section.settings.height }} {% if section.settings.full_width %}hero-section--fullwidth{% endif %}" data-section-id="{{ section.id }}">
+  <div class="hero-container">
+    
+    {%- comment -%} Responsive Background Image Handling {%- endcomment -%}
+    <div class="hero-media-wrapper">
+      {%- if section.settings.image != blank -%}
+        <picture>
+          {%- if section.settings.mobile_image != blank -%}
+            <source
+              media="(max-width: 767px)"
+              srcset="{{ section.settings.mobile_image | image_url: width: 450 }} 450w,
+                      {{ section.settings.mobile_image | image_url: width: 750 }} 750w"
+              sizes="100vw"
+            >
+          {%- endif -%}
+          <img
+            src="{{ section.settings.image | image_url: width: 2000 }}"
+            srcset="{{ section.settings.image | image_url: width: 750 }} 750w,
+                    {{ section.settings.image | image_url: width: 1400 }} 1400w,
+                    {{ section.settings.image | image_url: width: 2000 }} 2000w"
+            sizes="100vw"
+            alt="{{ section.settings.image.alt | default: section.settings.heading | escape }}"
+            class="hero-media-img"
+            loading="eager"
+            fetchpriority="high"
+            width="2000"
+            height="1125"
+          >
+        </picture>
+      {%- else -%}
+        <img
+          src="{{ 'hero-silver-jewellery.jpg' | asset_url }}"
+          alt="Indiasilvo Haute 925 Sterling Silver Jewellery"
+          class="hero-media-img"
+          loading="eager"
+          fetchpriority="high"
+          width="2000"
+          height="1125"
+        >
+      {%- endif -%}
+
+      <div class="hero-overlay" style="background-color: {{ section.settings.overlay_color }}; opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+    </div>
+
+    {%- comment -%} Content Area {%- endcomment -%}
+    <div class="container hero-content-wrapper hero-content--valign-{{ section.settings.content_position }}">
+      <div class="hero-content-box hero-content--align-{{ section.settings.text_alignment }}" style="max-width: {{ section.settings.content_max_width }}px;">
+        
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="hero-eyebrow">{{ section.settings.eyebrow | escape }}</span>
+        {%- endif -%}
+
+        {%- if section.settings.heading != blank -%}
+          <h1 class="hero-heading display-title">{{ section.settings.heading | escape }}</h1>
+        {%- endif -%}
+
+        {%- if section.settings.description != blank -%}
+          <p class="hero-description">{{ section.settings.description | escape }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.button_1_text != blank or section.settings.button_2_text != blank -%}
+          <div class="hero-cta-group">
+            {%- if section.settings.button_1_text != blank -%}
+              <a href="{{ section.settings.button_1_link | default: routes.all_products_collection_url }}" class="btn btn-primary hero-btn">
+                {{ section.settings.button_1_text | escape }}
+              </a>
+            {%- endif -%}
+
+            {%- if section.settings.button_2_text != blank -%}
+              <a href="{{ section.settings.button_2_link | default: '/pages/about' }}" class="btn btn-secondary hero-btn hero-btn--secondary">
+                {{ section.settings.button_2_text | escape }}
+              </a>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .hero-section {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--color-bg);
+  }
+  .hero-section--full { min-height: 100vh; }
+  .hero-section--large { min-height: 85vh; }
+  .hero-section--medium { min-height: 70vh; }
+  .hero-section--compact { min-height: 55vh; }
+
+  .hero-container {
+    position: relative;
+    width: 100%;
+    min-height: inherit;
+    display: flex;
+    align-items: center;
+  }
+
+  .hero-media-wrapper {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .hero-media-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transform: scale(1.01);
+    transition: transform var(--transition-slow);
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .hero-content-wrapper {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    padding-top: clamp(4rem, 8vw, 7rem);
+    padding-bottom: clamp(4rem, 8vw, 7rem);
+  }
+
+  .hero-content--valign-top { align-items: flex-start; }
+  .hero-content--valign-middle { align-items: center; }
+  .hero-content--valign-bottom { align-items: flex-end; }
+
+  .hero-content-box {
+    color: #FAF8F5;
+  }
+
+  .hero-content--align-left {
+    text-align: left;
+    margin-right: auto;
+  }
+  .hero-content--align-center {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .hero-content--align-right {
+    text-align: right;
+    margin-left: auto;
+  }
+
+  .hero-eyebrow {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-widest);
+    color: var(--color-accent-gold);
+    margin-bottom: var(--space-md);
+    font-weight: 500;
+  }
+
+  .hero-heading {
+    color: #FAF8F5;
+    margin-bottom: var(--space-md);
+    text-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  }
+
+  .hero-description {
+    font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+    color: rgba(250, 248, 245, 0.9);
+    line-height: 1.7;
+    margin-bottom: var(--space-xl);
+    max-width: 620px;
+  }
+  .hero-content--align-center .hero-description {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-cta-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    align-items: center;
+  }
+  .hero-content--align-center .hero-cta-group {
+    justify-content: center;
+  }
+  .hero-content--align-right .hero-cta-group {
+    justify-content: flex-end;
+  }
+
+  .hero-btn--secondary {
+    border-color: rgba(250, 248, 245, 0.6);
+    color: #FAF8F5;
+  }
+  .hero-btn--secondary:hover {
+    background-color: #FAF8F5;
+    color: #181615;
+    border-color: #FAF8F5;
+  }
+
+  @media (max-width: 767px) {
+    .hero-section--full, .hero-section--large {
+      min-height: 75vh;
+    }
+    .hero-cta-group {
+      flex-direction: column;
+      width: 100%;
+    }
+    .hero-btn {
+      width: 100%;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Hero Banner",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Desktop Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile Image (Optional)"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Hero Height",
+      "options": [
+        { "value": "full", "label": "Full Screen (100vh)" },
+        { "value": "large", "label": "Large (85vh)" },
+        { "value": "medium", "label": "Medium (70vh)" },
+        { "value": "compact", "label": "Compact (55vh)" }
+      ],
+      "default": "large"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Enable Full Width",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Typography & Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Text",
+      "default": "925 Pure Sterling Silver"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Editorial Heading",
+      "default": "Poetry in Sterling Silver"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Supporting Description",
+      "default": "Architectural silhouettes cast in sovereign-grade 925 sterling silver, hand-burnished for a mirror luster that never fades."
+    },
+    {
+      "type": "header",
+      "content": "Alignment & Positioning"
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Vertical Content Position",
+      "options": [
+        { "value": "top", "label": "Top" },
+        { "value": "middle", "label": "Middle" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "middle"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "min": 400,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "label": "Content Maximum Width",
+      "default": 700
+    },
+    {
+      "type": "header",
+      "content": "Overlay Tint"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Color",
+      "default": "#181615"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay Opacity",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Call To Action Buttons"
+    },
+    {
+      "type": "text",
+      "id": "button_1_text",
+      "label": "Primary Button Text",
+      "default": "Explore 925 Silver"
+    },
+    {
+      "type": "url",
+      "id": "button_1_link",
+      "label": "Primary Button Link"
+    },
+    {
+      "type": "text",
+      "id": "button_2_text",
+      "label": "Secondary Button Text",
+      "default": "Silversmith Atelier"
+    },
+    {
+      "type": "url",
+      "id": "button_2_link",
+      "label": "Secondary Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Banner"
+    }
+  ]
+}
+{% endschema %}

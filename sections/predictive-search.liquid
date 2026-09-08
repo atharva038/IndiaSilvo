@@ -7,9 +7,14 @@
       {%- for product in predictive_search.resources.products -%}
         <a href="{{ product.url }}" class="search-predictive-item" style="text-decoration: none; color: inherit;">
           <div style="width: 50px; height: 50px; background: var(--color-surface-alt); overflow: hidden; border-radius: var(--border-radius, 0);">
-            {%- if product.featured_media -%}
-              <img src="{{ product.featured_media | image_url: width: 100, height: 100, crop: 'center' }}" alt="{{ product.title | escape }}" style="width: 100%; height: 100%; object-fit: cover;">
-            {%- endif -%}
+              <img
+                src="{{ product.featured_media | image_url: width: 100, height: 100, crop: 'center' }}"
+                alt="{{ product.title | escape }}"
+                style="width: 100%; height: 100%; object-fit: cover;"
+                width="100"
+                height="100"
+                loading="lazy"
+              >
           </div>
           <div>
             <div style="font-family: var(--font-heading); font-size: 1.05rem; color: var(--color-text-primary);">{{ product.title }}</div>

@@ -1,0 +1,216 @@
+<section id="CategoryGrid-{{ section.id }}" class="category-grid-section section-spacing" data-section-id="{{ section.id }}" style="background-color: {{ section.settings.bg_color }};">
+  <div class="container">
+    
+    <div class="section-header">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="section-header__subtitle">{{ section.settings.eyebrow | escape }}</span>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="section-header__title h2">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+      {%- if section.settings.description != blank -%}
+        <p class="section-header__description">{{ section.settings.description | escape }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="category-tiles-grid">
+      {%- for block in section.blocks -%}
+        {%- assign collection = block.settings.collection -%}
+        <div class="category-tile-item" {{ block.shopify_attributes }}>
+          <a href="{{ collection.url | default: routes.all_products_collection_url }}" class="category-tile-link">
+            
+            <div class="category-tile-media">
+              {%- assign image = block.settings.image | default: collection.featured_image -%}
+              {%- if image != blank -%}
+                <img
+                  src="{{ image | image_url: width: 800 }}"
+                  srcset="{{ image | image_url: width: 400 }} 400w,
+                          {{ image | image_url: width: 800 }} 800w"
+                  sizes="(min-width: 990px) 25vw, 50vw"
+                  alt="{{ image.alt | default: block.settings.title | default: collection.title | escape }}"
+                  class="category-tile-img"
+                  loading="lazy"
+                  width="800"
+                  height="1000"
+                >
+              {%- else -%}
+                {%- case forloop.index -%}
+                  {%- when 1 -%}
+                    <img src="{{ 'collection-silver-rings.jpg' | asset_url }}" alt="925 Silver Rings" class="category-tile-img" loading="lazy" width="800" height="1000">
+                  {%- when 2 -%}
+                    <img src="{{ 'collection-silver-necklaces.jpg' | asset_url }}" alt="Silver Pendants & Chains" class="category-tile-img" loading="lazy" width="800" height="1000">
+                  {%- when 3 -%}
+                    <img src="{{ 'category-silver-earrings.jpg' | asset_url }}" alt="Silver Earrings" class="category-tile-img" loading="lazy" width="800" height="1000">
+                  {%- when 4 -%}
+                    <img src="{{ 'collection-silver-cuffs.jpg' | asset_url }}" alt="Silver Cuffs & Kada" class="category-tile-img" loading="lazy" width="800" height="1000">
+                  {%- else -%}
+                    <img src="{{ 'collection-silver-rings.jpg' | asset_url }}" alt="925 Silver" class="category-tile-img" loading="lazy" width="800" height="1000">
+                {%- endcase -%}
+              {%- endif -%}
+              <div class="category-tile-overlay"></div>
+            </div>
+
+            <div class="category-tile-info">
+              <h3 class="category-tile-title">
+                {{ block.settings.title | default: collection.title | default: 'Fine Jewellery' }}
+              </h3>
+              <span class="btn-link category-tile-btn">
+                <span>Explore</span>
+                {% render 'icons', icon: 'arrow-right' %}
+              </span>
+            </div>
+
+          </a>
+        </div>
+      {%- endfor -%}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .category-tiles-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(0.75rem, 2vw, 1.5rem);
+  }
+  @media (min-width: 990px) {
+    .category-tiles-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .category-tile-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius, 0);
+  }
+
+  .category-tile-link {
+    display: block;
+    position: relative;
+    text-decoration: none;
+    height: 100%;
+  }
+
+  .category-tile-media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/5;
+    background-color: var(--color-surface-alt);
+    overflow: hidden;
+  }
+
+  .category-tile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+  }
+  .category-tile-item:hover .category-tile-img {
+    transform: scale(1.06);
+  }
+
+  .category-tile-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(24, 22, 21, 0.75) 0%, rgba(24, 22, 21, 0.1) 60%, transparent 100%);
+    transition: background-color var(--transition-normal);
+  }
+  .category-tile-item:hover .category-tile-overlay {
+    background: linear-gradient(to top, rgba(24, 22, 21, 0.85) 0%, rgba(24, 22, 21, 0.2) 60%, transparent 100%);
+  }
+
+  .category-tile-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: clamp(1rem, 2vw, 1.5rem);
+    text-align: center;
+    color: #FAF8F5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .category-tile-title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.2rem, 1.8vw, 1.55rem);
+    color: #FAF8F5;
+    margin-bottom: 4px;
+    line-height: 1.25;
+  }
+
+  .category-tile-btn {
+    color: #FAF8F5 !important;
+    border-color: rgba(250, 248, 245, 0.7) !important;
+    font-size: 11px !important;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Shop By Category",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FAF8F5"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Text",
+      "default": "Bespoke Categories"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "Shop By Silver Silhouette"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Section Description",
+      "default": "Curated collections designed to harmonize with your personal aesthetic."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category Tile",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Select Collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Custom Tile Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Custom Title Override"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop By Category",
+      "blocks": [
+        { "type": "category", "settings": { "title": "925 Silver Rings" } },
+        { "type": "category", "settings": { "title": "Pendants & Chains" } },
+        { "type": "category", "settings": { "title": "Earrings & Jhumkas" } },
+        { "type": "category", "settings": { "title": "Cuffs & Kada" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

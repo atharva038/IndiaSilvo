@@ -1,0 +1,61 @@
+<div
+  class="recently-viewed-section section-spacing is-hidden"
+  id="RecentlyViewed-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  data-current-product-id="{{ product.id }}"
+  data-current-product-handle="{{ product.handle }}"
+  data-limit="{{ section.settings.products_to_show | default: 4 }}"
+>
+  <div class="container">
+    <div class="section-header">
+      {%- if section.settings.subtitle != blank -%}
+        <span class="section-header__subtitle">{{ section.settings.subtitle | escape }}</span>
+      {%- endif -%}
+      <h2 class="section-header__title h2">{{ section.settings.heading | escape }}</h2>
+    </div>
+
+    <div class="product-grid product-grid--4-col" id="RecentlyViewedGrid-{{ section.id }}">
+      {%- comment -%} Dynamically populated by IndiasilvoTheme.initRecentlyViewed() {%- endcomment -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .recently-viewed-section.is-hidden {
+    display: none;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Recently Viewed",
+  "settings": [
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Your Atelier History"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Recently Viewed Creations"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "label": "Maximum products to show",
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Recently Viewed"
+    }
+  ]
+}
+{% endschema %}

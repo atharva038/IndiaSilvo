@@ -3,10 +3,17 @@
     "main": {
       "type": "main-collection",
       "settings": {
+        "show_breadcrumbs": true,
+        "show_collection_image": false,
+        "image_height": "medium",
+        "show_description": true,
+        "show_product_count": true,
         "products_per_page": 16,
         "columns_desktop": "4",
         "enable_filtering": true,
-        "enable_sorting": true
+        "enable_sorting": true,
+        "show_craft_note": true,
+        "craft_note_text": "Every Indiasilvo jewel is cast in certified 925 sterling silver, electro-plated with liquid rhodium for permanent tarnish resistance, and certified by the Bureau of Indian Standards."
       }
     }
   },

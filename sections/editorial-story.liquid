@@ -1,0 +1,199 @@
+<section id="EditorialStory-{{ section.id }}" class="editorial-story-section section-spacing" data-section-id="{{ section.id }}" style="background-color: {{ section.settings.bg_color }};">
+  <div class="container">
+    <div class="editorial-story-asymmetric {% if section.settings.image_position == 'right' %}editorial-story-asymmetric--reverse{% endif %}">
+      
+      {%- comment -%} Large Visual Column (60%) {%- endcomment -%}
+      <div class="editorial-story__media-col">
+        <div class="editorial-story__media-frame">
+          {%- if section.settings.image != blank -%}
+            <img
+              src="{{ section.settings.image | image_url: width: 1200 }}"
+              srcset="{{ section.settings.image | image_url: width: 600 }} 600w,
+                      {{ section.settings.image | image_url: width: 1200 }} 1200w"
+              sizes="(min-width: 990px) 58vw, 100vw"
+              alt="{{ section.settings.image.alt | default: section.settings.heading | escape }}"
+              class="editorial-story__img"
+              loading="lazy"
+              width="1200"
+              height="1400"
+            >
+          {%- else -%}
+            <img
+              src="{{ 'brand-silver-craft.jpg' | asset_url }}"
+              alt="Artisanal 925 Silversmithing"
+              class="editorial-story__img"
+              loading="lazy"
+              width="1200"
+              height="1400"
+            >
+          {%- endif -%}
+        </div>
+      </div>
+
+      {%- comment -%} Editorial Text Column (40%) {%- endcomment -%}
+      <div class="editorial-story__content-col">
+        <div class="editorial-story__content-box">
+          {%- if section.settings.eyebrow != blank -%}
+            <span class="editorial-story__eyebrow">{{ section.settings.eyebrow | escape }}</span>
+          {%- endif -%}
+
+          {%- if section.settings.heading != blank -%}
+            <h2 class="editorial-story__heading h2">{{ section.settings.heading | escape }}</h2>
+          {%- endif -%}
+
+          <div class="gold-divider" style="margin-left: 0; margin-top: 1rem; margin-bottom: 1.5rem;"></div>
+
+          {%- if section.settings.description != blank -%}
+            <div class="editorial-story__description">
+              {{ section.settings.description }}
+            </div>
+          {%- endif -%}
+
+          {%- if section.settings.button_text != blank -%}
+            <div style="margin-top: var(--space-xl);">
+              <a href="{{ section.settings.button_link | default: '/pages/about' }}" class="btn btn-primary">
+                {{ section.settings.button_text | escape }}
+              </a>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .editorial-story-asymmetric {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
+  }
+
+  @media (min-width: 990px) {
+    .editorial-story-asymmetric {
+      grid-template-columns: 1.25fr 0.85fr;
+    }
+    .editorial-story-asymmetric--reverse {
+      grid-template-columns: 0.85fr 1.25fr;
+    }
+    .editorial-story-asymmetric--reverse .editorial-story__media-col {
+      order: 2;
+    }
+    .editorial-story-asymmetric--reverse .editorial-story__content-col {
+      order: 1;
+    }
+  }
+
+  .editorial-story__media-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/5;
+    background-color: var(--color-surface-alt);
+    border-radius: var(--border-radius, 0);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+  }
+
+  .editorial-story__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+  }
+  .editorial-story__media-frame:hover .editorial-story__img {
+    transform: scale(1.03);
+  }
+
+  .editorial-story__content-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .editorial-story__eyebrow {
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-widest);
+    color: var(--color-accent-gold);
+    margin-bottom: var(--space-xs);
+    font-weight: 500;
+  }
+
+  .editorial-story__heading {
+    font-family: var(--font-heading);
+    font-size: clamp(1.85rem, 3.2vw, 2.75rem);
+    line-height: 1.25;
+    margin-bottom: 0;
+  }
+
+  .editorial-story__description {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Editorial Story",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#F4F0EB"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Editorial Image"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image Position on Desktop",
+      "options": [
+        { "value": "left", "label": "Left (60% / 40%)" },
+        { "value": "right", "label": "Right (40% / 60%)" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Text",
+      "default": "The Silversmith's Eye"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "Sculpted by Hand, Hallmarked for Eternity"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Narrative Body",
+      "default": "<p>In our atelier, silver is not treated as a substitute for gold, but as a sovereign canvas of light. We hand-carve waxes, cast certified 925 bullion, and set each gemstone under microscopic scrutiny.</p><p>Finished with a protective bath of liquid rhodium, each piece maintains its mirror brilliance without tarnishing over time.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Label",
+      "default": "Explore The Craft"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Editorial Story"
+    }
+  ]
+}
+{% endschema %}

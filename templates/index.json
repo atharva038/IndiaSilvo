@@ -1,104 +1,178 @@
 {
   "sections": {
-    "hero_banner": {
-      "type": "hero-banner",
+    "hero": {
+      "type": "hero",
       "settings": {
-        "height": 90,
-        "subtitle": "925 Pure Sterling Silver",
-        "title": "Poetry in Sterling Silver",
+        "height": "large",
+        "full_width": true,
+        "eyebrow": "925 Pure Sterling Silver",
+        "heading": "Poetry in Sterling Silver",
         "description": "Architectural silhouettes cast in sovereign-grade 925 sterling silver, hand-burnished for a mirror luster that never fades.",
-        "alignment": "center",
+        "content_position": "middle",
+        "text_alignment": "center",
         "content_max_width": 700,
         "overlay_color": "#181615",
         "overlay_opacity": 30,
-        "btn_1_text": "Explore 925 Silver",
-        "btn_1_url": "/collections/all",
-        "btn_2_text": "Silversmith Atelier",
-        "btn_2_url": "/pages/about"
+        "button_1_text": "Explore 925 Silver",
+        "button_1_link": "/collections/all",
+        "button_2_text": "Silversmith Atelier",
+        "button_2_link": "/pages/about"
       }
     },
-    "craftsmanship_features": {
-      "type": "craftsmanship-features",
+    "brand_introduction": {
+      "type": "brand-introduction",
+      "settings": {
+        "bg_color": "#FAF8F5",
+        "eyebrow": "Crafted With Intention",
+        "heading": "Fine 925 sterling silver sculpted for your most meaningful moments.",
+        "description": "Every Indiasilvo piece embodies a reverence for purity. Cast strictly from sovereign 925 silver, hand-burnished by master silversmiths, and protected with liquid rhodium for eternal brilliance.",
+        "link_text": "Read Our Craft Story",
+        "link_url": "/pages/about"
+      }
+    },
+    "featured_collections": {
+      "type": "featured-collections",
       "blocks": {
-        "feat_1": {
-          "type": "feature",
+        "col_1": {
+          "type": "collection_block",
           "settings": {
-            "icon": "shield",
-            "title": "925 BIS Hallmarked",
-            "text": "Every creation bears official 925 laser hallmarks guaranteeing 92.5% precious silver purity."
+            "eyebrow": "Solitaire Series",
+            "title": "925 Silver Rings",
+            "description": "Architectural solitaires and pavé statement bands.",
+            "button_label": "Explore Rings"
           }
         },
-        "feat_2": {
-          "type": "feature",
+        "col_2": {
+          "type": "collection_block",
           "settings": {
-            "icon": "sparkle",
-            "title": "Anti-Tarnish Rhodium",
-            "text": "Triple-coated with precious rhodium to prevent oxidation and ensure enduring radiance."
+            "eyebrow": "Filigree Series",
+            "title": "Pendants & Chains",
+            "description": "Intricate openwork medallions and delicate drops.",
+            "button_label": "Explore Pendants"
           }
         },
-        "feat_3": {
-          "type": "feature",
+        "col_3": {
+          "type": "collection_block",
           "settings": {
-            "icon": "diamond",
-            "title": "AAA Hand-Set Gems",
-            "text": "Flawless gemstones and zircons set under microscope precision by master artisans."
-          }
-        },
-        "feat_4": {
-          "type": "feature",
-          "settings": {
-            "icon": "truck",
-            "title": "Insured Express Delivery",
-            "text": "Dispatched in signature velvet anti-tarnish boxes with complimentary transit insurance."
+            "eyebrow": "Artisan Series",
+            "title": "Cuffs & Kada",
+            "description": "Substantial chiselled silver bracelets and geometric cuffs.",
+            "button_label": "Explore Cuffs"
           }
         }
       },
       "block_order": [
-        "feat_1",
-        "feat_2",
-        "feat_3",
-        "feat_4"
+        "col_1",
+        "col_2",
+        "col_3"
       ],
       "settings": {
-        "bg_color": "#F4F0EB"
+        "bg_color": "#FAF8F5",
+        "eyebrow": "Curated Silhouettes",
+        "heading": "Signature 925 Silver Collections",
+        "description": "Explore architectural statements handcrafted from hallmarked sterling silver and handset gemstones.",
+        "highlight_first": false
       }
     },
-    "featured_collection": {
-      "type": "featured-collection",
+    "featured_products": {
+      "type": "featured-products",
       "settings": {
-        "subtitle": "Signature Silver Creations",
-        "title": "Icons of Sterling Silver",
-        "description": "Hand-forged 925 sterling silver statements designed for daily modern luxury and heirloom longevity.",
+        "bg_color": "#FAF8F5",
+        "eyebrow": "Best Sellers",
+        "heading": "Icons of Sterling Silver",
+        "description": "Hand-forged 925 sterling silver statements designed for modern luxury and heirloom longevity.",
         "products_to_show": 4,
         "columns_desktop": "4",
-        "show_view_all": true
+        "show_view_all": true,
+        "view_all_label": "View All Creations"
       }
     },
-    "collection_list": {
-      "type": "collection-list",
+    "editorial_story": {
+      "type": "editorial-story",
+      "settings": {
+        "bg_color": "#F4F0EB",
+        "image_position": "left",
+        "eyebrow": "The Silversmith's Eye",
+        "heading": "Sculpted by Hand, Hallmarked for Eternity",
+        "description": "<p>In our atelier, silver is not treated as a substitute for gold, but as a sovereign canvas of light. We hand-carve waxes, cast certified 925 bullion, and set each gemstone under microscopic scrutiny.</p><p>Finished with a protective bath of liquid rhodium, each piece maintains its mirror brilliance without tarnishing over time.</p>",
+        "button_text": "Explore The Craft",
+        "button_link": "/pages/about"
+      }
+    },
+    "craftsmanship": {
+      "type": "craftsmanship",
+      "blocks": {
+        "pillar_1": {
+          "type": "pillar",
+          "settings": {
+            "icon": "shield-check",
+            "title": "925 BIS Hallmarking",
+            "text": "Strict 92.5% silver purity certified with sovereign Bureau of Indian Standards laser hallmark."
+          }
+        },
+        "pillar_2": {
+          "type": "pillar",
+          "settings": {
+            "icon": "sparkle",
+            "title": "Anti-Tarnish Rhodium",
+            "text": "Triple electro-plated with liquid rhodium to permanently resist atmospheric oxidation."
+          }
+        },
+        "pillar_3": {
+          "type": "pillar",
+          "settings": {
+            "icon": "diamond",
+            "title": "AAA Gemstones",
+            "text": "Hand-cut stones and pavé solitaires hand-set under 20x magnification for zero fallout."
+          }
+        },
+        "pillar_4": {
+          "type": "pillar",
+          "settings": {
+            "icon": "truck",
+            "title": "Insured Transit",
+            "text": "Dispatched in velvet keepsake boxes with complimentary insurance and tamper-proof seals."
+          }
+        }
+      },
+      "block_order": [
+        "pillar_1",
+        "pillar_2",
+        "pillar_3",
+        "pillar_4"
+      ],
+      "settings": {
+        "bg_color": "#FAF8F5",
+        "eyebrow": "The Indiasilvo Standard",
+        "heading": "Uncompromising Quality & Authenticity",
+        "description": "Every creation is built to sovereign metallurgical benchmarks, certified for purity, and finished for a lifetime of brilliance."
+      }
+    },
+    "category_grid": {
+      "type": "category-grid",
       "blocks": {
         "cat_1": {
-          "type": "collection",
+          "type": "category",
           "settings": {
             "title": "925 Silver Rings"
           }
         },
         "cat_2": {
-          "type": "collection",
+          "type": "category",
           "settings": {
-            "title": "Silver Pendants & Chains"
+            "title": "Pendants & Chains"
           }
         },
         "cat_3": {
-          "type": "collection",
+          "type": "category",
           "settings": {
             "title": "Earrings & Jhumkas"
           }
         },
         "cat_4": {
-          "type": "collection",
+          "type": "category",
           "settings": {
-            "title": "Silver Cuffs & Kada"
+            "title": "Cuffs & Kada"
           }
         }
       },
@@ -109,53 +183,10 @@
         "cat_4"
       ],
       "settings": {
-        "subtitle": "Curated Categories",
-        "title": "Shop By Silver Silhouette"
-      }
-    },
-    "silver_craft_process": {
-      "type": "silver-craft-process",
-      "blocks": {
-        "step_1": {
-          "type": "step",
-          "settings": {
-            "title": "92.5% Pure Smelting",
-            "text": "Certified bullion silver is alloyed with 7.5% strengthening copper for optimal structural integrity."
-          }
-        },
-        "step_2": {
-          "type": "step",
-          "settings": {
-            "title": "Master Filigree & Setting",
-            "text": "Artisans shape delicate silver wires and secure each gemstone by hand under magnification."
-          }
-        },
-        "step_3": {
-          "type": "step",
-          "settings": {
-            "title": "8-Stage Hand Burnishing",
-            "text": "Successive fine polishings bring out the deep, luminous moon-glow unique to pure silver."
-          }
-        },
-        "step_4": {
-          "type": "step",
-          "settings": {
-            "title": "Rhodium Shield & Hallmark",
-            "text": "Electrolytically sealed with anti-tarnish rhodium and laser-engraved with the 925 BIS hallmark."
-          }
-        }
-      },
-      "block_order": [
-        "step_1",
-        "step_2",
-        "step_3",
-        "step_4"
-      ],
-      "settings": {
-        "bg_color": "#FFFFFF",
-        "subtitle": "The Silversmith Atelier",
-        "title": "Anatomy of Master Silvercraft",
-        "description": "Every Indiasilvo piece passes through four artisanal disciplines before receiving its purity certification."
+        "bg_color": "#FAF8F5",
+        "eyebrow": "Bespoke Categories",
+        "heading": "Shop By Silver Silhouette",
+        "description": "Curated collections designed to harmonize with your personal aesthetic."
       }
     },
     "brand_story": {
@@ -166,6 +197,7 @@
         "subtitle": "The Silversmith Heritage",
         "title": "Honoring Pure Sterling Silver",
         "text": "<p>Indiasilvo was founded on a singular passion: celebrating sterling silver as the ultimate medium of modern fine jewellery. We blend royal Indian silver-craft traditions with architectural minimalism.</p><p>Each creation is cast strictly in BIS hallmarked 925 sterling silver, electro-coated with liquid rhodium for lifetime tarnish resistance, and finished by fifth-generation master artisans.</p>",
+        "show_details": true,
         "button_text": "Discover Our Atelier",
         "button_url": "/pages/about"
       }
@@ -176,7 +208,7 @@
         "test_1": {
           "type": "testimonial",
           "settings": {
-            "quote": "The weight of the 925 silver and the mirror rhodium finish are breathtaking. It hasn't tarnished at all even with daily wear.",
+            "quote": "The weight of the 925 silver and the meticulous stone setting surpassed my highest expectations. It feels like a true heirloom.",
             "author": "Ananya Sharma",
             "city": "Mumbai"
           }
@@ -184,7 +216,7 @@
         "test_2": {
           "type": "testimonial",
           "settings": {
-            "quote": "The packaging, anti-tarnish velvet keepsake pouch, and 925 hallmarking certificate arrived impeccably presented. Pure silver elegance.",
+            "quote": "The packaging, velvet pouch, and hallmarking certificate arrived impeccably presented. The craftsmanship is pure luxury.",
             "author": "Devika Rao",
             "city": "Bengaluru"
           }
@@ -192,7 +224,7 @@
         "test_3": {
           "type": "testimonial",
           "settings": {
-            "quote": "Indiasilvo has redefined contemporary silver jewellery. Architectural, substantial in weight, and unmistakably premium.",
+            "quote": "Indiasilvo has completely redefined contemporary silver jewellery for me. Architectural, understated, and unmistakably premium.",
             "author": "Priya Mehra",
             "city": "New Delhi"
           }
@@ -204,50 +236,36 @@
         "test_3"
       ],
       "settings": {
-        "bg_color": "#F4F0EB",
-        "subtitle": "Patron Praises",
-        "title": "Words From Silver Collectors"
-      }
-    },
-    "instagram_feed": {
-      "type": "instagram-feed",
-      "blocks": {
-        "ig_1": { "type": "image" },
-        "ig_2": { "type": "image" },
-        "ig_3": { "type": "image" },
-        "ig_4": { "type": "image" }
-      },
-      "block_order": [
-        "ig_1",
-        "ig_2",
-        "ig_3",
-        "ig_4"
-      ],
-      "settings": {
-        "subtitle": "Instagram @indiasilvo",
-        "title": "As Worn By Silver Connoisseurs",
-        "account_handle": "indiasilvo"
-      }
-    },
-    "newsletter": {
-      "type": "newsletter",
-      "settings": {
         "bg_color": "#FAF8F5",
-        "subtitle": "The 925 Silver Circle",
-        "title": "Bespoke Silver Previews & Private Salons",
-        "description": "Receive priority access to limited edition 925 silver drops, care masterclasses, and private concierge curation."
+        "subtitle": "Patron Praises",
+        "title": "Words From Our Collectors"
+      }
+    },
+    "final_cta": {
+      "type": "final-cta",
+      "settings": {
+        "full_width": true,
+        "eyebrow": "Indiasilvo Atelier",
+        "heading": "Discover Your Next Heirloom",
+        "description": "Immerse yourself in authentic 925 sterling silver craftsmanship. Each piece is hallmarked for purity, rhodium-shielded, and packaged in our signature keepsake box.",
+        "button_text": "Shop The 925 Collection",
+        "button_link": "/collections/all",
+        "content_max_width": 680,
+        "overlay_color": "#181615",
+        "overlay_opacity": 45
       }
     }
   },
   "order": [
-    "hero_banner",
-    "craftsmanship_features",
-    "featured_collection",
-    "collection_list",
-    "silver_craft_process",
+    "hero",
+    "brand_introduction",
+    "featured_collections",
+    "featured_products",
+    "editorial_story",
+    "craftsmanship",
+    "category_grid",
     "brand_story",
     "testimonials",
-    "instagram_feed",
-    "newsletter"
+    "final_cta"
   ]
 }
