@@ -1,28 +1,63 @@
-<div id="search-modal" class="search-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="{{ 'general.accessibility.search' | t }}">
-  <div class="container search-modal__inner">
-    <button type="button" class="search-modal__close" data-modal-close="search" aria-label="{{ 'general.accessibility.close' | t }}">
-      {% render 'icons', icon: 'close' %}
-    </button>
+<div
+  id="search-modal"
+  class="search-modal"
+  aria-hidden="true"
+  role="dialog"
+  aria-modal="true"
+  aria-label="{{ 'general.accessibility.search' | t }}"
+>
+  <div class="search-modal__backdrop" data-modal-close="search"></div>
 
-    <form action="{{ routes.search_url }}" method="get" role="search" class="search-modal__form">
-      <input
-        type="search"
-        name="q"
-        value="{{ search.terms | escape }}"
-        placeholder="{{ 'sections.header.search_placeholder' | t }}"
-        class="search-modal__input"
-        autocomplete="off"
-        autocorrect="off"
-        autocapitalize="off"
-        spellcheck="false"
-      >
-      <input type="hidden" name="type" value="product">
-      <input type="hidden" name="options[prefix]" value="last">
-      <button type="submit" class="search-modal__submit" aria-label="{{ 'general.accessibility.search' | t }}">
-        {% render 'icons', icon: 'search' %}
+  <div class="container search-modal__inner">
+    <div class="search-modal__header">
+      <span class="search-modal__eyebrow">Indiasilvo Boutique Search</span>
+      <button type="button" class="search-modal__close" data-modal-close="search" aria-label="{{ 'general.accessibility.close' | t }}">
+        {% render 'icons', icon: 'close' %}
       </button>
+    </div>
+
+    <form action="{{ routes.search_url }}" method="get" role="search" class="search-modal__form" id="search-modal-form">
+      <div class="search-modal__input-wrapper">
+        <span class="search-modal__input-icon" aria-hidden="true">
+          {% render 'icons', icon: 'search' %}
+        </span>
+
+        <input
+          type="search"
+          name="q"
+          value="{{ search.terms | escape }}"
+          placeholder="{{ 'sections.header.search_placeholder' | t }}"
+          class="search-modal__input"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
+          aria-label="{{ 'sections.header.search_placeholder' | t }}"
+          id="SearchModalInput"
+        >
+
+        <button type="button" class="search-modal__clear is-hidden" id="SearchModalClear" aria-label="Clear search input">
+          {% render 'icons', icon: 'close' %}
+        </button>
+
+        <input type="hidden" name="type" value="product">
+        <input type="hidden" name="options[prefix]" value="last">
+      </div>
     </form>
 
-    <div class="search-modal__results" aria-live="polite"></div>
+    {%- comment -%} Popular Search Quick Links {%- endcomment -%}
+    <div class="search-modal__quick-tags" id="SearchModalQuickTags">
+      <span class="search-modal__quick-title">Popular Searches:</span>
+      <div class="search-modal__tags-list">
+        <a href="{{ routes.search_url }}?type=product&q=Ring" class="search-modal__tag">Rings</a>
+        <a href="{{ routes.search_url }}?type=product&q=Pendant" class="search-modal__tag">Pendants</a>
+        <a href="{{ routes.search_url }}?type=product&q=Earrings" class="search-modal__tag">Earrings</a>
+        <a href="{{ routes.search_url }}?type=product&q=Cuff" class="search-modal__tag">Cuffs & Bangles</a>
+        <a href="{{ routes.search_url }}?type=product&q=Solitaire" class="search-modal__tag">Solitaire</a>
+      </div>
+    </div>
+
+    {%- comment -%} Dynamic Live Predictive Search Results {%- endcomment -%}
+    <div class="search-modal__results" id="SearchModalResults" aria-live="polite"></div>
   </div>
 </div>

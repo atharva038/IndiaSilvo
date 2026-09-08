@@ -81,6 +81,7 @@
         "eyebrow": "Best Sellers",
         "heading": "Icons of Sterling Silver",
         "description": "Hand-forged 925 sterling silver statements designed for modern luxury and heirloom longevity.",
+        "collection": "all",
         "products_to_show": 4,
         "columns_desktop": "4",
         "show_view_all": true,

@@ -18,7 +18,7 @@
     <div class="product-layout-grid">
       
       {%- comment -%} ================= LEFT COLUMN: EDITORIAL GALLERY ================= {%- endcomment -%}
-      <div class="product-gallery" id="ProductGallery-{{ section.id }}" data-gallery>
+      <div class="product-gallery {% if product.media.size > 1 %}product-gallery--has-thumbs{% else %}product-gallery--single{% endif %}" id="ProductGallery-{{ section.id }}" data-gallery>
         
         {%- comment -%} Desktop Thumbnail Strip (Left dock on desktop) {%- endcomment -%}
         {%- if product.media.size > 1 -%}

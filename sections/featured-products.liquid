@@ -13,7 +13,7 @@
       {%- endif -%}
     </div>
 
-    {%- assign collection = section.settings.collection -%}
+    {%- assign featured_collection = section.settings.collection | default: collections['all'] -%}
 
     <div class="product-grid product-grid--{{ section.settings.columns_desktop }}-col">
       {%- if section.blocks.size > 0 -%}
@@ -22,66 +22,21 @@
             {% render 'product-card', product: block.settings.product %}
           {%- endif -%}
         {%- endfor -%}
-      {%- elsif collection != blank and collection.products_count > 0 -%}
-        {%- for product in collection.products limit: section.settings.products_to_show -%}
+      {%- elsif featured_collection != blank and featured_collection.products_count > 0 -%}
+        {%- for product in featured_collection.products limit: section.settings.products_to_show -%}
           {% render 'product-card', product: product %}
         {%- endfor -%}
-      {%- else -%}
-        {%- comment -%} Default 925 Silver Fallback Showcase {%- endcomment -%}
-        <div class="product-card">
-          <div class="product-card__media-wrapper">
-            <img src="{{ 'product-silver-ring.jpg' | asset_url }}" alt="Solitaire 925 Silver Ring" class="product-card__image" loading="lazy" width="600" height="750">
-            <div class="product-card__badges"><span class="badge badge-sale">925 BIS</span></div>
-          </div>
-          <div class="product-card__info">
-            <span class="product-card__vendor">925 Sterling Silver</span>
-            <h3 class="product-card__title">Aura Solitaire Brilliant Ring</h3>
-            <div class="price-container"><span class="price__sale">₹3,499</span><s class="price__compare">₹4,299</s></div>
-          </div>
-        </div>
-
-        <div class="product-card">
-          <div class="product-card__media-wrapper">
-            <img src="{{ 'product-silver-necklace.jpg' | asset_url }}" alt="925 Silver Filigree Pendant" class="product-card__image" loading="lazy" width="600" height="750">
-            <div class="product-card__badges"><span class="badge badge-sale">Best Seller</span></div>
-          </div>
-          <div class="product-card__info">
-            <span class="product-card__vendor">925 Sterling Silver</span>
-            <h3 class="product-card__title">Mughal Filigree Medallion Necklace</h3>
-            <div class="price-container"><span class="price__regular">₹5,899</span></div>
-          </div>
-        </div>
-
-        <div class="product-card">
-          <div class="product-card__media-wrapper">
-            <img src="{{ 'product-silver-earrings.jpg' | asset_url }}" alt="925 Silver Drop Earrings" class="product-card__image" loading="lazy" width="600" height="750">
-            <div class="product-card__badges"><span class="badge badge-sale">925 BIS</span></div>
-          </div>
-          <div class="product-card__info">
-            <span class="product-card__vendor">925 Sterling Silver</span>
-            <h3 class="product-card__title">Celestial Cascade Pear Drop Earrings</h3>
-            <div class="price-container"><span class="price__regular">₹4,199</span></div>
-          </div>
-        </div>
-
-        <div class="product-card">
-          <div class="product-card__media-wrapper">
-            <img src="{{ 'product-silver-cuff.jpg' | asset_url }}" alt="925 Silver Chiseled Cuff" class="product-card__image" loading="lazy" width="600" height="750">
-            <div class="product-card__badges"><span class="badge badge-sale">Artisan Edition</span></div>
-          </div>
-          <div class="product-card__info">
-            <span class="product-card__vendor">925 Sterling Silver</span>
-            <h3 class="product-card__title">Architectural Hammered Silver Cuff</h3>
-            <div class="price-container"><span class="price__sale">₹7,299</span><s class="price__compare">₹8,500</s></div>
-          </div>
-        </div>
+      {%- elsif collections.all.products_count > 0 -%}
+        {%- for product in collections.all.products limit: section.settings.products_to_show -%}
+          {% render 'product-card', product: product %}
+        {%- endfor -%}
       {%- endif -%}
     </div>
 
-    {%- if section.settings.show_view_all and collection != blank -%}
+    {%- if section.settings.show_view_all -%}
       <div style="text-align: center; margin-top: clamp(2.5rem, 4vw, 4rem);">
-        <a href="{{ collection.url }}" class="btn btn-secondary">
-          {{ section.settings.view_all_label | default: 'View All Pieces' }}
+        <a href="{{ featured_collection.url | default: routes.all_products_collection_url }}" class="btn btn-secondary">
+          {{ section.settings.view_all_label | default: 'View All Creations' }}
         </a>
       </div>
     {%- endif -%}

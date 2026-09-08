@@ -14,57 +14,103 @@
     </div>
 
     <div class="editorial-collections-grid">
-      {%- for block in section.blocks -%}
-        {%- assign collection = block.settings.collection -%}
-        <div class="editorial-collection-card {% if forloop.first and section.settings.highlight_first %}editorial-collection-card--featured{% endif %}" {{ block.shopify_attributes }}>
-          <a href="{{ collection.url | default: '#' }}" class="editorial-collection-card__link">
-            
-            <div class="editorial-collection-card__media">
-              {%- assign image = block.settings.image | default: collection.featured_image -%}
-              {%- if image != blank -%}
-                <img
-                  src="{{ image | image_url: width: 1000 }}"
-                  srcset="{{ image | image_url: width: 500 }} 500w,
-                          {{ image | image_url: width: 1000 }} 1000w"
-                  sizes="(min-width: 990px) 33vw, 100vw"
-                  alt="{{ image.alt | default: block.settings.title | default: collection.title | escape }}"
-                  class="editorial-collection-card__img"
-                  loading="lazy"
-                  width="1000"
-                  height="1250"
-                >
-              {%- else -%}
-                {%- case forloop.index -%}
-                  {%- when 1 -%}
-                    <img src="{{ 'collection-silver-rings.jpg' | asset_url }}" alt="925 Silver Rings Collection" class="editorial-collection-card__img" loading="lazy" width="1000" height="1250">
-                  {%- when 2 -%}
-                    <img src="{{ 'collection-silver-necklaces.jpg' | asset_url }}" alt="925 Silver Pendants & Necklaces" class="editorial-collection-card__img" loading="lazy" width="1000" height="1250">
-                  {%- when 3 -%}
-                    <img src="{{ 'collection-silver-cuffs.jpg' | asset_url }}" alt="925 Silver Cuffs & Bangles" class="editorial-collection-card__img" loading="lazy" width="1000" height="1250">
-                  {%- else -%}
-                    <img src="{{ 'collection-silver-rings.jpg' | asset_url }}" alt="925 Silver Creations" class="editorial-collection-card__img" loading="lazy" width="1000" height="1250">
-                {%- endcase -%}
-              {%- endif -%}
-              <div class="editorial-collection-card__overlay"></div>
-            </div>
+      {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign collection = block.settings.collection
+            if collection == blank
+              case forloop.index
+                when 1
+                  assign collection = collections['rings'] | default: collections['frontpage'] | default: collections['all']
+                when 2
+                  assign collection = collections['necklaces'] | default: collections['pendant'] | default: collections['all']
+                when 3
+                  assign collection = collections['cuffs-bangles'] | default: collections['bracelets'] | default: collections['all']
+              endcase
+            endif
+            assign target_url = collection.url | default: routes.all_products_collection_url
+            assign target_image = block.settings.image | default: collection.featured_image
+            assign target_title = block.settings.title | default: collection.title | default: 'Signature Collection'
+          -%}
+          <div class="editorial-collection-card {% if forloop.first and section.settings.highlight_first %}editorial-collection-card--featured{% endif %}" {{ block.shopify_attributes }}>
+            <a href="{{ target_url }}" class="editorial-collection-card__link">
+              
+              <div class="editorial-collection-card__media">
+                {%- if target_image != blank -%}
+                  <img
+                    src="{{ target_image | image_url: width: 1000 }}"
+                    srcset="{{ target_image | image_url: width: 500 }} 500w,
+                            {{ target_image | image_url: width: 1000 }} 1000w"
+                    sizes="(min-width: 990px) 33vw, 100vw"
+                    alt="{{ target_image.alt | default: target_title | escape }}"
+                    class="editorial-collection-card__img"
+                    loading="lazy"
+                    width="1000"
+                    height="1250"
+                  >
+                {%- else -%}
+                  {%- case forloop.index -%}
+                    {%- when 1 -%}
+                      <img src="{{ 'collection-silver-rings.jpg' | asset_url }}" alt="925 Silver Rings Collection" class="editorial-collection-card__img" loading="lazy" width="1000" height="1250">
+                    {%- when 2 -%}
+                      <img src="{{ 'collection-silver-necklaces.jpg' | asset_url }}" alt="925 Silver Pendants & Necklaces" class="editorial-collection-card__img" loading="lazy" width="1000" height="1250">
+                    {%- when 3 -%}
+                      <img src="{{ 'collection-silver-cuffs.jpg' | asset_url }}" alt="925 Silver Cuffs & Bangles" class="editorial-collection-card__img" loading="lazy" width="1000" height="1250">
+                    {%- else -%}
+                      <img src="{{ 'collection-silver-rings.jpg' | asset_url }}" alt="925 Silver Creations" class="editorial-collection-card__img" loading="lazy" width="1000" height="1250">
+                  {%- endcase -%}
+                {%- endif -%}
+                <div class="editorial-collection-card__overlay"></div>
+              </div>
 
-            <div class="editorial-collection-card__content">
-              <span class="editorial-collection-card__eyebrow">{{ block.settings.eyebrow | default: '925 Sterling Silver' }}</span>
-              <h3 class="editorial-collection-card__title">
-                {{ block.settings.title | default: collection.title | default: 'Signature Collection' }}
-              </h3>
-              {%- if block.settings.description != blank -%}
-                <p class="editorial-collection-card__desc">{{ block.settings.description | escape }}</p>
-              {%- endif -%}
-              <span class="btn-link" style="color:#FAF8F5; border-color: rgba(250,248,245,0.7); margin-top:0.5rem;">
-                <span>{{ block.settings.button_label | default: 'Explore Series' }}</span>
-                {% render 'icons', icon: 'arrow-right' %}
-              </span>
-            </div>
+              <div class="editorial-collection-card__content">
+                <span class="editorial-collection-card__eyebrow">{{ block.settings.eyebrow | default: '925 Sterling Silver' }}</span>
+                <h3 class="editorial-collection-card__title">
+                  {{ target_title }}
+                </h3>
+                {%- if block.settings.description != blank or collection.description != blank -%}
+                  <p class="editorial-collection-card__desc">{{ block.settings.description | default: collection.description | strip_html | truncatewords: 15 }}</p>
+                {%- endif -%}
+                <span class="btn-link" style="color:#FAF8F5; border-color: rgba(250,248,245,0.7); margin-top:0.5rem;">
+                  <span>{{ block.settings.button_label | default: 'Explore Series' }}</span>
+                  {% render 'icons', icon: 'arrow-right' %}
+                </span>
+              </div>
 
-          </a>
-        </div>
-      {%- endfor -%}
+            </a>
+          </div>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for collection in collections limit: 3 -%}
+          <div class="editorial-collection-card">
+            <a href="{{ collection.url }}" class="editorial-collection-card__link">
+              <div class="editorial-collection-card__media">
+                {%- if collection.featured_image != blank -%}
+                  <img
+                    src="{{ collection.featured_image | image_url: width: 1000 }}"
+                    alt="{{ collection.title | escape }}"
+                    class="editorial-collection-card__img"
+                    loading="lazy"
+                    width="1000"
+                    height="1250"
+                  >
+                {%- else -%}
+                  <img src="{{ 'collection-silver-rings.jpg' | asset_url }}" alt="{{ collection.title | escape }}" class="editorial-collection-card__img" loading="lazy" width="1000" height="1250">
+                {%- endif -%}
+                <div class="editorial-collection-card__overlay"></div>
+              </div>
+              <div class="editorial-collection-card__content">
+                <span class="editorial-collection-card__eyebrow">925 Sterling Silver</span>
+                <h3 class="editorial-collection-card__title">{{ collection.title }}</h3>
+                <span class="btn-link" style="color:#FAF8F5; border-color: rgba(250,248,245,0.7); margin-top:0.5rem;">
+                  <span>Explore Series</span>
+                  {% render 'icons', icon: 'arrow-right' %}
+                </span>
+              </div>
+            </a>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
     </div>
 
   </div>

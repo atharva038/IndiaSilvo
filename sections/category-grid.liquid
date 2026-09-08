@@ -14,55 +14,102 @@
     </div>
 
     <div class="category-tiles-grid">
-      {%- for block in section.blocks -%}
-        {%- assign collection = block.settings.collection -%}
-        <div class="category-tile-item" {{ block.shopify_attributes }}>
-          <a href="{{ collection.url | default: routes.all_products_collection_url }}" class="category-tile-link">
-            
-            <div class="category-tile-media">
-              {%- assign image = block.settings.image | default: collection.featured_image -%}
-              {%- if image != blank -%}
-                <img
-                  src="{{ image | image_url: width: 800 }}"
-                  srcset="{{ image | image_url: width: 400 }} 400w,
-                          {{ image | image_url: width: 800 }} 800w"
-                  sizes="(min-width: 990px) 25vw, 50vw"
-                  alt="{{ image.alt | default: block.settings.title | default: collection.title | escape }}"
-                  class="category-tile-img"
-                  loading="lazy"
-                  width="800"
-                  height="1000"
-                >
-              {%- else -%}
-                {%- case forloop.index -%}
-                  {%- when 1 -%}
-                    <img src="{{ 'collection-silver-rings.jpg' | asset_url }}" alt="925 Silver Rings" class="category-tile-img" loading="lazy" width="800" height="1000">
-                  {%- when 2 -%}
-                    <img src="{{ 'collection-silver-necklaces.jpg' | asset_url }}" alt="Silver Pendants & Chains" class="category-tile-img" loading="lazy" width="800" height="1000">
-                  {%- when 3 -%}
-                    <img src="{{ 'category-silver-earrings.jpg' | asset_url }}" alt="Silver Earrings" class="category-tile-img" loading="lazy" width="800" height="1000">
-                  {%- when 4 -%}
-                    <img src="{{ 'collection-silver-cuffs.jpg' | asset_url }}" alt="Silver Cuffs & Kada" class="category-tile-img" loading="lazy" width="800" height="1000">
-                  {%- else -%}
-                    <img src="{{ 'collection-silver-rings.jpg' | asset_url }}" alt="925 Silver" class="category-tile-img" loading="lazy" width="800" height="1000">
-                {%- endcase -%}
-              {%- endif -%}
-              <div class="category-tile-overlay"></div>
-            </div>
+      {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign collection = block.settings.collection
+            if collection == blank
+              case forloop.index
+                when 1
+                  assign collection = collections['rings'] | default: collections['frontpage'] | default: collections['all']
+                when 2
+                  assign collection = collections['necklaces'] | default: collections['pendants'] | default: collections['all']
+                when 3
+                  assign collection = collections['earrings'] | default: collections['all']
+                when 4
+                  assign collection = collections['cuffs-bangles'] | default: collections['bracelets'] | default: collections['all']
+              endcase
+            endif
+            assign target_url = collection.url | default: routes.all_products_collection_url
+            assign target_image = block.settings.image | default: collection.featured_image
+            assign target_title = block.settings.title | default: collection.title | default: 'Fine Jewellery'
+          -%}
+          <div class="category-tile-item" {{ block.shopify_attributes }}>
+            <a href="{{ target_url }}" class="category-tile-link">
+              
+              <div class="category-tile-media">
+                {%- if target_image != blank -%}
+                  <img
+                    src="{{ target_image | image_url: width: 800 }}"
+                    srcset="{{ target_image | image_url: width: 400 }} 400w,
+                            {{ target_image | image_url: width: 800 }} 800w"
+                    sizes="(min-width: 990px) 25vw, 50vw"
+                    alt="{{ target_image.alt | default: target_title | escape }}"
+                    class="category-tile-img"
+                    loading="lazy"
+                    width="800"
+                    height="1000"
+                  >
+                {%- else -%}
+                  {%- case forloop.index -%}
+                    {%- when 1 -%}
+                      <img src="{{ 'collection-silver-rings.jpg' | asset_url }}" alt="925 Silver Rings" class="category-tile-img" loading="lazy" width="800" height="1000">
+                    {%- when 2 -%}
+                      <img src="{{ 'collection-silver-necklaces.jpg' | asset_url }}" alt="Silver Pendants & Chains" class="category-tile-img" loading="lazy" width="800" height="1000">
+                    {%- when 3 -%}
+                      <img src="{{ 'category-silver-earrings.jpg' | asset_url }}" alt="Silver Earrings" class="category-tile-img" loading="lazy" width="800" height="1000">
+                    {%- when 4 -%}
+                      <img src="{{ 'collection-silver-cuffs.jpg' | asset_url }}" alt="Silver Cuffs & Kada" class="category-tile-img" loading="lazy" width="800" height="1000">
+                    {%- else -%}
+                      <img src="{{ 'collection-silver-rings.jpg' | asset_url }}" alt="925 Silver" class="category-tile-img" loading="lazy" width="800" height="1000">
+                  {%- endcase -%}
+                {%- endif -%}
+                <div class="category-tile-overlay"></div>
+              </div>
 
-            <div class="category-tile-info">
-              <h3 class="category-tile-title">
-                {{ block.settings.title | default: collection.title | default: 'Fine Jewellery' }}
-              </h3>
-              <span class="btn-link category-tile-btn">
-                <span>Explore</span>
-                {% render 'icons', icon: 'arrow-right' %}
-              </span>
-            </div>
+              <div class="category-tile-info">
+                <h3 class="category-tile-title">
+                  {{ target_title }}
+                </h3>
+                <span class="btn-link category-tile-btn">
+                  <span>Explore</span>
+                  {% render 'icons', icon: 'arrow-right' %}
+                </span>
+              </div>
 
-          </a>
-        </div>
-      {%- endfor -%}
+            </a>
+          </div>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for collection in collections limit: 4 -%}
+          <div class="category-tile-item">
+            <a href="{{ collection.url }}" class="category-tile-link">
+              <div class="category-tile-media">
+                {%- if collection.featured_image != blank -%}
+                  <img
+                    src="{{ collection.featured_image | image_url: width: 800 }}"
+                    alt="{{ collection.title | escape }}"
+                    class="category-tile-img"
+                    loading="lazy"
+                    width="800"
+                    height="1000"
+                  >
+                {%- else -%}
+                  <img src="{{ 'collection-silver-rings.jpg' | asset_url }}" alt="{{ collection.title | escape }}" class="category-tile-img" loading="lazy" width="800" height="1000">
+                {%- endif -%}
+                <div class="category-tile-overlay"></div>
+              </div>
+              <div class="category-tile-info">
+                <h3 class="category-tile-title">{{ collection.title }}</h3>
+                <span class="btn-link category-tile-btn">
+                  <span>Explore</span>
+                  {% render 'icons', icon: 'arrow-right' %}
+                </span>
+              </div>
+            </a>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
     </div>
 
   </div>

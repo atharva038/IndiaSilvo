@@ -1,10 +1,11 @@
 /**
  * Indiasilvo Theme Controller
- * Vanilla ES6+ Shopify Cart, PDP Variant Selection, Gallery Lightbox, Navigation & Interactive Engine
+ * Vanilla ES6+ Shopify Cart, PDP Variant Selection, Gallery Lightbox, Predictive Search, Navigation & Commerce Engine
  */
 
 class IndiasilvoTheme {
   constructor() {
+    this.isUpdatingCart = false;
     this.initHeaderScroll();
     this.initDrawers();
     this.initSizeGuideModal();
@@ -89,6 +90,20 @@ class IndiasilvoTheme {
     }
   }
 
+  // Toast Notification Engine
+  showToast(message, type = 'success') {
+    const toast = document.getElementById('theme-toast');
+    if (!toast) return;
+
+    toast.textContent = message;
+    toast.className = `theme-toast is-visible theme-toast--${type}`;
+
+    clearTimeout(this.toastTimer);
+    this.toastTimer = setTimeout(() => {
+      toast.classList.remove('is-visible');
+    }, 3500);
+  }
+
   // 2b. Size Guide Modal
   initSizeGuideModal() {
     const sizeModal = document.getElementById('size-guide-modal');
@@ -116,8 +131,10 @@ class IndiasilvoTheme {
     const searchModal = document.getElementById('search-modal');
     const triggers = document.querySelectorAll('[data-modal-trigger="search"]');
     const closeBtns = document.querySelectorAll('[data-modal-close="search"]');
-    const searchInput = document.querySelector('.search-modal__input');
-    const searchResults = document.querySelector('.search-modal__results');
+    const searchInput = document.getElementById('SearchModalInput');
+    const searchResults = document.getElementById('SearchModalResults');
+    const searchClear = document.getElementById('SearchModalClear');
+    const quickTags = document.getElementById('SearchModalQuickTags');
 
     if (!searchModal) return;
 
@@ -127,7 +144,9 @@ class IndiasilvoTheme {
         document.body.classList.add('modal-open');
         searchModal.classList.add('is-open');
         searchModal.setAttribute('aria-hidden', 'false');
-        if (searchInput) setTimeout(() => searchInput.focus(), 100);
+        if (searchInput) {
+          setTimeout(() => searchInput.focus(), 150);
+        }
       });
     });
 
@@ -135,18 +154,36 @@ class IndiasilvoTheme {
       btn.addEventListener('click', () => this.closeAllDrawers());
     });
 
+    if (searchClear && searchInput) {
+      searchClear.addEventListener('click', () => {
+        searchInput.value = '';
+        searchClear.classList.add('is-hidden');
+        if (searchResults) searchResults.innerHTML = '';
+        if (quickTags) quickTags.style.display = 'flex';
+        searchInput.focus();
+      });
+    }
+
     if (searchInput && searchResults) {
       let debounceTimer;
       searchInput.addEventListener('input', (e) => {
         const query = e.target.value.trim();
+
+        if (searchClear) {
+          searchClear.classList.toggle('is-hidden', query.length === 0);
+        }
+
         clearTimeout(debounceTimer);
         if (query.length < 2) {
           searchResults.innerHTML = '';
+          if (quickTags) quickTags.style.display = 'flex';
           return;
         }
 
+        if (quickTags) quickTags.style.display = 'none';
+
         debounceTimer = setTimeout(() => {
-          fetch(`${window.Indiasilvo.routes.predictive_search_url}?q=${encodeURIComponent(query)}&resources[type]=product&resources[limit]=5&section_id=predictive-search`)
+          fetch(`${window.Indiasilvo.routes.predictive_search_url}?q=${encodeURIComponent(query)}&resources[type]=product,collection&resources[limit]=6&section_id=predictive-search`)
             .then(res => res.text())
             .then(html => {
               const parser = new DOMParser();
@@ -155,9 +192,20 @@ class IndiasilvoTheme {
               searchResults.innerHTML = resultsSection.innerHTML;
             })
             .catch(() => {
-              // Graceful fallback: regular form submission
+              // Graceful fallback
             });
-        }, 300);
+        }, 250);
+      });
+
+      // Keyboard navigation in search results
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') {
+          const firstResult = searchResults.querySelector('.search-predictive-item, .predictive-search-tag');
+          if (firstResult) {
+            e.preventDefault();
+            firstResult.focus();
+          }
+        }
       });
     }
   }
@@ -198,13 +246,22 @@ class IndiasilvoTheme {
         method: 'POST',
         body: formData
       })
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) {
+          return res.json().then(errData => {
+            throw new Error(errData.description || 'Unable to add item to bag.');
+          });
+        }
+        return res.json();
+      })
       .then(item => {
         this.openDrawer(cartDrawer);
         this.refreshCart();
+        this.showToast('Added to Shopping Bag');
       })
       .catch(err => {
         console.error('Add to Cart Error:', err);
+        this.showToast(err.message || 'Item could not be added', 'error');
       })
       .finally(() => {
         if (submitBtn) {
@@ -214,8 +271,10 @@ class IndiasilvoTheme {
       });
     });
 
-    // Delegate Quantity & Removal in Cart Drawer
+    // Delegate Quantity & Removal in Cart Drawer and Cart Page
     document.addEventListener('click', (e) => {
+      if (this.isUpdatingCart) return;
+
       const qtyBtn = e.target.closest('[data-cart-qty-change]');
       if (qtyBtn) {
         const key = qtyBtn.dataset.key;
@@ -234,9 +293,9 @@ class IndiasilvoTheme {
       }
     });
 
-    // Cart Note Auto-Save
+    // Cart Note Auto-Save (Drawer and Page)
     document.addEventListener('change', (e) => {
-      if (e.target.matches('#cart-note-input')) {
+      if (e.target.matches('#cart-note-input, #CartPageNote')) {
         fetch(window.Indiasilvo.routes.cart + '/update.js', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -255,6 +314,14 @@ class IndiasilvoTheme {
   }
 
   updateCartItem(key, quantity) {
+    if (this.isUpdatingCart) return;
+    this.isUpdatingCart = true;
+
+    // Visual feedback
+    document.querySelectorAll(`[data-line-item-key="${key}"]`).forEach(el => {
+      el.classList.add('is-updating');
+    });
+
     fetch(window.Indiasilvo.routes.cart_change_url + '.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -263,6 +330,21 @@ class IndiasilvoTheme {
     .then(res => res.json())
     .then(cart => {
       this.renderCart(cart);
+      if (quantity === 0) {
+        this.showToast('Item removed from bag');
+      } else {
+        this.showToast('Shopping bag updated');
+      }
+    })
+    .catch(err => {
+      console.error('Cart update error:', err);
+      this.showToast('Unable to update cart', 'error');
+    })
+    .finally(() => {
+      this.isUpdatingCart = false;
+      document.querySelectorAll(`[data-line-item-key="${key}"]`).forEach(el => {
+        el.classList.remove('is-updating');
+      });
     });
   }
 
@@ -274,25 +356,38 @@ class IndiasilvoTheme {
   }
 
   renderCart(cart) {
-    // Update Badge Count
+    // 1. Update Badge Count across header
     document.querySelectorAll('.cart-count-badge').forEach(badge => {
       badge.textContent = cart.item_count;
       badge.style.display = cart.item_count > 0 ? 'flex' : 'none';
     });
 
-    const itemsContainer = document.querySelector('.cart-drawer__items');
-    const emptyContainer = document.querySelector('.cart-drawer__empty');
-    const subtotalEl = document.querySelector('.cart-drawer__subtotal-price');
-    const footerEl = document.querySelector('.cart-drawer__footer');
-    const freeShippingEl = document.querySelector('.cart-free-shipping');
+    // 2. Update Drawer Elements
+    const countPill = document.querySelector('[data-cart-count-pill]');
+    if (countPill) countPill.textContent = cart.item_count;
 
-    if (!itemsContainer) return;
+    const itemsContainer = document.getElementById('CartDrawerItems');
+    const emptyContainer = document.getElementById('CartDrawerEmpty');
+    const subtotalEl = document.querySelector('.cart-drawer__subtotal-price');
+    const footerEl = document.getElementById('CartDrawerFooter');
+    const freeShippingEl = document.getElementById('CartDrawerFreeShipping');
+
+    // 3. Update Cart Page Elements (if present)
+    const cartPageItems = document.getElementById('CartPageItems');
+    const cartPageSubtotal = document.getElementById('CartPageSubtotal');
+    if (cartPageSubtotal) {
+      cartPageSubtotal.textContent = this.formatMoney(cart.total_price);
+    }
 
     if (cart.item_count === 0) {
-      itemsContainer.innerHTML = '';
+      if (itemsContainer) itemsContainer.innerHTML = '';
       if (emptyContainer) emptyContainer.style.display = 'flex';
       if (footerEl) footerEl.style.display = 'none';
       if (freeShippingEl) freeShippingEl.style.display = 'none';
+      if (cartPageItems) {
+        // If on cart page, reload or display empty state
+        window.location.reload();
+      }
       return;
     }
 
@@ -300,7 +395,7 @@ class IndiasilvoTheme {
     if (footerEl) footerEl.style.display = 'block';
     if (freeShippingEl) freeShippingEl.style.display = 'block';
 
-    // Free Shipping Progress
+    // Free Shipping Progress calculation
     if (freeShippingEl && window.Indiasilvo.cartStrings.freeShippingThreshold > 0) {
       const thresholdCents = window.Indiasilvo.cartStrings.freeShippingThreshold * 100;
       const remainingCents = thresholdCents - cart.total_price;
@@ -323,43 +418,57 @@ class IndiasilvoTheme {
       subtotalEl.textContent = this.formatMoney(cart.total_price);
     }
 
-    // Render Line Items
-    let html = '';
-    cart.items.forEach(item => {
-      const imageSrc = item.image ? item.image : '';
-      html += `
-        <div class="cart-item" data-line-item-key="${item.key}">
-          <div class="cart-item__image-wrap">
-            ${imageSrc ? `<img src="${imageSrc}" alt="${item.title}" loading="lazy" width="80" height="80">` : ''}
-          </div>
-          <div class="cart-item__details">
-            <a href="${item.url}" class="cart-item__title">${item.product_title}</a>
-            ${item.variant_title ? `<span class="cart-item__variant">${item.variant_title}</span>` : ''}
-            <div class="cart-item__price">${this.formatMoney(item.final_line_price)}</div>
-            
-            <div class="cart-item__actions">
-              <div class="quantity-stepper">
-                <button type="button" class="quantity-stepper__btn" data-cart-qty-change="-1" data-key="${item.key}" data-current-qty="${item.quantity}" aria-label="Decrease quantity">
-                  -
-                </button>
-                <span class="quantity-stepper__input">${item.quantity}</span>
-                <button type="button" class="quantity-stepper__btn" data-cart-qty-change="1" data-key="${item.key}" data-current-qty="${item.quantity}" aria-label="Increase quantity">
-                  +
+    // Render Drawer Line Items
+    if (itemsContainer) {
+      let html = '';
+      cart.items.forEach(item => {
+        const imageSrc = item.image ? item.image : '';
+        const hasDiscount = item.original_line_price > item.final_line_price;
+
+        html += `
+          <div class="cart-item" data-line-item-key="${item.key}">
+            <div class="cart-item__image-wrap">
+              ${imageSrc ? `<img src="${imageSrc}" alt="${item.title}" loading="lazy" width="80" height="80">` : ''}
+            </div>
+            <div class="cart-item__details">
+              <div class="cart-item__head">
+                <a href="${item.url}" class="cart-item__title">${item.product_title}</a>
+                <button type="button" class="cart-item__remove-btn" data-cart-remove data-key="${item.key}" aria-label="Remove item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/></svg>
                 </button>
               </div>
-              <button type="button" class="cart-item__remove-btn" data-cart-remove data-key="${item.key}">
-                Remove
-              </button>
+
+              ${item.variant_title ? `<span class="cart-item__variant">${item.variant_title}</span>` : ''}
+
+              <div class="cart-item__price-row">
+                <div class="cart-item__price">
+                  ${hasDiscount ? `
+                    <span class="cart-item__price-sale">${this.formatMoney(item.final_line_price)}</span>
+                    <s class="cart-item__price-compare">${this.formatMoney(item.original_line_price)}</s>
+                  ` : `
+                    <span>${this.formatMoney(item.final_line_price)}</span>
+                  `}
+                </div>
+                
+                <div class="quantity-stepper">
+                  <button type="button" class="quantity-stepper__btn" data-cart-qty-change="-1" data-key="${item.key}" data-current-qty="${item.quantity}" aria-label="Decrease quantity">
+                    -
+                  </button>
+                  <span class="quantity-stepper__input">${item.quantity}</span>
+                  <button type="button" class="quantity-stepper__btn" data-cart-qty-change="1" data-key="${item.key}" data-current-qty="${item.quantity}" aria-label="Increase quantity">
+                    +
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      `;
-    });
-
-    itemsContainer.innerHTML = html;
+        `;
+      });
+      itemsContainer.innerHTML = html;
+    }
   }
 
-  // 5. Accessible Collapsible Accordions (For PDP specs, care guide, FAQ)
+  // 5. Accessible Collapsible Accordions
   initAccordions() {
     document.addEventListener('click', (e) => {
       const header = e.target.closest('.accordion-header');
@@ -383,7 +492,7 @@ class IndiasilvoTheme {
     });
   }
 
-  // 6. PHASE 6: Product Detail Page (PDP) Controller
+  // 6. PDP Controller
   initProductDetail() {
     const productSection = document.querySelector('.product-section');
     if (!productSection) return;
@@ -415,7 +524,6 @@ class IndiasilvoTheme {
     const stickyBar = document.getElementById(`StickyMobileBar-${sectionId}`);
     const stickyPriceEl = document.getElementById(`StickyMobilePrice-${sectionId}`);
     const stickyAddBtn = document.getElementById(`StickyMobileAddBtn-${sectionId}`);
-    const stickyThumb = document.getElementById(`StickyMobileThumb-${sectionId}`);
 
     // Zoom Lightbox Elements
     const zoomModal = document.getElementById(`ProductZoomModal-${sectionId}`);
@@ -432,42 +540,28 @@ class IndiasilvoTheme {
     let currentSlideIndex = 0;
     let zoomCurrentIndex = 0;
 
-    // Helper: Switch Active Gallery Media
     const setActiveMedia = (index) => {
       if (index < 0 || index >= slides.length) return;
       currentSlideIndex = index;
 
       slides.forEach((slide, idx) => {
-        if (idx === index) {
-          slide.classList.add('is-active');
-        } else {
-          slide.classList.remove('is-active');
-        }
+        slide.classList.toggle('is-active', idx === index);
       });
 
       thumbs.forEach((thumb, idx) => {
-        if (idx === index) {
-          thumb.classList.add('is-active');
-          thumb.setAttribute('aria-selected', 'true');
-        } else {
-          thumb.classList.remove('is-active');
-          thumb.setAttribute('aria-selected', 'false');
-        }
+        const isActive = idx === index;
+        thumb.classList.toggle('is-active', isActive);
+        thumb.setAttribute('aria-selected', isActive ? 'true' : 'false');
       });
 
       dots.forEach((dot, idx) => {
-        if (idx === index) {
-          dot.classList.add('is-active');
-        } else {
-          dot.classList.remove('is-active');
-        }
+        dot.classList.toggle('is-active', idx === index);
       });
 
       if (counterCurr) {
         counterCurr.textContent = String(index + 1).padStart(2, '0');
       }
 
-      // Mobile slide track scroll
       if (galleryTrack && window.innerWidth < 990) {
         galleryTrack.scrollTo({
           left: galleryTrack.offsetWidth * index,
@@ -476,7 +570,6 @@ class IndiasilvoTheme {
       }
     };
 
-    // Gallery Thumbnails Click
     thumbs.forEach(thumb => {
       thumb.addEventListener('click', () => {
         const index = parseInt(thumb.dataset.mediaIndex, 10);
@@ -484,7 +577,6 @@ class IndiasilvoTheme {
       });
     });
 
-    // Gallery Navigation Arrows
     const prevArrow = productSection.querySelector('[data-action="gallery-prev"]');
     const nextArrow = productSection.querySelector('[data-action="gallery-next"]');
 
@@ -502,7 +594,6 @@ class IndiasilvoTheme {
       });
     }
 
-    // Gallery Mobile Scroll Sync
     if (galleryTrack) {
       let isScrollingTimer;
       galleryTrack.addEventListener('scroll', () => {
@@ -522,7 +613,7 @@ class IndiasilvoTheme {
       }, { passive: true });
     }
 
-    // Fullscreen Zoom Modal Handler
+    // Zoom Lightbox
     const openZoomModal = (index) => {
       if (!zoomModal || !mediaList.length) return;
       zoomCurrentIndex = index;
@@ -609,7 +700,6 @@ class IndiasilvoTheme {
           selectedText.textContent = pill.dataset.optionValue;
         }
 
-        // Collect all currently selected options
         const selectedOptions = [];
         productSection.querySelectorAll('.variant-option-group').forEach(optGroup => {
           const activePill = optGroup.querySelector('.variant-pill.is-selected');
@@ -618,19 +708,14 @@ class IndiasilvoTheme {
           }
         });
 
-        // Find matching variant
         const matchedVariant = variants.find(v => {
           return selectedOptions.every((val, idx) => v[`option${idx + 1}`] === val);
         });
 
         if (matchedVariant) {
-          // Update Hidden Variant ID
           if (currentVariantInput) currentVariantInput.value = matchedVariant.id;
-
-          // Update Price
           if (priceEl) priceEl.textContent = this.formatMoney(matchedVariant.price);
 
-          // Update Compare-at Price & Savings Badge
           if (comparePriceEl) {
             if (matchedVariant.compare_at_price > matchedVariant.price) {
               comparePriceEl.textContent = this.formatMoney(matchedVariant.compare_at_price);
@@ -646,12 +731,8 @@ class IndiasilvoTheme {
             }
           }
 
-          // Update SKU
-          if (skuEl) {
-            skuEl.textContent = matchedVariant.sku || '—';
-          }
+          if (skuEl) skuEl.textContent = matchedVariant.sku || '—';
 
-          // Update Live Inventory Status
           if (inventoryEl) {
             if (matchedVariant.available) {
               inventoryEl.innerHTML = `
@@ -670,18 +751,13 @@ class IndiasilvoTheme {
             }
           }
 
-          // Update Add to Cart Button State
           if (addToCartBtn) {
-            if (matchedVariant.available) {
-              addToCartBtn.disabled = false;
-              if (addToCartText) addToCartText.textContent = window.Indiasilvo.cartStrings?.addToCart || 'Add to Bag';
-            } else {
-              addToCartBtn.disabled = true;
-              if (addToCartText) addToCartText.textContent = window.Indiasilvo.cartStrings?.soldOut || 'Sold Out';
+            addToCartBtn.disabled = !matchedVariant.available;
+            if (addToCartText) {
+              addToCartText.textContent = matchedVariant.available ? (window.Indiasilvo.cartStrings?.addToCart || 'Add to Bag') : (window.Indiasilvo.cartStrings?.soldOut || 'Sold Out');
             }
           }
 
-          // Update Sticky Mobile Bar State
           if (stickyPriceEl) stickyPriceEl.textContent = this.formatMoney(matchedVariant.price);
           if (stickyAddBtn) {
             stickyAddBtn.disabled = !matchedVariant.available;
@@ -691,22 +767,17 @@ class IndiasilvoTheme {
             }
           }
 
-          // Sync Variant Media if available
           if (matchedVariant.featured_media) {
             const targetMediaId = matchedVariant.featured_media.id;
             const mediaIndex = Array.from(slides).findIndex(s => s.dataset.mediaId == targetMediaId);
-            if (mediaIndex !== -1) {
-              setActiveMedia(mediaIndex);
-            }
+            if (mediaIndex !== -1) setActiveMedia(mediaIndex);
           }
 
-          // Update URL Query String without page reload
           const newUrl = new URL(window.location.href);
           newUrl.searchParams.set('variant', matchedVariant.id);
           window.history.replaceState({ path: newUrl.href }, '', newUrl.href);
 
         } else {
-          // Variant combination unavailable
           if (addToCartBtn) {
             addToCartBtn.disabled = true;
             if (addToCartText) addToCartText.textContent = 'Unavailable';
@@ -740,7 +811,7 @@ class IndiasilvoTheme {
       });
     });
 
-    // Sticky Mobile Purchase Bar Intersection Observer
+    // Sticky Mobile Purchase Bar
     if (stickyBar && addToCartBtn) {
       if ('IntersectionObserver' in window) {
         const observer = new IntersectionObserver((entries) => {
@@ -756,7 +827,6 @@ class IndiasilvoTheme {
         observer.observe(addToCartBtn);
       }
 
-      // Sticky Add to Cart click delegates to main form submission
       if (stickyAddBtn) {
         stickyAddBtn.addEventListener('click', (e) => {
           e.preventDefault();
@@ -768,7 +838,7 @@ class IndiasilvoTheme {
     }
   }
 
-  // 7. Recently Viewed Products Tracker & Renderer
+  // 7. Recently Viewed Products Tracker
   initRecentlyViewed() {
     const productSection = document.querySelector('.product-section');
     const recentlyViewedSection = document.querySelector('.recently-viewed-section');
@@ -781,7 +851,6 @@ class IndiasilvoTheme {
       viewedList = [];
     }
 
-    // 1. If on product page, record product
     if (productSection) {
       const handle = productSection.closest('main')?.querySelector('[data-current-product-handle]')?.dataset.currentProductHandle;
       const currentHandle = handle || window.location.pathname.split('/products/')[1]?.split('?')[0];
@@ -796,7 +865,6 @@ class IndiasilvoTheme {
       }
     }
 
-    // 2. If recently-viewed section exists, render items
     if (recentlyViewedSection) {
       const currentHandle = recentlyViewedSection.dataset.currentProductHandle;
       const displayHandles = viewedList.filter(h => h !== currentHandle).slice(0, 4);
@@ -809,7 +877,6 @@ class IndiasilvoTheme {
 
       recentlyViewedSection.classList.remove('is-hidden');
 
-      // Fetch cards for each handle asynchronously
       const fetchCardPromises = displayHandles.map(handle => {
         return fetch(`/products/${handle}?section_id=product-recommendations`)
           .then(res => res.text())

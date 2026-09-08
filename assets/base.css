@@ -9,6 +9,16 @@
   padding: 0;
 }
 
+button {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+
 html {
   font-size: var(--font-body-base-size, 15px);
   -webkit-font-smoothing: antialiased;
@@ -280,6 +290,82 @@ select {
 input:focus, textarea:focus, select:focus {
   border-color: var(--color-accent-gold);
   box-shadow: 0 0 0 1px var(--color-accent-gold);
+}
+
+/* Global Quantity Stepper Component */
+.quantity-stepper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  border-radius: var(--border-radius, 0);
+  height: 48px;
+  min-width: 120px;
+  max-width: 130px;
+  padding: 0 4px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.quantity-stepper__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: none;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  border-radius: var(--border-radius, 0);
+  transition: background var(--transition-fast), color var(--transition-fast);
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.quantity-stepper__btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--color-accent-gold);
+}
+
+.quantity-stepper__btn svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+
+.quantity-stepper input[type="number"].quantity-stepper__input,
+.quantity-stepper__input {
+  flex: 1;
+  width: 36px !important;
+  min-width: 0;
+  height: 100% !important;
+  border: none !important;
+  background: transparent !important;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  padding: 0 !important;
+  box-shadow: none !important;
+  -moz-appearance: textfield;
+}
+
+.quantity-stepper input[type="number"].quantity-stepper__input::-webkit-outer-spin-button,
+.quantity-stepper input[type="number"].quantity-stepper__input::-webkit-inner-spin-button,
+.quantity-stepper__input::-webkit-outer-spin-button,
+.quantity-stepper__input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.quantity-stepper input[type="number"].quantity-stepper__input:focus,
+.quantity-stepper__input:focus {
+  outline: none;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 label {

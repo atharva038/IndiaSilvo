@@ -5,10 +5,10 @@
 
 {%- unless template == 'index' or template == 'cart' or template == '404' -%}
   {%- assign t = template | split: '.' | first -%}
-  <nav class="breadcrumbs" aria-label="{{ 'general.breadcrumbs.title' | default: 'Breadcrumbs' }}">
+  <nav class="breadcrumbs" aria-label="{{ 'general.breadcrumbs.title' | t: default: 'Breadcrumbs' }}">
     <div class="breadcrumbs__list">
       <div class="breadcrumbs__item">
-        <a href="{{ routes.root_url }}" class="breadcrumbs__link">{{ 'general.breadcrumbs.home' | default: 'Home' }}</a>
+        <a href="{{ routes.root_url }}" class="breadcrumbs__link">{{ 'general.breadcrumbs.home' | t: default: 'Home' }}</a>
       </div>
 
       {%- case t -%}
@@ -27,7 +27,7 @@
           {%- else -%}
             <span class="breadcrumbs__separator" aria-hidden="true">/</span>
             <div class="breadcrumbs__item">
-              <a href="{{ routes.all_products_collection_url }}" class="breadcrumbs__link">{{ 'general.breadcrumbs.jewellery' | default: 'Jewellery' }}</a>
+              <a href="{{ routes.all_products_collection_url }}" class="breadcrumbs__link">{{ 'general.breadcrumbs.jewellery' | t: default: 'Jewellery' }}</a>
             </div>
           {%- endif -%}
           <span class="breadcrumbs__separator" aria-hidden="true">/</span>
@@ -38,7 +38,7 @@
         {%- when 'collection' -%}
           <span class="breadcrumbs__separator" aria-hidden="true">/</span>
           <div class="breadcrumbs__item">
-            <a href="{{ routes.all_products_collection_url }}" class="breadcrumbs__link">{{ 'general.breadcrumbs.jewellery' | default: 'Jewellery' }}</a>
+            <a href="{{ routes.all_products_collection_url }}" class="breadcrumbs__link">{{ 'general.breadcrumbs.jewellery' | t: default: 'Jewellery' }}</a>
           </div>
           {%- if current_tags -%}
             <span class="breadcrumbs__separator" aria-hidden="true">/</span>
