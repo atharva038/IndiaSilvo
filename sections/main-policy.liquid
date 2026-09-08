@@ -1,0 +1,362 @@
+{{ 'section-pages.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign path = request.path | downcase
+  assign title_dc = policy.title | default: page.title | downcase
+  
+  assign is_privacy = false
+  assign is_refund = false
+  assign is_terms = false
+  assign is_shipping = false
+
+  if path contains 'privacy' or title_dc contains 'privacy'
+    assign is_privacy = true
+    assign default_title = 'Privacy Policy'
+  elsif path contains 'refund' or path contains 'return' or title_dc contains 'refund' or title_dc contains 'return'
+    assign is_refund = true
+    assign default_title = 'Refund & Exchange Policy'
+  elsif path contains 'terms' or title_dc contains 'terms'
+    assign is_terms = true
+    assign default_title = 'Terms of Service'
+  elsif path contains 'shipping' or path contains 'delivery' or title_dc contains 'shipping' or title_dc contains 'delivery'
+    assign is_shipping = true
+    assign default_title = 'Shipping & Delivery Policy'
+  else
+    assign is_privacy = true
+    assign default_title = 'Privacy Policy'
+  endif
+
+  assign display_title = policy.title | default: page.title | default: default_title
+-%}
+
+<div class="policy-section section-spacing" data-section-id="{{ section.id }}">
+  <div class="container container-narrow">
+    
+    <div class="policy-breadcrumbs-wrapper">
+      {% render 'breadcrumbs' %}
+    </div>
+
+    <header class="section-header policy-header">
+      <span class="section-header__subtitle">Client Assurance & Legal</span>
+      <h1 class="policy-title h2">{{ display_title | escape }}</h1>
+      <div class="gold-divider"></div>
+      <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--color-text-muted); margin-top: -0.5rem;">
+        Effective Date: {{ 'now' | date: '%B %Y' }} | IndiaSilvo 925 Sterling Silver
+      </p>
+    </header>
+
+    {%- comment -%} Navigation Pills {%- endcomment -%}
+    <nav class="policy-nav-tabs" aria-label="Store Policies Navigation">
+      <a href="/policies/privacy-policy" class="policy-nav-tab {% if is_privacy %}is-active{% endif %}">
+        Privacy Policy
+      </a>
+      <a href="/policies/refund-policy" class="policy-nav-tab {% if is_refund %}is-active{% endif %}">
+        Refund & Exchange Policy
+      </a>
+      <a href="/policies/terms-of-service" class="policy-nav-tab {% if is_terms %}is-active{% endif %}">
+        Terms of Service
+      </a>
+      <a href="/policies/shipping-policy" class="policy-nav-tab {% if is_shipping %}is-active{% endif %}">
+        Shipping & Delivery Policy
+      </a>
+    </nav>
+
+    {%- comment -%} ================= PRIVACY POLICY ================= {%- endcomment -%}
+    {%- if is_privacy -%}
+      <div class="policy-highlights-grid">
+        <div class="policy-highlight-card">
+          <div class="policy-highlight-card__icon">{% render 'icons', icon: 'shield' %}</div>
+          <h3 class="policy-highlight-card__title">256-Bit SSL Encryption</h3>
+          <p class="policy-highlight-card__text">Bank-grade encrypted checkout ensuring your payment and personal records remain strictly confidential.</p>
+        </div>
+        <div class="policy-highlight-card">
+          <div class="policy-highlight-card__icon">{% render 'icons', icon: 'diamond' %}</div>
+          <h3 class="policy-highlight-card__title">Zero Data Brokering</h3>
+          <p class="policy-highlight-card__text">We never sell, rent, or trade your personal details, purchase history, or sizing specifications to third parties.</p>
+        </div>
+        <div class="policy-highlight-card">
+          <div class="policy-highlight-card__icon">{% render 'icons', icon: 'sparkle' %}</div>
+          <h3 class="policy-highlight-card__title">Discreet Communications</h3>
+          <p class="policy-highlight-card__text">Order updates and invitations to private salon viewings are transmitted only upon explicit consent.</p>
+        </div>
+      </div>
+
+      <div class="policy-clauses-container">
+        <div class="policy-clause-card">
+          <div class="policy-clause-header">
+            <span class="policy-clause-num">01.</span>
+            <h2 class="policy-clause-title">Information Collected with Discretion</h2>
+          </div>
+          <div class="policy-clause-body">
+            <p>To provide a tailored luxury experience, IndiaSilvo collects essential client data during order placement, consultation scheduling, and bespoke ring sizing inquiries. This includes your name, shipping address, contact email, telephone number, and payment verification tokens.</p>
+            <p>When you browse our digital showroom, device technical identifiers (such as browser version, IP location, and screen resolution) are processed to optimize visual rendering.</p>
+          </div>
+        </div>
+
+        <div class="policy-clause-card">
+          <div class="policy-clause-header">
+            <span class="policy-clause-num">02.</span>
+            <h2 class="policy-clause-title">Payment & Transaction Security</h2>
+          </div>
+          <div class="policy-clause-body">
+            <p>IndiaSilvo does not store or process complete credit card numbers or banking passwords on internal servers. All financial transactions are managed directly through PCI-DSS Level 1 certified gateway partners.</p>
+            <ul>
+              <li><strong>PCI-DSS Compliance:</strong> Adheres to stringent global data security standards.</li>
+              <li><strong>Tokenized Transactions:</strong> Payment credentials are encrypted into unique, secure alphanumeric tokens.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="policy-clause-card">
+          <div class="policy-clause-header">
+            <span class="policy-clause-num">03.</span>
+            <h2 class="policy-clause-title">Authorized Service Providers</h2>
+          </div>
+          <div class="policy-clause-body">
+            <p>Your delivery information is shared exclusively with vetted logistics partners (such as insured express couriers) strictly for the purpose of dispatching and delivering your jewellery parcels.</p>
+            <p>Government assay and BIS Hallmarking records comply with regulatory purity standards under Indian law.</p>
+          </div>
+        </div>
+
+        <div class="policy-clause-card">
+          <div class="policy-clause-header">
+            <span class="policy-clause-num">04.</span>
+            <h2 class="policy-clause-title">Cookies & Digital Experience</h2>
+          </div>
+          <div class="policy-clause-body">
+            <p>We utilize lightweight essential cookies to remember items in your shopping bag, persist active currency selections, and ensure seamless checkout navigation. You may adjust cookie preferences anytime through browser settings.</p>
+          </div>
+        </div>
+
+        <div class="policy-clause-card">
+          <div class="policy-clause-header">
+            <span class="policy-clause-num">05.</span>
+            <h2 class="policy-clause-title">Client Rights & Data Removal</h2>
+          </div>
+          <div class="policy-clause-body">
+            <p>You maintain full authority over your personal information. You may request access to, correction of, or permanent deletion of your client profile by contacting our data protection concierge at <strong>concierge@indiasilvo.com</strong>.</p>
+          </div>
+        </div>
+      </div>
+
+    {%- comment -%} ================= REFUND & EXCHANGE POLICY ================= {%- endcomment -%}
+    {%- elsif is_refund -%}
+      <div class="policy-highlights-grid">
+        <div class="policy-highlight-card">
+          <div class="policy-highlight-card__icon">{% render 'icons', icon: 'sparkle' %}</div>
+          <h3 class="policy-highlight-card__title">15-Day Inspection Window</h3>
+          <p class="policy-highlight-card__text">Enjoy a 15-day complimentary trial window to inspect your creations in person from the day of delivery.</p>
+        </div>
+        <div class="policy-highlight-card">
+          <div class="policy-highlight-card__icon">{% render 'icons', icon: 'shield' %}</div>
+          <h3 class="policy-highlight-card__title">BIS Security Tag Seal</h3>
+          <p class="policy-highlight-card__text">Returns and exchanges are accepted as long as the 925 BIS Hallmarking security tag remains intact and unworn.</p>
+        </div>
+        <div class="policy-highlight-card">
+          <div class="policy-highlight-card__icon">{% render 'icons', icon: 'truck' %}</div>
+          <h3 class="policy-highlight-card__title">Insured Reverse Pickup</h3>
+          <p class="policy-highlight-card__text">We arrange fully insured reverse courier pickup directly from your doorstep with tamper-proof bags.</p>
+        </div>
+      </div>
+
+      <div class="policy-clauses-container">
+        <div class="policy-clause-card">
+          <div class="policy-clause-header">
+            <span class="policy-clause-num">01.</span>
+            <h2 class="policy-clause-title">15-Day Return & Exchange Guarantee</h2>
+          </div>
+          <div class="policy-clause-body">
+            <p>We want you to treasure every IndiaSilvo creation. If a piece does not completely enchant you or requires a different ring/bracelet size, you may initiate a return or exchange within 15 calendar days of recorded delivery.</p>
+          </div>
+        </div>
+
+        <div class="policy-clause-card">
+          <div class="policy-clause-header">
+            <span class="policy-clause-num">02.</span>
+            <h2 class="policy-clause-title">Condition & Packaging Requirements</h2>
+          </div>
+          <div class="policy-clause-body">
+            <p>To qualify for a full refund or exchange, returned items must meet our luxury inspection criteria:</p>
+            <ul>
+              <li>Unworn, undamaged, and free of scratches, perfume residues, or alterations.</li>
+              <li>Accompanied by the original velvet presentation box, Certificate of Authenticity, and BIS guarantee card.</li>
+              <li>Tamper-evident security tag must be firmly attached and uncut.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="policy-clause-card">
+          <div class="policy-clause-header">
+            <span class="policy-clause-num">03.</span>
+            <h2 class="policy-clause-title">Custom Commissions & Bespoke Engravings</h2>
+          </div>
+          <div class="policy-clause-body">
+            <p>Creations that have been customized with bespoke laser engravings, custom gemstone sourcing, or modified dimensions are crafted exclusively for the client and are non-refundable, except in cases of manufacturing imperfection.</p>
+          </div>
+        </div>
+
+        <div class="policy-clause-card">
+          <div class="policy-clause-header">
+            <span class="policy-clause-num">04.</span>
+            <h2 class="policy-clause-title">Atelier Inspection & Refund Disbursal</h2>
+          </div>
+          <div class="policy-clause-body">
+            <p>Upon receipt at our atelier, our master jewelers inspect the silver purity and gemstone settings within 48 business hours. Approved refunds are credited directly to the original payment method within 5 to 7 business days.</p>
+          </div>
+        </div>
+      </div>
+
+    {%- comment -%} ================= TERMS OF SERVICE ================= {%- endcomment -%}
+    {%- elsif is_terms -%}
+      <div class="policy-highlights-grid">
+        <div class="policy-highlight-card">
+          <div class="policy-highlight-card__icon">{% render 'icons', icon: 'diamond' %}</div>
+          <h3 class="policy-highlight-card__title">Certified 925 Purity</h3>
+          <p class="policy-highlight-card__text">Every creation is guaranteed 92.5% pure sterling silver alloyed and hallmarked under BIS standards.</p>
+        </div>
+        <div class="policy-highlight-card">
+          <div class="policy-highlight-card__icon">{% render 'icons', icon: 'shield' %}</div>
+          <h3 class="policy-highlight-card__title">Authenticity Warranty</h3>
+          <p class="policy-highlight-card__text">Comprehensive warranty safeguarding metal purity, plating durability, and gemstone setting security.</p>
+        </div>
+        <div class="policy-highlight-card">
+          <div class="policy-highlight-card__icon">{% render 'icons', icon: 'sparkle' %}</div>
+          <h3 class="policy-highlight-card__title">Artisanal Integrity</h3>
+          <p class="policy-highlight-card__text">Original bespoke jewellery silhouettes protected by intellectual property and artisanal copyright.</p>
+        </div>
+      </div>
+
+      <div class="policy-clauses-container">
+        <div class="policy-clause-card">
+          <div class="policy-clause-header">
+            <span class="policy-clause-num">01.</span>
+            <h2 class="policy-clause-title">Acceptance of Commercial Terms</h2>
+          </div>
+          <div class="policy-clause-body">
+            <p>By accessing the IndiaSilvo digital boutique or purchasing our creations, you agree to be bound by these Terms of Service, applicable commercial statutes, and precious metal trade guidelines.</p>
+          </div>
+        </div>
+
+        <div class="policy-clause-card">
+          <div class="policy-clause-header">
+            <span class="policy-clause-num">02.</span>
+            <h2 class="policy-clause-title">Purity Certification & Handcrafted Character</h2>
+          </div>
+          <div class="policy-clause-body">
+            <p>All IndiaSilvo jewellery pieces are crafted in certified 925 sterling silver and triple-plated in precious Rhodium or 18K Gold. Due to individual handcrafted artisanal finishing, minor dimensional nuances represent the hallmark of authentic metalwork.</p>
+          </div>
+        </div>
+
+        <div class="policy-clause-card">
+          <div class="policy-clause-header">
+            <span class="policy-clause-num">03.</span>
+            <h2 class="policy-clause-title">Pricing, Orders & Invoicing</h2>
+          </div>
+          <div class="policy-clause-body">
+            <p>All prices displayed are in store currency and inclusive of applicable statutory taxes and insured transit handling. IndiaSilvo reserves the right to correct typographical pricing discrepancies prior to order dispatch.</p>
+          </div>
+        </div>
+
+        <div class="policy-clause-card">
+          <div class="policy-clause-header">
+            <span class="policy-clause-num">04.</span>
+            <h2 class="policy-clause-title">Intellectual Property & Design Copyright</h2>
+          </div>
+          <div class="policy-clause-body">
+            <p>All jewellery photography, architectural silhouettes, branding marks, and copy displayed across this platform represent the intellectual property of IndiaSilvo and may not be reproduced without written authorization.</p>
+          </div>
+        </div>
+      </div>
+
+    {%- comment -%} ================= SHIPPING & DELIVERY POLICY ================= {%- endcomment -%}
+    {%- elsif is_shipping -%}
+      <div class="policy-highlights-grid">
+        <div class="policy-highlight-card">
+          <div class="policy-highlight-card__icon">{% render 'icons', icon: 'truck' %}</div>
+          <h3 class="policy-highlight-card__title">100% Insured Transit</h3>
+          <p class="policy-highlight-card__text">Every package is fully insured against loss, theft, or damage from dispatch until handover signature.</p>
+        </div>
+        <div class="policy-highlight-card">
+          <div class="policy-highlight-card__icon">{% render 'icons', icon: 'sparkle' %}</div>
+          <h3 class="policy-highlight-card__title">24-48h Atelier Dispatch</h3>
+          <p class="policy-highlight-card__text">In-stock signature pieces undergo final quality control and dispatch within 24 to 48 business hours.</p>
+        </div>
+        <div class="policy-highlight-card">
+          <div class="policy-highlight-card__icon">{% render 'icons', icon: 'shield' %}</div>
+          <h3 class="policy-highlight-card__title">Tamper-Proof Seals</h3>
+          <p class="policy-highlight-card__text">Creations arrive in discreet, heavy-duty tamper-evident outer cartons with unique security seals.</p>
+        </div>
+      </div>
+
+      <div class="policy-clauses-container">
+        <div class="policy-clause-card">
+          <div class="policy-clause-header">
+            <span class="policy-clause-num">01.</span>
+            <h2 class="policy-clause-title">Complimentary Insured Delivery</h2>
+          </div>
+          <div class="policy-clause-body">
+            <p>We provide complimentary insured express delivery on all orders exceeding ₹5,000 across India. For orders below this threshold, a flat subsidised express courier fee is calculated transparently during checkout.</p>
+          </div>
+        </div>
+
+        <div class="policy-clause-card">
+          <div class="policy-clause-header">
+            <span class="policy-clause-num">02.</span>
+            <h2 class="policy-clause-title">Dispatch Schedules & Transit Timelines</h2>
+          </div>
+          <div class="policy-clause-body">
+            <ul>
+              <li><strong>Ready-to-Wear Creations:</strong> Dispatched within 24 to 48 hours.</li>
+              <li><strong>Custom Sizing & Engraving:</strong> Dispatched within 4 to 6 business days.</li>
+              <li><strong>Transit Durations:</strong> Metro regions receive delivery in 2-3 business days; regional territories in 3-5 business days.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="policy-clause-card">
+          <div class="policy-clause-header">
+            <span class="policy-clause-num">03.</span>
+            <h2 class="policy-clause-title">Real-Time Tracking & Handover Protocols</h2>
+          </div>
+          <div class="policy-clause-body">
+            <p>Upon courier handover, an automated SMS and email containing your secure consignment tracking URL will be transmitted. All deliveries require an OTP or signature verification upon handover.</p>
+          </div>
+        </div>
+
+        <div class="policy-clause-card">
+          <div class="policy-clause-header">
+            <span class="policy-clause-num">04.</span>
+            <h2 class="policy-clause-title">Damaged or Tampered Package Protocol</h2>
+          </div>
+          <div class="policy-clause-body">
+            <p>If the outer tamper-evident security pouch appears damaged, cut, or resealed upon arrival, <strong>do not accept delivery</strong> and immediately alert our concierge team at <strong>concierge@indiasilvo.com</strong>.</p>
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Concierge Assistance Banner {%- endcomment -%}
+    <div class="policy-assistance-card">
+      <div class="policy-assistance-icon">
+        {% render 'icons', icon: 'shield' %}
+      </div>
+      <div class="policy-assistance-text">
+        <h3 class="policy-assistance-title">Have Questions Regarding Our Policies?</h3>
+        <p class="policy-assistance-desc">
+          Our dedicated jewellery concierge is available to assist you with inquiries regarding BIS Hallmarking, insured delivery, or bespoke orders.
+        </p>
+      </div>
+      <a href="{{ routes.root_url }}pages/contact" class="btn btn-secondary policy-assistance-btn">
+        Contact Concierge
+      </a>
+    </div>
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Policy Content",
+  "settings": []
+}
+{% endschema %}

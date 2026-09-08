@@ -112,17 +112,28 @@
         &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All Rights Reserved. Pure 925 Sterling Silver Jewellery.
       </div>
 
-      {%- if shop.policies.size > 0 -%}
-        <ul class="footer-policies-list" aria-label="Legal Policies">
-          {%- for policy in shop.policies -%}
-            {%- if policy.url != blank -%}
-              <li>
-                <a href="{{ policy.url }}" class="footer-policy-link">{{ policy.title }}</a>
-              </li>
-            {%- endif -%}
-          {%- endfor -%}
-        </ul>
-      {%- endif -%}
+      <ul class="footer-policies-list" aria-label="Legal Policies">
+        <li>
+          <a href="{% if shop.privacy_policy != blank %}{{ shop.privacy_policy.url }}{% else %}/policies/privacy-policy{% endif %}" class="footer-policy-link">
+            {{ shop.privacy_policy.title | default: 'Privacy Policy' }}
+          </a>
+        </li>
+        <li>
+          <a href="{% if shop.refund_policy != blank %}{{ shop.refund_policy.url }}{% else %}/policies/refund-policy{% endif %}" class="footer-policy-link">
+            {{ shop.refund_policy.title | default: 'Refund Policy' }}
+          </a>
+        </li>
+        <li>
+          <a href="{% if shop.terms_of_service != blank %}{{ shop.terms_of_service.url }}{% else %}/policies/terms-of-service{% endif %}" class="footer-policy-link">
+            {{ shop.terms_of_service.title | default: 'Terms of Service' }}
+          </a>
+        </li>
+        <li>
+          <a href="{% if shop.shipping_policy != blank %}{{ shop.shipping_policy.url }}{% else %}/policies/shipping-policy{% endif %}" class="footer-policy-link">
+            {{ shop.shipping_policy.title | default: 'Shipping Policy' }}
+          </a>
+        </li>
+      </ul>
 
       <div class="footer-payment-icons">
         {%- if section.settings.show_payment_methods -%}

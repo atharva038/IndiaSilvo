@@ -1,0 +1,193 @@
+{{ 'section-pages.css' | asset_url | stylesheet_tag }}
+
+<div class="faq-section section-spacing" data-section-id="{{ section.id }}">
+  <div class="container container-narrow">
+    
+    <div class="page-breadcrumbs-wrapper">
+      {% render 'breadcrumbs' %}
+    </div>
+
+    <header class="section-header faq-header">
+      <span class="section-header__subtitle">{{ section.settings.subtitle | default: 'Client Assistance' }}</span>
+      <h1 class="page-title h2">{{ page.title | default: section.settings.heading | default: 'Frequently Asked Questions' }}</h1>
+      <div class="gold-divider"></div>
+      {%- if section.settings.description != blank -%}
+        <p class="section-header__description">{{ section.settings.description }}</p>
+      {%- endif -%}
+    </header>
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="faq-accordion-group">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'category' -%}
+              <div class="faq-category-header" {{ block.shopify_attributes }}>
+                <h2 class="faq-category-title">{{ block.settings.title }}</h2>
+              </div>
+
+            {%- when 'question' -%}
+              <details class="faq-item" {{ block.shopify_attributes }}>
+                <summary class="faq-item__summary">
+                  <span class="faq-item__question">{{ block.settings.question }}</span>
+                  <span class="faq-item__icon" aria-hidden="true">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="12" y1="5" x2="12" y2="19" class="faq-icon-v"></line>
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                  </span>
+                </summary>
+                <div class="faq-item__answer rte">
+                  {{ block.settings.answer }}
+                </div>
+              </details>
+          {%- endcase -%}
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <div class="faq-accordion-group">
+        <div class="faq-category-header">
+          <h2 class="faq-category-title">Orders & Complimentary Insured Delivery</h2>
+        </div>
+        <details class="faq-item" open>
+          <summary class="faq-item__summary">
+            <span class="faq-item__question">How are IndiaSilvo jewellery creations packaged and delivered?</span>
+            <span class="faq-item__icon" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19" class="faq-icon-v"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </span>
+          </summary>
+          <div class="faq-item__answer rte">
+            <p>Every piece arrives in our signature velvet-lined jewellery presentation box accompanied by a Certificate of Authenticity. All shipments are 100% insured from our atelier to your doorstep with tamper-proof security seals.</p>
+          </div>
+        </details>
+        
+        <details class="faq-item">
+          <summary class="faq-item__summary">
+            <span class="faq-item__question">What are your standard shipping timelines?</span>
+            <span class="faq-item__icon" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19" class="faq-icon-v"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </span>
+          </summary>
+          <div class="faq-item__answer rte">
+            <p>In-stock creations are dispatched within 24 to 48 hours. Express courier transit typically takes 2 to 5 business days depending on destination.</p>
+          </div>
+        </details>
+
+        <div class="faq-category-header">
+          <h2 class="faq-category-title">BIS Hallmarking & Silver Purity</h2>
+        </div>
+        <details class="faq-item">
+          <summary class="faq-item__summary">
+            <span class="faq-item__question">Are all IndiaSilvo creations genuine 92.5% Sterling Silver?</span>
+            <span class="faq-item__icon" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19" class="faq-icon-v"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </span>
+          </summary>
+          <div class="faq-item__answer rte">
+            <p>Yes. Every piece is crafted exclusively in 925 Sterling Silver, independently certified with government BIS Hallmarking stamps and triple-plated in precious Rhodium or 18K Gold to prevent tarnishing.</p>
+          </div>
+        </details>
+
+        <div class="faq-category-header">
+          <h2 class="faq-category-title">Returns, Exchanges & Warranty</h2>
+        </div>
+        <details class="faq-item">
+          <summary class="faq-item__summary">
+            <span class="faq-item__question">What is your return and exchange policy?</span>
+            <span class="faq-item__icon" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19" class="faq-icon-v"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </span>
+          </summary>
+          <div class="faq-item__answer rte">
+            <p>We provide a complimentary 15-day return and exchange window on all unworn items in their original packaging with security tags intact. Custom-engraved commissions are final sale.</p>
+          </div>
+        </details>
+      </div>
+    {%- endif -%}
+
+    <div class="policy-assistance-card" style="margin-top: 3.5rem;">
+      <div class="policy-assistance-icon">
+        {% render 'icons', icon: 'diamond' %}
+      </div>
+      <div class="policy-assistance-text">
+        <h3 class="policy-assistance-title">Require Personal Guidance?</h3>
+        <p class="policy-assistance-desc">
+          Speak with our master jewelers regarding custom ring sizing, bespoke engraving, or diamond certification.
+        </p>
+      </div>
+      <a href="{{ routes.root_url }}pages/contact" class="btn btn-secondary policy-assistance-btn">
+        Contact Concierge
+      </a>
+    </div>
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "FAQ Accordion",
+  "settings": [
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Client Assistance"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Find comprehensive answers regarding purity certification, bespoke sizing, insured dispatch, and care instructions."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category Header",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Category Title",
+          "default": "Orders & Shipping"
+        }
+      ]
+    },
+    {
+      "type": "question",
+      "name": "Question & Answer",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "How do I care for my 925 sterling silver jewellery?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Store your pieces in a cool, dry place inside our anti-tarnish pouch. Wipe gently with a soft polishing cloth after wear.</p>"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
