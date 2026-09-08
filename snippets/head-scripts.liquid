@@ -1,0 +1,21 @@
+<script>
+  window.Indiasilvo = window.Indiasilvo || {};
+  window.Indiasilvo.routes = {
+    root: "{{ routes.root_url }}",
+    cart: "{{ routes.cart_url }}",
+    cart_add_url: "{{ routes.cart_add_url }}",
+    cart_change_url: "{{ routes.cart_change_url }}",
+    cart_clear_url: "{{ routes.cart_clear_url }}",
+    predictive_search_url: "{{ routes.predictive_search_url }}"
+  };
+  window.Indiasilvo.cartStrings = {
+    error: {{ 'sections.cart.cart_error' | default: 'Error updating cart' | json }},
+    quantityError: {{ 'sections.cart.cart_quantity_error_html' | default: 'You can only add available inventory to your bag.' | json }},
+    freeShippingThreshold: {{ settings.free_shipping_threshold | default: 0 }},
+    freeShippingMessage: {{ settings.free_shipping_message | default: 'Add [amount] more to unlock Free Shipping' | json }},
+    freeShippingAchieved: {{ settings.free_shipping_achieved | default: 'You have unlocked Complimentary Insured Express Shipping!' | json }}
+  };
+  window.Indiasilvo.moneyFormat = {{ shop.money_format | json }};
+</script>
+
+<script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>

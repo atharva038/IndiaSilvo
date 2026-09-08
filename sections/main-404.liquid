@@ -1,0 +1,20 @@
+<div class="404-section section-spacing" data-section-id="{{ section.id }}">
+  <div class="container container-narrow" style="text-align: center;">
+    <span class="section-header__subtitle">404</span>
+    <h1 class="display-title" style="margin-bottom: 1rem;">{{ 'templates.404.title' | t }}</h1>
+    <div class="gold-divider"></div>
+    <p style="font-size: 1.15rem; margin-bottom: 2.5rem; color: var(--color-text-secondary);">
+      {{ 'templates.404.subtext' | t }}
+    </p>
+    <a href="{{ routes.root_url }}" class="btn btn-primary">
+      {{ 'templates.404.button' | t }}
+    </a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "404 Page",
+  "settings": []
+}
+{% endschema %}

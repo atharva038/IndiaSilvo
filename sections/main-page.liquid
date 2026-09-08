@@ -1,0 +1,18 @@
+<div class="page-section section-spacing" data-section-id="{{ section.id }}">
+  <div class="container container-narrow">
+    <div class="section-header">
+      <h1 class="h2">{{ page.title | escape }}</h1>
+      <div class="gold-divider"></div>
+    </div>
+    <div class="page-content rte" style="font-size: 1.05rem; line-height: 1.8; color: var(--color-text-secondary);">
+      {{ page.content }}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Page Content",
+  "settings": []
+}
+{% endschema %}

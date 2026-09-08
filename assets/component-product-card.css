@@ -1,0 +1,192 @@
+/**
+ * Product Card Component
+ */
+
+.product-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-surface);
+  border-radius: var(--border-radius, 0);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  height: 100%;
+}
+
+.product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-card);
+}
+
+.product-card__media-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--product-card-aspect-ratio, 4/5);
+  background-color: var(--color-surface-alt);
+  overflow: hidden;
+  border-radius: var(--border-radius, 0);
+}
+
+.product-card__image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity var(--transition-normal), transform var(--transition-slow);
+}
+
+.product-card__image--primary {
+  opacity: 1;
+  z-index: 1;
+}
+
+.product-card__image--secondary {
+  opacity: 0;
+  z-index: 2;
+}
+
+.product-card:hover .product-card__image--secondary {
+  opacity: 1;
+}
+
+.product-card:hover .product-card__image {
+  transform: scale(1.03);
+}
+
+/* Badges on Card */
+.product-card__badges {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Quick Add Overlay */
+.product-card__quick-add {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px;
+  z-index: 4;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  background: linear-gradient(to top, rgba(24, 22, 21, 0.4) 0%, transparent 100%);
+}
+
+.product-card:hover .product-card__quick-add {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.product-card__quick-add-btn {
+  width: 100%;
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-2xs);
+  padding: 0.65rem 1rem;
+  letter-spacing: var(--letter-spacing-wider);
+  text-transform: uppercase;
+  font-weight: 600;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-subtle);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.product-card__quick-add-btn:hover {
+  background-color: var(--color-text-primary);
+  color: var(--color-bg);
+  border-color: var(--color-text-primary);
+}
+
+/* Product Card Information */
+.product-card__info {
+  padding: 1rem 0.5rem 0.5rem 0.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.product-card__vendor {
+  font-size: var(--font-size-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-widest);
+  color: var(--color-accent-gold);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.product-card__title {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--color-text-primary);
+  margin-bottom: 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.product-card__title a {
+  color: inherit;
+}
+
+.product-card__title a:hover {
+  color: var(--color-accent-gold);
+}
+
+/* Price Display */
+.price-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+.price__regular {
+  color: var(--color-text-primary);
+}
+
+.price__sale {
+  color: var(--color-accent-gold);
+  font-weight: 600;
+}
+
+.price__compare {
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+  font-size: var(--font-size-xs);
+}
+
+/* Responsive Product Grids */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(0.75rem, 2vw, 1.75rem);
+}
+
+@media (min-width: 768px) {
+  .product-grid--3-col {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .product-grid--4-col {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .product-grid--4-col {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

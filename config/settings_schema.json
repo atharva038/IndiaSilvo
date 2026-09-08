@@ -1,0 +1,308 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Indiasilvo Luxury",
+    "theme_version": "1.0.0",
+    "theme_author": "Indiasilvo",
+    "theme_documentation_url": "https://indiasilvo.com",
+    "theme_support_url": "https://indiasilvo.com/contact"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Theme Color Palette"
+      },
+      {
+        "type": "color",
+        "id": "color_bg",
+        "label": "Background Color",
+        "default": "#FAF8F5"
+      },
+      {
+        "type": "color",
+        "id": "color_surface",
+        "label": "Surface / Card Background",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "color_surface_alt",
+        "label": "Alternative Surface (Muted)",
+        "default": "#F4F0EB"
+      },
+      {
+        "type": "color",
+        "id": "color_text_primary",
+        "label": "Primary Text",
+        "default": "#181615"
+      },
+      {
+        "type": "color",
+        "id": "color_text_secondary",
+        "label": "Secondary Text",
+        "default": "#5A544F"
+      },
+      {
+        "type": "color",
+        "id": "color_text_muted",
+        "label": "Muted Text",
+        "default": "#8C847D"
+      },
+      {
+        "type": "color",
+        "id": "color_border",
+        "label": "Border / Line Color",
+        "default": "#E6DFD5"
+      },
+      {
+        "type": "color",
+        "id": "color_accent_gold",
+        "label": "Jewellery Gold Accent",
+        "default": "#B89768"
+      },
+      {
+        "type": "color",
+        "id": "color_accent_gold_hover",
+        "label": "Gold Accent Hover",
+        "default": "#A07E50"
+      },
+      {
+        "type": "color",
+        "id": "color_button_bg",
+        "label": "Primary Button Background",
+        "default": "#181615"
+      },
+      {
+        "type": "color",
+        "id": "color_button_text",
+        "label": "Primary Button Text",
+        "default": "#FAF8F5"
+      },
+      {
+        "type": "color",
+        "id": "color_button_hover_bg",
+        "label": "Primary Button Hover Background",
+        "default": "#36322F"
+      },
+      {
+        "type": "color",
+        "id": "color_badge_sale_bg",
+        "label": "Sale Badge Background",
+        "default": "#B89768"
+      },
+      {
+        "type": "color",
+        "id": "color_badge_sale_text",
+        "label": "Sale Badge Text",
+        "default": "#FFFFFF"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Font Families"
+      },
+      {
+        "type": "font_picker",
+        "id": "font_heading",
+        "label": "Heading / Display Font (Serif Recommended)",
+        "default": "playfair_display_n4"
+      },
+      {
+        "type": "font_picker",
+        "id": "font_body",
+        "label": "Body / UI Font (Clean Sans-Serif Recommended)",
+        "default": "assistant_n4"
+      },
+      {
+        "type": "range",
+        "id": "font_body_base_size",
+        "min": 14,
+        "max": 18,
+        "step": 1,
+        "unit": "px",
+        "label": "Base Body Font Size",
+        "default": 15
+      },
+      {
+        "type": "range",
+        "id": "heading_scale",
+        "min": 90,
+        "max": 130,
+        "step": 5,
+        "unit": "%",
+        "label": "Heading Size Scale",
+        "default": 100
+      }
+    ]
+  },
+  {
+    "name": "Layout & Styling",
+    "settings": [
+      {
+        "type": "range",
+        "id": "page_max_width",
+        "min": 1100,
+        "max": 1600,
+        "step": 20,
+        "unit": "px",
+        "label": "Standard Content Max Width",
+        "default": 1360
+      },
+      {
+        "type": "range",
+        "id": "page_wide_max_width",
+        "min": 1300,
+        "max": 1800,
+        "step": 20,
+        "unit": "px",
+        "label": "Wide Content Max Width",
+        "default": 1560
+      },
+      {
+        "type": "range",
+        "id": "border_radius",
+        "min": 0,
+        "max": 16,
+        "step": 2,
+        "unit": "px",
+        "label": "Element Border Radius",
+        "default": 0
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_subtle_grain",
+        "label": "Enable Subtle Luxury Background Grain",
+        "default": false
+      }
+    ]
+  },
+  {
+    "name": "Cart & Checkout",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "label": "Cart Experience",
+        "options": [
+          {
+            "value": "drawer",
+            "label": "Slide-Over Drawer (Recommended)"
+          },
+          {
+            "value": "page",
+            "label": "Dedicated Cart Page"
+          }
+        ],
+        "default": "drawer"
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_show_notes",
+        "label": "Enable Order Special Instructions / Notes",
+        "default": true
+      },
+      {
+        "type": "number",
+        "id": "free_shipping_threshold",
+        "label": "Free Shipping Threshold (Amount in store currency, e.g. 1500)",
+        "default": 2000
+      },
+      {
+        "type": "text",
+        "id": "free_shipping_message",
+        "label": "Free Shipping Progress Message",
+        "default": "Add [amount] more to unlock Complimentary Insured Shipping"
+      },
+      {
+        "type": "text",
+        "id": "free_shipping_achieved",
+        "label": "Free Shipping Achieved Message",
+        "default": "You have unlocked Complimentary Insured Express Shipping!"
+      }
+    ]
+  },
+  {
+    "name": "Product Card",
+    "settings": [
+      {
+        "type": "select",
+        "id": "product_card_aspect_ratio",
+        "label": "Product Image Aspect Ratio",
+        "options": [
+          {
+            "value": "1/1",
+            "label": "Square (1:1)"
+          },
+          {
+            "value": "4/5",
+            "label": "Portrait (4:5) - Editorial Recommended"
+          },
+          {
+            "value": "3/4",
+            "label": "Classic Portrait (3:4)"
+          }
+        ],
+        "default": "4/5"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_secondary_image_on_hover",
+        "label": "Show Secondary Image on Hover",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_vendor",
+        "label": "Show Brand / Metal Subtitle",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_quick_add",
+        "label": "Enable Quick Add to Bag on Cards",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Brand & Social Links",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon Image (32x32px)"
+      },
+      {
+        "type": "text",
+        "id": "social_instagram_link",
+        "label": "Instagram URL"
+      },
+      {
+        "type": "text",
+        "id": "social_facebook_link",
+        "label": "Facebook URL"
+      },
+      {
+        "type": "text",
+        "id": "social_pinterest_link",
+        "label": "Pinterest URL"
+      },
+      {
+        "type": "text",
+        "id": "social_youtube_link",
+        "label": "YouTube URL"
+      },
+      {
+        "type": "text",
+        "id": "social_whatsapp_number",
+        "label": "WhatsApp Concierge Number (with country code)"
+      }
+    ]
+  }
+]

@@ -1,0 +1,251 @@
+<div class="hero-section {% if section.settings.layout == 'split' %}hero-section--split{% else %}hero-section--full{% endif %}" data-section-id="{{ section.id }}">
+  <div class="hero-wrapper" style="min-height: {{ section.settings.height }}vh;">
+    
+    {%- comment -%} Background Image or Video {%- endcomment -%}
+    <div class="hero-media">
+      {%- if section.settings.image != blank -%}
+        <img
+          src="{{ section.settings.image | image_url: width: 2000 }}"
+          srcset="{{ section.settings.image | image_url: width: 750 }} 750w,
+                  {{ section.settings.image | image_url: width: 1400 }} 1400w,
+                  {{ section.settings.image | image_url: width: 2000 }} 2000w"
+          sizes="100vw"
+          alt="{{ section.settings.image.alt | default: section.settings.title | escape }}"
+          class="hero-media__img"
+          loading="eager"
+          fetchpriority="high"
+          width="2000"
+          height="1100"
+        >
+      {%- else -%}
+        <img
+          src="{{ 'hero-silver-jewellery.jpg' | asset_url }}"
+          alt="Indiasilvo Haute 925 Sterling Silver Jewellery"
+          class="hero-media__img"
+          loading="eager"
+          fetchpriority="high"
+          width="2000"
+          height="1100"
+        >
+      {%- endif -%}
+      <div class="hero-overlay" style="background-color: {{ section.settings.overlay_color }}; opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+    </div>
+
+    {%- comment -%} Hero Text Content {%- endcomment -%}
+    <div class="container hero-content-container">
+      <div class="hero-content hero-content--{{ section.settings.alignment }}" style="max-width: {{ section.settings.content_max_width }}px;">
+        {%- if section.settings.subtitle != blank -%}
+          <span class="hero-subtitle">{{ section.settings.subtitle | escape }}</span>
+        {%- endif -%}
+
+        {%- if section.settings.title != blank -%}
+          <h1 class="hero-title display-title">{{ section.settings.title | escape }}</h1>
+        {%- endif -%}
+
+        {%- if section.settings.description != blank -%}
+          <p class="hero-description">{{ section.settings.description | escape }}</p>
+        {%- endif -%}
+
+        <div class="hero-buttons">
+          {%- if section.settings.btn_1_text != blank -%}
+            <a href="{{ section.settings.btn_1_url }}" class="btn btn-primary">
+              {{ section.settings.btn_1_text | escape }}
+            </a>
+          {%- endif -%}
+          {%- if section.settings.btn_2_text != blank -%}
+            <a href="{{ section.settings.btn_2_url }}" class="btn btn-secondary">
+              {{ section.settings.btn_2_text | escape }}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .hero-section {
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .hero-media {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  .hero-media__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .hero-content-container {
+    position: relative;
+    z-index: 2;
+    padding-top: clamp(4rem, 8vw, 8rem);
+    padding-bottom: clamp(4rem, 8vw, 8rem);
+  }
+  .hero-content {
+    color: #FAF8F5;
+  }
+  .hero-content--center {
+    margin: 0 auto;
+    text-align: center;
+  }
+  .hero-content--left {
+    margin-right: auto;
+    text-align: left;
+  }
+  .hero-content--right {
+    margin-left: auto;
+    text-align: right;
+  }
+  .hero-subtitle {
+    display: block;
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-widest);
+    color: var(--color-accent-gold);
+    margin-bottom: var(--space-md);
+    font-weight: 500;
+  }
+  .hero-title {
+    color: inherit;
+    margin-bottom: var(--space-lg);
+  }
+  .hero-description {
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    color: rgba(250, 248, 245, 0.85);
+    line-height: 1.6;
+    margin-bottom: var(--space-2xl);
+  }
+  .hero-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    align-items: center;
+  }
+  .hero-content--center .hero-buttons {
+    justify-content: center;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Hero Banner",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hero Image"
+    },
+    {
+      "type": "range",
+      "id": "height",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "label": "Section Minimum Height",
+      "default": 85
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Haute Joaillerie & 925 Silver"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Hero Title",
+      "default": "Poetry in Sterling Silver"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Handcrafted with artisanal heritage, hallmarked for purity, and sculpted into modern timeless icons."
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Content Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "min": 400,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "label": "Content Maximum Width",
+      "default": 700
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Tint Color",
+      "default": "#181615"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay Opacity",
+      "default": 35
+    },
+    {
+      "type": "header",
+      "content": "Call to Action Buttons"
+    },
+    {
+      "type": "text",
+      "id": "btn_1_text",
+      "label": "Primary Button Text",
+      "default": "Explore Collection"
+    },
+    {
+      "type": "url",
+      "id": "btn_1_url",
+      "label": "Primary Button Link"
+    },
+    {
+      "type": "text",
+      "id": "btn_2_text",
+      "label": "Secondary Button Text",
+      "default": "Discover Our Craft"
+    },
+    {
+      "type": "url",
+      "id": "btn_2_url",
+      "label": "Secondary Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Banner"
+    }
+  ]
+}
+{% endschema %}

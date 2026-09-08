@@ -1,0 +1,130 @@
+{
+  "general": {
+    "accessibility": {
+      "skip_to_content": "Skip to content",
+      "close": "Close",
+      "open_menu": "Open navigation menu",
+      "close_menu": "Close navigation menu",
+      "search": "Search our jewellery collections",
+      "cart_count": "Shopping bag with {{ count }} items",
+      "view_details": "View {{ title }} details"
+    },
+    "meta": {
+      "page": "Page {{ page }}",
+      "tags": "Tagged \"{{ tags }}\""
+    },
+    "pagination": {
+      "label": "Pagination",
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {{ number }}"
+    },
+    "breadcrumbs": {
+      "home": "Home",
+      "collections": "Collections",
+      "search": "Search Results"
+    }
+  },
+  "sections": {
+    "header": {
+      "search_placeholder": "Search rings, necklaces, bracelets...",
+      "account": "Account",
+      "cart": "Bag",
+      "menu": "Menu"
+    },
+    "cart": {
+      "title": "Your Shopping Bag",
+      "empty": "Your shopping bag is currently empty.",
+      "continue_shopping": "Explore New Arrivals",
+      "subtotal": "Subtotal",
+      "taxes_and_shipping_policy_at_checkout_html": "Taxes, duties & insured shipping calculated at checkout.",
+      "checkout": "Proceed to Checkout",
+      "view_cart": "View Bag",
+      "remove": "Remove",
+      "note": "Gift Message / Special Order Notes",
+      "note_placeholder": "Add a complimentary gift message or bespoke instructions...",
+      "quantity": "Quantity",
+      "update": "Update Bag",
+      "free_shipping_congrats": "Complimentary Insured Shipping Unlocked",
+      "free_shipping_progress": "Add {{ amount }} more for Complimentary Insured Shipping"
+    },
+    "featured_collection": {
+      "view_all": "View All Pieces"
+    },
+    "collection_template": {
+      "title": "Collection",
+      "filter_by_label": "Filter:",
+      "sort_by_label": "Sort by",
+      "product_count": "{{ count }} piece",
+      "product_count_plural": "{{ count }} pieces",
+      "empty": "No pieces matched your selected criteria.",
+      "clear_all": "Clear All Filters",
+      "apply": "Apply Filters"
+    },
+    "main_product": {
+      "add_to_cart": "Add to Bag",
+      "sold_out": "Sold Out",
+      "unavailable": "Unavailable",
+      "buy_it_now": "Buy with 1-Click",
+      "quantity": "Quantity",
+      "sku": "SKU:",
+      "hallmark": "925 Silver / BIS Hallmarked",
+      "purity": "Purity & Authenticity",
+      "specifications": "Craftsmanship & Details",
+      "shipping_returns": "Shipping & Complimentary Returns",
+      "care_guide": "Jewellery Care Guide",
+      "size_guide": "Size Guide",
+      "in_stock": "In Stock, Ready to Dispatch",
+      "low_stock": "Limited Edition: Only a few pieces remaining",
+      "out_of_stock": "Currently Out of Stock",
+      "share": "Share this piece"
+    },
+    "contact": {
+      "form": {
+        "name": "Full Name",
+        "email": "Email Address",
+        "phone": "Phone Number (Optional)",
+        "subject": "Inquiry Subject",
+        "message": "Your Message",
+        "send": "Send Message",
+        "post_success": "Thank you for contacting our jewellery concierge. We will respond within 24 hours.",
+        "error_heading": "Please adjust the following:"
+      }
+    },
+    "newsletter": {
+      "heading": "Join The Connoisseur Club",
+      "subtext": "Receive exclusive previews of bespoke collections and private salon invitations.",
+      "placeholder": "Enter your email address",
+      "button": "Subscribe",
+      "success": "Welcome to Indiasilvo. Your invitation has been dispatched."
+    }
+  },
+  "products": {
+    "product": {
+      "sale": "Sale",
+      "new": "New",
+      "sold_out": "Sold Out",
+      "regular_price": "Regular price",
+      "sale_price": "Sale price",
+      "unit_price": "Unit price",
+      "from_price_html": "From {{ price }}",
+      "quick_view": "Quick View",
+      "quick_add": "Quick Add"
+    }
+  },
+  "templates": {
+    "404": {
+      "title": "Page Not Found",
+      "subtext": "The page you are looking for has been relocated or is no longer available in our boutique.",
+      "button": "Return to Boutique"
+    },
+    "search": {
+      "title": "Search Boutique",
+      "no_results": "No jewellery pieces found for \"{{ terms }}\".",
+      "results_with_count": {
+        "one": "{{ count }} piece found for \"{{ terms }}\"",
+        "other": "{{ count }} pieces found for \"{{ terms }}\""
+      }
+    }
+  }
+}

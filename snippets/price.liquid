@@ -1,0 +1,27 @@
+{%- comment -%}
+  Price Snippet
+  Usage: {% render 'price', product: product, price_class: '' %}
+{%- endcomment -%}
+
+{%- liquid
+  assign target = product.selected_or_first_available_variant | default: product
+  assign compare_at_price = target.compare_at_price
+  assign price = target.price | default: 1999
+  assign available = target.available | default: true
+  assign on_sale = false
+  if compare_at_price > price
+    assign on_sale = true
+  endif
+-%}
+
+<div class="price-container {{ price_class }}">
+  {%- if on_sale -%}
+    <span class="visually-hidden">{{ 'products.product.sale_price' | t }}</span>
+    <span class="price__sale">{{ price | money }}</span>
+    <span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>
+    <s class="price__compare">{{ compare_at_price | money }}</s>
+  {%- else -%}
+    <span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>
+    <span class="price__regular">{{ price | money }}</span>
+  {%- endif -%}
+</div>

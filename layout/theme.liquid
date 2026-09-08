@@ -1,0 +1,42 @@
+<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <title>
+      {{ page_title }}
+      {%- if current_tags %} &ndash; {{ 'general.meta.tags' | t: tags: current_tags.first }}{% endif -%}
+      {%- if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    </title>
+
+    {% render 'head-seo' %}
+    {% render 'head-styles' %}
+    {% render 'structured-data' %}
+
+    {{ content_for_header }}
+
+    {% render 'head-scripts' %}
+  </head>
+
+  <body class="template-{{ template.name | handle }} {% if template.suffix %}template-suffix-{{ template.suffix | handle }}{% endif %}">
+    <a class="skip-to-content-link visually-hidden" href="#MainContent">
+      {{ 'general.accessibility.skip_to_content' | t }}
+    </a>
+
+    {% sections 'header-group' %}
+
+    <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+
+    {% sections 'footer-group' %}
+
+    {% render 'cart-drawer' %}
+    {% render 'search-modal' %}
+    {% render 'size-guide-modal' %}
+
+    <div id="overlay-backdrop" class="overlay-backdrop" aria-hidden="true"></div>
+  </body>
+</html>

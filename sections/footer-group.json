@@ -1,0 +1,51 @@
+{
+  "name": "Footer Group",
+  "type": "footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "brand_block": {
+          "type": "brand",
+          "settings": {
+            "title": "Indiasilvo",
+            "text": "Curators of exquisite 925 sterling silver and hallmarked fine jewellery, fusing heirloom Indian artistry with modern architectural silhouettes."
+          }
+        },
+        "menu_boutique": {
+          "type": "menu",
+          "settings": {
+            "title": "Boutique",
+            "menu": "main-menu"
+          }
+        },
+        "menu_services": {
+          "type": "menu",
+          "settings": {
+            "title": "Client Care",
+            "menu": "footer"
+          }
+        },
+        "newsletter_block": {
+          "type": "newsletter",
+          "settings": {
+            "title": "The Private Circle",
+            "text": "Receive bespoke previews, secret salon invitations, and private jewellery curation direct to your inbox."
+          }
+        }
+      },
+      "block_order": [
+        "brand_block",
+        "menu_boutique",
+        "menu_services",
+        "newsletter_block"
+      ],
+      "settings": {
+        "show_payment_methods": true
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

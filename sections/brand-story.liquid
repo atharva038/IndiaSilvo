@@ -1,0 +1,159 @@
+<div class="brand-story-section section-spacing" data-section-id="{{ section.id }}" style="background-color: {{ section.settings.bg_color }};">
+  <div class="container">
+    <div class="brand-story-grid {% if section.settings.image_position == 'right' %}brand-story-grid--reverse{% endif %}">
+      
+      {%- comment -%} Media Column {%- endcomment -%}
+      <div class="brand-story__media">
+        {%- if section.settings.image != blank -%}
+          <img
+            src="{{ section.settings.image | image_url: width: 1000 }}"
+            srcset="{{ section.settings.image | image_url: width: 500 }} 500w,
+                    {{ section.settings.image | image_url: width: 1000 }} 1000w"
+            sizes="(min-width: 990px) 50vw, 100vw"
+            alt="{{ section.settings.image.alt | default: section.settings.title | escape }}"
+            class="brand-story__img"
+            loading="lazy"
+            width="1000"
+            height="1200"
+          >
+        {%- else -%}
+          <img
+            src="{{ 'brand-silver-craft.jpg' | asset_url }}"
+            alt="Master Silversmith at Indiasilvo Atelier"
+            class="brand-story__img"
+            loading="lazy"
+            width="1000"
+            height="1200"
+          >
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} Narrative Column {%- endcomment -%}
+      <div class="brand-story__content">
+        {%- if section.settings.subtitle != blank -%}
+          <span class="section-header__subtitle" style="text-align:left;">{{ section.settings.subtitle | escape }}</span>
+        {%- endif -%}
+        <h2 class="brand-story__title h2">{{ section.settings.title | escape }}</h2>
+        <div class="gold-divider" style="margin-left: 0;"></div>
+        
+        <div class="brand-story__text">
+          {{ section.settings.text }}
+        </div>
+
+        {%- if section.settings.button_text != blank -%}
+          <div style="margin-top: var(--space-xl);">
+            <a href="{{ section.settings.button_url }}" class="btn btn-primary">
+              {{ section.settings.button_text | escape }}
+            </a>
+          </div>
+        {%- endif -%}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  .brand-story-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
+  }
+  @media (min-width: 990px) {
+    .brand-story-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .brand-story-grid--reverse .brand-story__media {
+      order: 2;
+    }
+  }
+  .brand-story__media {
+    position: relative;
+    aspect-ratio: 4/5;
+    background-color: var(--color-surface-alt);
+    overflow: hidden;
+    border-radius: var(--border-radius, 0);
+  }
+  .brand-story__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .brand-story__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .brand-story__title {
+    margin-bottom: var(--space-xs);
+  }
+  .brand-story__text {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Brand Story / Editorial",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FAF8F5"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Editorial Image"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image Position on Desktop",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "The Maison Heritage"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Centuries of Silversmithing Legacy"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Narrative Text",
+      "default": "<p>Indiasilvo was born from a singular conviction: that sterling silver possesses a poetic brilliance rivaling any precious metal on Earth. Our master artisans blend centuries-old Indian filigree techniques with contemporary architectural forms.</p><p>Every creation is forged from hallmarked 925 sterling silver, set with hand-selected gemstones, and rigorously tested for purity and longevity.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Label",
+      "default": "Read Our Craft Story"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Story / Editorial"
+    }
+  ]
+}
+{% endschema %}

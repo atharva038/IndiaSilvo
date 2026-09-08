@@ -1,0 +1,40 @@
+{%- comment -%} Typography & Google Fonts preconnect {%- endcomment -%}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --color-bg: {{ settings.color_bg | default: '#FAF8F5' }};
+    --color-surface: {{ settings.color_surface | default: '#FFFFFF' }};
+    --color-surface-alt: {{ settings.color_surface_alt | default: '#F4F0EB' }};
+    --color-text-primary: {{ settings.color_text_primary | default: '#181615' }};
+    --color-text-secondary: {{ settings.color_text_secondary | default: '#5A544F' }};
+    --color-text-muted: {{ settings.color_text_muted | default: '#8C847D' }};
+    --color-border: {{ settings.color_border | default: '#E6DFD5' }};
+    --color-accent-gold: {{ settings.color_accent_gold | default: '#B89768' }};
+    --color-accent-gold-hover: {{ settings.color_accent_gold_hover | default: '#A07E50' }};
+    --color-button-bg: {{ settings.color_button_bg | default: '#181615' }};
+    --color-button-text: {{ settings.color_button_text | default: '#FAF8F5' }};
+    --color-button-hover-bg: {{ settings.color_button_hover_bg | default: '#36322F' }};
+    --color-badge-sale-bg: {{ settings.color_badge_sale_bg | default: '#B89768' }};
+    --color-badge-sale-text: {{ settings.color_badge_sale_text | default: '#FFFFFF' }};
+
+    --font-heading: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+    --font-body: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --font-body-base-size: {{ settings.font_body_base_size | default: 15 }}px;
+    --heading-scale: {{ settings.heading_scale | default: 100 | divided_by: 100.0 }};
+
+    --page-max-width: {{ settings.page_max_width | default: 1360 }}px;
+    --page-wide-max-width: {{ settings.page_wide_max_width | default: 1560 }}px;
+    --border-radius: {{ settings.border_radius | default: 0 }}px;
+  }
+</style>
+
+{{ 'theme-tokens.css' | asset_url | stylesheet_tag }}
+{{ 'base.css' | asset_url | stylesheet_tag }}
+{{ 'component-header.css' | asset_url | stylesheet_tag }}
+{{ 'component-footer.css' | asset_url | stylesheet_tag }}
+{{ 'component-product-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-cart-drawer.css' | asset_url | stylesheet_tag }}
+{{ 'component-search-modal.css' | asset_url | stylesheet_tag }}

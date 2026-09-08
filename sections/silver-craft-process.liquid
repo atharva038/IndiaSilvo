@@ -1,0 +1,165 @@
+<div class="silver-craft-section section-spacing" data-section-id="{{ section.id }}" style="background-color: {{ section.settings.bg_color }};">
+  <div class="container">
+    
+    <div class="section-header">
+      {%- if section.settings.subtitle != blank -%}
+        <span class="section-header__subtitle">{{ section.settings.subtitle | escape }}</span>
+      {%- endif -%}
+      <h2 class="section-header__title h2">{{ section.settings.title | escape }}</h2>
+      {%- if section.settings.description != blank -%}
+        <p class="section-header__description">{{ section.settings.description | escape }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="silver-craft-steps">
+      {%- for block in section.blocks -%}
+        <div class="silver-craft-card" {{ block.shopify_attributes }}>
+          <div class="silver-craft-step-num">0{{ forloop.index }}</div>
+          <h3 class="silver-craft-card__title">{{ block.settings.title | escape }}</h3>
+          <p class="silver-craft-card__text">{{ block.settings.text | escape }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .silver-craft-steps {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+  @media (min-width: 768px) {
+    .silver-craft-steps {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .silver-craft-steps {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .silver-craft-card {
+    background-color: var(--color-surface);
+    padding: clamp(1.5rem, 2.5vw, 2rem);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius, 0);
+    position: relative;
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  }
+  .silver-craft-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card);
+  }
+  .silver-craft-step-num {
+    font-family: var(--font-heading);
+    font-size: 2.25rem;
+    color: var(--color-accent-gold);
+    line-height: 1;
+    margin-bottom: var(--space-md);
+    opacity: 0.8;
+  }
+  .silver-craft-card__title {
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+    margin-bottom: var(--space-xs);
+    color: var(--color-text-primary);
+  }
+  .silver-craft-card__text {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin: 0;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Silver Craftsmanship",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FAF8F5"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "The 925 Silversmith Atelier"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Anatomy of Master Silvercraft"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Every Indiasilvo creation passes through four sacred silversmithing disciplines before receiving its 925 purity hallmark."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Craft Step",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Step Title",
+          "default": "1. Pure 92.5% Smelting"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Step Description",
+          "default": "Certified high-purity silver is alloyed precisely with 7.5% strengthening copper for durability without compromising brilliance."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Silver Craftsmanship",
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "title": "92.5% Pure Casting",
+            "text": "Certified bullion silver is melted and cast into bespoke architectural silhouettes with optimal density."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Hand-Filigree & Setting",
+            "text": "Master artisans meticulously hand-set AAA grade zircons and gemstones under microscope magnification."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "8-Stage Hand Burnish",
+            "text": "Repeated multi-grit hand polishing brings out the deep luminous glow unique to fine sterling silver."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Rhodium Shield & Hallmark",
+            "text": "Immersed in precious liquid rhodium to permanently resist tarnishing, stamped with official 925 purity laser seal."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

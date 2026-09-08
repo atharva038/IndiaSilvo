@@ -1,0 +1,92 @@
+{%- comment -%}
+  Storefront Native Faceted Filtering Snippet
+  Usage: {% render 'facets', results: collection %}
+{%- endcomment -%}
+
+<form class="facets-form" id="FacetsFilterForm" method="get">
+  <div class="facets-wrapper" style="display:flex; flex-wrap:wrap; gap:1.5rem; align-items:center; margin-bottom:2rem; padding:1rem 0; border-top:1px solid var(--color-border); border-bottom:1px solid var(--color-border);">
+    <div style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--color-text-secondary);">
+      {{ 'sections.collection_template.filter_by_label' | t }}
+    </div>
+
+    {%- for filter in results.filters -%}
+      <div class="facet-dropdown" style="position:relative; display:inline-block;">
+        <details class="facet-details" style="cursor:pointer;">
+          <summary class="facet-summary" style="font-size:13px; font-weight:500; text-transform:uppercase; letter-spacing:0.05em; display:flex; align-items:center; gap:6px; list-style:none;">
+            <span>{{ filter.label | escape }}</span>
+            {%- if filter.active_values.size > 0 -%}
+              <span class="badge badge-sale" style="padding:2px 6px; font-size:10px;">{{ filter.active_values.size }}</span>
+            {%- endif -%}
+            {% render 'icons', icon: 'chevron-down' %}
+          </summary>
+
+          <div class="facet-popover" style="position:absolute; top:calc(100% + 8px); left:0; min-width:240px; background:var(--color-surface); border:1px solid var(--color-border); box-shadow:var(--shadow-card); padding:1rem; z-index:10; border-radius:var(--border-radius, 0);">
+            {%- case filter.type -%}
+              {%- when 'list' -%}
+                <ul style="list-style:none; display:flex; flex-direction:column; gap:0.5rem; max-height:200px; overflow-y:auto;">
+                  {%- for value in filter.values -%}
+                    <li>
+                      <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer; text-transform:none; margin:0;">
+                        <input
+                          type="checkbox"
+                          name="{{ value.param_name }}"
+                          value="{{ value.value }}"
+                          id="Filter-{{ filter.param_name }}-{{ forloop.index }}"
+                          {% if value.active %}checked{% endif %}
+                          {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                          onchange="this.closest('form').submit();"
+                        >
+                        <span>{{ value.label | escape }}</span>
+                        <span style="color:var(--color-text-muted); font-size:11px;">({{ value.count }})</span>
+                      </label>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+
+              {%- when 'price_range' -%}
+                <div style="display:flex; gap:8px; align-items:center;">
+                  <input
+                    type="number"
+                    name="{{ filter.min_value.param_name }}"
+                    id="Filter-{{ filter.min_value.param_name }}"
+                    {% if filter.min_value.value %}value="{{ filter.min_value.value | divided_by: 100.0 }}"{% endif %}
+                    placeholder="Min"
+                    min="0"
+                    max="{{ filter.range_max | divided_by: 100.0 }}"
+                    style="width:80px; padding:0.4rem;"
+                  >
+                  <span>-</span>
+                  <input
+                    type="number"
+                    name="{{ filter.max_value.param_name }}"
+                    id="Filter-{{ filter.max_value.param_name }}"
+                    {% if filter.max_value.value %}value="{{ filter.max_value.value | divided_by: 100.0 }}"{% endif %}
+                    placeholder="Max"
+                    min="0"
+                    max="{{ filter.range_max | divided_by: 100.0 }}"
+                    style="width:80px; padding:0.4rem;"
+                  >
+                  <button type="submit" class="btn btn-primary" style="padding:0.4rem 0.8rem; font-size:11px;">Go</button>
+                </div>
+            {%- endcase -%}
+          </div>
+        </details>
+      </div>
+    {%- endfor -%}
+
+    {%- comment -%} Sort By Dropdown {%- endcomment -%}
+    <div style="margin-left:auto; display:flex; align-items:center; gap:8px;">
+      <label for="SortBy" style="margin:0; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.1em;">
+        {{ 'sections.collection_template.sort_by_label' | t }}:
+      </label>
+      <select id="SortBy" name="sort_by" onchange="this.closest('form').submit();" style="width:auto; padding:0.4rem 0.8rem; font-size:13px;">
+        {%- assign sort_by = results.sort_by | default: results.default_sort_by -%}
+        {%- for option in results.sort_options -%}
+          <option value="{{ option.value }}" {% if option.value == sort_by %}selected="selected"{% endif %}>
+            {{ option.name }}
+          </option>
+        {%- endfor -%}
+      </select>
+    </div>
+  </div>
+</form>

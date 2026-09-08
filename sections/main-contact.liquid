@@ -1,0 +1,66 @@
+<div class="contact-section section-spacing" data-section-id="{{ section.id }}">
+  <div class="container container-narrow">
+    
+    <div class="section-header">
+      <span class="section-header__subtitle">Private Concierge</span>
+      <h1 class="h2">{{ page.title | default: 'Bespoke Inquiries' }}</h1>
+      <p class="section-header__description">
+        Our jewellery specialists are at your disposal for bespoke sizing, custom commissions, or appointment bookings.
+      </p>
+    </div>
+
+    {%- form 'contact', id: 'ContactForm', class: 'contact-form' -%}
+      {%- if form.posted_successfully? -%}
+        <div style="background-color: var(--color-surface); border: 1px solid var(--color-accent-gold); padding: 1.5rem; text-align: center; margin-bottom: 2rem;">
+          <p style="color: var(--color-accent-gold); font-weight: 500;">
+            {{ 'sections.contact.form.post_success' | t }}
+          </p>
+        </div>
+      {%- endif -%}
+
+      {%- if form.errors -%}
+        <div style="background-color: #FDF2F2; border: 1px solid #F8B4B4; padding: 1rem; margin-bottom: 2rem; color: #9B1C1C; font-size: 13px;">
+          <p>{{ 'sections.contact.form.error_heading' | t }}</p>
+          <ul>
+            {%- for error in form.errors -%}
+              <li>{{ form.errors.translated_fields[error] }} {{ form.errors.messages[error] }}</li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+        <div>
+          <label for="ContactName">{{ 'sections.contact.form.name' | t }}</label>
+          <input type="text" id="ContactName" name="contact[{{ 'sections.contact.form.name' | t }}]" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}" required>
+        </div>
+        <div>
+          <label for="ContactEmail">{{ 'sections.contact.form.email' | t }}</label>
+          <input type="email" id="ContactEmail" name="contact[email]" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" autocorrect="off" autocapitalize="off" required>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 1rem;">
+        <label for="ContactPhone">{{ 'sections.contact.form.phone' | t }}</label>
+        <input type="tel" id="ContactPhone" name="contact[{{ 'sections.contact.form.phone' | t }}]" value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}">
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <label for="ContactMessage">{{ 'sections.contact.form.message' | t }}</label>
+        <textarea rows="5" id="ContactMessage" name="contact[{{ 'sections.contact.form.message' | t }}]" required>{% if form.body %}{{ form.body }}{% endif %}</textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-full" style="height: 48px;">
+        {{ 'sections.contact.form.send' | t }}
+      </button>
+    {%- endform -%}
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Contact Page",
+  "settings": []
+}
+{% endschema %}

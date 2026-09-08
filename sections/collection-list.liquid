@@ -1,0 +1,178 @@
+<div class="collection-list-section section-spacing" data-section-id="{{ section.id }}">
+  <div class="container">
+    
+    <div class="section-header">
+      {%- if section.settings.subtitle != blank -%}
+        <span class="section-header__subtitle">{{ section.settings.subtitle | escape }}</span>
+      {%- endif -%}
+      <h2 class="section-header__title h2">{{ section.settings.title | escape }}</h2>
+    </div>
+
+    <div class="collection-tiles-grid">
+      {%- for block in section.blocks -%}
+        {%- assign collection = block.settings.collection -%}
+        <div class="collection-tile" {{ block.shopify_attributes }}>
+          <a href="{{ collection.url | default: '#' }}" class="collection-tile__link">
+            <div class="collection-tile__media">
+              {%- assign image = block.settings.image | default: collection.featured_image -%}
+              {%- if image != blank -%}
+                <img
+                  src="{{ image | image_url: width: 800 }}"
+                  srcset="{{ image | image_url: width: 400 }} 400w,
+                          {{ image | image_url: width: 800 }} 800w"
+                  sizes="(min-width: 990px) 25vw, 50vw"
+                  alt="{{ image.alt | default: block.settings.title | escape }}"
+                  class="collection-tile__img"
+                  loading="lazy"
+                  width="800"
+                  height="1000"
+                >
+              {%- else -%}
+                {%- case forloop.index -%}
+                  {%- when 1 -%}
+                    <img src="{{ 'product-silver-ring.jpg' | asset_url }}" alt="925 Silver Rings" class="collection-tile__img" loading="lazy" width="800" height="1000">
+                  {%- when 2 -%}
+                    <img src="{{ 'product-silver-necklace.jpg' | asset_url }}" alt="Silver Pendants & Chains" class="collection-tile__img" loading="lazy" width="800" height="1000">
+                  {%- when 3 -%}
+                    <img src="{{ 'product-silver-earrings.jpg' | asset_url }}" alt="Silver Earrings" class="collection-tile__img" loading="lazy" width="800" height="1000">
+                  {%- when 4 -%}
+                    <img src="{{ 'product-silver-cuff.jpg' | asset_url }}" alt="Silver Cuffs & Kada" class="collection-tile__img" loading="lazy" width="800" height="1000">
+                  {%- else -%}
+                    <img src="{{ 'product-silver-ring.jpg' | asset_url }}" alt="Fine 925 Silver" class="collection-tile__img" loading="lazy" width="800" height="1000">
+                {%- endcase -%}
+              {%- endif -%}
+              <div class="collection-tile__overlay"></div>
+            </div>
+
+            <div class="collection-tile__content">
+              <h3 class="collection-tile__title">
+                {{ block.settings.title | default: collection.title | default: 'Fine Jewellery' }}
+              </h3>
+              <span class="btn-link" style="color:#FAF8F5; border-color:#FAF8F5;">
+                Explore
+              </span>
+            </div>
+          </a>
+        </div>
+      {%- endfor -%}
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .collection-tiles-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(0.75rem, 2vw, 1.5rem);
+  }
+  @media (min-width: 990px) {
+    .collection-tiles-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .collection-tile {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius, 0);
+  }
+  .collection-tile__link {
+    display: block;
+    position: relative;
+    text-decoration: none;
+    height: 100%;
+  }
+  .collection-tile__media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/5;
+    background-color: var(--color-surface-alt);
+    overflow: hidden;
+  }
+  .collection-tile__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+  }
+  .collection-tile:hover .collection-tile__img {
+    transform: scale(1.05);
+  }
+  .collection-tile__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(24, 22, 21, 0.7) 0%, rgba(24, 22, 21, 0.1) 60%, transparent 100%);
+  }
+  .collection-tile__content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: clamp(1rem, 2vw, 1.5rem);
+    text-align: center;
+    color: #FAF8F5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .collection-tile__title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+    color: #FAF8F5;
+    margin-bottom: 6px;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Collection List",
+  "settings": [
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Bespoke Categories"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Shop By Category"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection Category",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Custom Category Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Custom Title (optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection List",
+      "blocks": [
+        { "type": "collection", "settings": { "title": "Rings & Bands" } },
+        { "type": "collection", "settings": { "title": "Necklaces & Pendants" } },
+        { "type": "collection", "settings": { "title": "Earrings" } },
+        { "type": "collection", "settings": { "title": "Bracelets & Cuffs" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

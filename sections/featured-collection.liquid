@@ -1,0 +1,160 @@
+<div class="featured-collection-section section-spacing" data-section-id="{{ section.id }}">
+  <div class="container">
+    
+    <div class="section-header">
+      {%- if section.settings.subtitle != blank -%}
+        <span class="section-header__subtitle">{{ section.settings.subtitle | escape }}</span>
+      {%- endif -%}
+      <h2 class="section-header__title h2">{{ section.settings.title | escape }}</h2>
+      {%- if section.settings.description != blank -%}
+        <p class="section-header__description">{{ section.settings.description | escape }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- assign collection = section.settings.collection -%}
+    <div class="product-grid product-grid--{{ section.settings.columns_desktop }}-col">
+      {%- if collection != blank and collection.products_count > 0 -%}
+        {%- for product in collection.products limit: section.settings.products_to_show -%}
+          {% render 'product-card', product: product %}
+        {%- endfor -%}
+      {%- else -%}
+        {%- comment -%} Curated 925 Silver Default Showcase {%- endcomment -%}
+        <div class="product-card">
+          <div class="product-card__media-wrapper">
+            <img src="{{ 'product-silver-ring.jpg' | asset_url }}" alt="Solitaire 925 Silver Ring" class="product-card__image" loading="lazy" width="600" height="750">
+            <div class="product-card__badges">
+              <span class="badge badge-sale">925 BIS</span>
+            </div>
+          </div>
+          <div class="product-card__info">
+            <span class="product-card__vendor">925 Sterling Silver</span>
+            <h3 class="product-card__title">Aura Solitaire Brilliant Ring</h3>
+            <div class="price-container">
+              <span class="price__sale">₹3,499</span>
+              <s class="price__compare">₹4,299</s>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-card__media-wrapper">
+            <img src="{{ 'product-silver-necklace.jpg' | asset_url }}" alt="925 Silver Filigree Pendant" class="product-card__image" loading="lazy" width="600" height="750">
+            <div class="product-card__badges">
+              <span class="badge badge-sale">Best Seller</span>
+            </div>
+          </div>
+          <div class="product-card__info">
+            <span class="product-card__vendor">925 Sterling Silver</span>
+            <h3 class="product-card__title">Mughal Filigree Medallion Necklace</h3>
+            <div class="price-container">
+              <span class="price__regular">₹5,899</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-card__media-wrapper">
+            <img src="{{ 'product-silver-earrings.jpg' | asset_url }}" alt="925 Silver Drop Earrings" class="product-card__image" loading="lazy" width="600" height="750">
+            <div class="product-card__badges">
+              <span class="badge badge-sale">925 BIS</span>
+            </div>
+          </div>
+          <div class="product-card__info">
+            <span class="product-card__vendor">925 Sterling Silver</span>
+            <h3 class="product-card__title">Celestial Cascade Pear Drop Earrings</h3>
+            <div class="price-container">
+              <span class="price__regular">₹4,199</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-card__media-wrapper">
+            <img src="{{ 'product-silver-cuff.jpg' | asset_url }}" alt="925 Silver Chiseled Cuff" class="product-card__image" loading="lazy" width="600" height="750">
+            <div class="product-card__badges">
+              <span class="badge badge-sale">Artisan Edition</span>
+            </div>
+          </div>
+          <div class="product-card__info">
+            <span class="product-card__vendor">925 Sterling Silver</span>
+            <h3 class="product-card__title">Architectural Hammered Silver Cuff</h3>
+            <div class="price-container">
+              <span class="price__sale">₹7,299</span>
+              <s class="price__compare">₹8,500</s>
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.show_view_all and collection != blank -%}
+      <div style="text-align: center; margin-top: clamp(2rem, 4vw, 3.5rem);">
+        <a href="{{ collection.url }}" class="btn btn-secondary">
+          {{ 'sections.featured_collection.view_all' | t }}
+        </a>
+      </div>
+    {%- endif -%}
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Featured Collection",
+  "settings": [
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Curated Selection"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Signature Creations"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Each piece is cast in certified pure 925 sterling silver and hand-finished by master silversmiths."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "label": "Products to show",
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "columns_desktop",
+      "label": "Columns on desktop",
+      "options": [
+        { "value": "3", "label": "3 Columns" },
+        { "value": "4", "label": "4 Columns" }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show 'View all' button",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Collection"
+    }
+  ]
+}
+{% endschema %}

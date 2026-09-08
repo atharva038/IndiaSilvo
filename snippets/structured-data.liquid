@@ -1,0 +1,66 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": {{ shop.name | json }},
+  "url": {{ shop.url | append: routes.root_url | json }},
+  {% if settings.favicon != blank %}
+    "logo": {{ settings.favicon | image_url: width: 500 | prepend: "https:" | json }},
+  {% endif %}
+  "sameAs": [
+    {{ settings.social_instagram_link | json }},
+    {{ settings.social_facebook_link | json }},
+    {{ settings.social_pinterest_link | json }}
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": {{ shop.name | json }},
+  "url": {{ shop.url | append: routes.root_url | json }},
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "{{ shop.url }}{{ routes.search_url }}?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+
+{%- if template contains 'product' and product -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": {{ product.title | json }},
+  "url": {{ shop.url | append: product.url | json }},
+  {% if product.featured_media %}
+    "image": [
+      {{ product.featured_media | image_url: width: 1000 | prepend: "https:" | json }}
+    ],
+  {% endif %}
+  "description": {{ product.description | strip_html | truncatewords: 60 | json }},
+  {% if product.selected_or_first_available_variant.sku != blank %}
+    "sku": {{ product.selected_or_first_available_variant.sku | json }},
+  {% endif %}
+  "brand": {
+    "@type": "Brand",
+    "name": {{ product.vendor | default: shop.name | json }}
+  },
+  "offers": [
+    {% for variant in product.variants %}
+    {
+      "@type": "Offer",
+      "priceCurrency": {{ cart.currency.iso_code | json }},
+      "price": {{ variant.price | divided_by: 100.00 | json }},
+      "itemCondition": "https://schema.org/NewCondition",
+      "availability": "https://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+      "url": {{ shop.url | append: variant.url | json }}
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]
+}
+</script>
+{%- endif -%}

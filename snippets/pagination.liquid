@@ -1,0 +1,44 @@
+{%- comment -%}
+  Pagination Snippet
+  Usage: {% render 'pagination', paginate: paginate %}
+{%- endcomment -%}
+
+{%- if paginate.parts.size > 0 -%}
+  <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
+    <ul class="pagination__list" style="display:flex; justify-content:center; align-items:center; gap:0.5rem; list-style:none; margin-top:3rem;">
+      {%- if paginate.previous -%}
+        <li>
+          <a href="{{ paginate.previous.url }}" class="btn btn-secondary" style="padding:0.6rem 1rem;" aria-label="{{ 'general.pagination.previous' | t }}">
+            {% render 'icons', icon: 'chevron-left' %}
+          </a>
+        </li>
+      {%- endif -%}
+
+      {%- for part in paginate.parts -%}
+        <li>
+          {%- if part.is_link -%}
+            <a href="{{ part.url }}" class="btn btn-secondary" style="padding:0.6rem 1rem; min-width:40px;" aria-label="{{ 'general.pagination.page' | t: number: part.title }}">
+              {{ part.title }}
+            </a>
+          {%- else -%}
+            {%- if part.title == paginate.current_page -%}
+              <span class="btn btn-primary" style="padding:0.6rem 1rem; min-width:40px;" aria-current="page">
+                {{ part.title }}
+              </span>
+            {%- else -%}
+              <span style="padding:0.6rem 1rem;">{{ part.title }}</span>
+            {%- endif -%}
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+
+      {%- if paginate.next -%}
+        <li>
+          <a href="{{ paginate.next.url }}" class="btn btn-secondary" style="padding:0.6rem 1rem;" aria-label="{{ 'general.pagination.next' | t }}">
+            {% render 'icons', icon: 'chevron-right' %}
+          </a>
+        </li>
+      {%- endif -%}
+    </ul>
+  </nav>
+{%- endif -%}

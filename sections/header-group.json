@@ -1,0 +1,26 @@
+{
+  "name": "Header Group",
+  "type": "header",
+  "sections": {
+    "announcement_bar": {
+      "type": "announcement-bar",
+      "settings": {
+        "show_announcement": true,
+        "text": "Complimentary Insured Shipping & Hallmarking on all Orders",
+        "bg_color": "#181615",
+        "text_color": "#FAF8F5"
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "logo_width": 140,
+        "menu": "main-menu"
+      }
+    }
+  },
+  "order": [
+    "announcement_bar",
+    "header"
+  ]
+}

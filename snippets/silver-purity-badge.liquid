@@ -1,0 +1,70 @@
+{%- comment -%}
+  Silver Purity & Hallmark Badge Snippet
+  Usage: {% render 'silver-purity-badge', hallmark: '925', finish: 'Rhodium Anti-Tarnish' %}
+{%- endcomment -%}
+
+<div class="silver-hallmark-badge">
+  <div class="silver-hallmark-stamp">
+    <span class="silver-hallmark-stamp__925">925</span>
+    <span class="silver-hallmark-stamp__label">SILVER</span>
+  </div>
+  <div class="silver-hallmark-info">
+    <span class="silver-hallmark-title">BIS Certified 92.5% Pure Sterling Silver</span>
+    <span class="silver-hallmark-sub">Triple-plated with precious Rhodium for permanent mirror shine & anti-tarnish protection</span>
+  </div>
+</div>
+
+<style>
+  .silver-hallmark-badge {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background-color: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius, 0);
+  }
+  .silver-hallmark-stamp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 50%, #CBD5E1 100%);
+    border: 1.5px solid #94A3B8;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.8), 0 2px 4px rgba(0,0,0,0.06);
+  }
+  .silver-hallmark-stamp__925 {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #1E293B;
+    line-height: 1;
+  }
+  .silver-hallmark-stamp__label {
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #475569;
+    text-transform: uppercase;
+  }
+  .silver-hallmark-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .silver-hallmark-title {
+    font-family: var(--font-body);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+  .silver-hallmark-sub {
+    font-size: var(--font-size-2xs);
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+  }
+</style>

@@ -1,0 +1,53 @@
+{
+  "current": {
+    "color_bg": "#FAF8F5",
+    "color_surface": "#FFFFFF",
+    "color_surface_alt": "#F4F0EB",
+    "color_text_primary": "#181615",
+    "color_text_secondary": "#5A544F",
+    "color_text_muted": "#8C847D",
+    "color_border": "#E6DFD5",
+    "color_accent_gold": "#B89768",
+    "color_accent_gold_hover": "#A07E50",
+    "color_button_bg": "#181615",
+    "color_button_text": "#FAF8F5",
+    "color_button_hover_bg": "#36322F",
+    "color_badge_sale_bg": "#B89768",
+    "color_badge_sale_text": "#FFFFFF",
+    "font_body_base_size": 15,
+    "heading_scale": 100,
+    "page_max_width": 1360,
+    "page_wide_max_width": 1560,
+    "border_radius": 0,
+    "enable_subtle_grain": false,
+    "cart_type": "drawer",
+    "cart_show_notes": true,
+    "free_shipping_threshold": 2500,
+    "free_shipping_message": "Add [amount] more to unlock Complimentary Insured Shipping",
+    "free_shipping_achieved": "You have unlocked Complimentary Insured Express Shipping!",
+    "product_card_aspect_ratio": "4/5",
+    "show_secondary_image_on_hover": true,
+    "show_vendor": true,
+    "show_quick_add": true,
+    "social_instagram_link": "https://instagram.com/indiasilvo",
+    "social_facebook_link": "https://facebook.com/indiasilvo",
+    "social_pinterest_link": "https://pinterest.com/indiasilvo",
+    "social_whatsapp_number": "+919876543210"
+  },
+  "presets": {
+    "Default": {
+      "color_bg": "#FAF8F5",
+      "color_surface": "#FFFFFF",
+      "color_surface_alt": "#F4F0EB",
+      "color_text_primary": "#181615",
+      "color_text_secondary": "#5A544F",
+      "color_text_muted": "#8C847D",
+      "color_border": "#E6DFD5",
+      "color_accent_gold": "#B89768",
+      "color_accent_gold_hover": "#A07E50",
+      "color_button_bg": "#181615",
+      "color_button_text": "#FAF8F5",
+      "color_button_hover_bg": "#36322F"
+    }
+  }
+}

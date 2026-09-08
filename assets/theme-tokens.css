@@ -1,0 +1,64 @@
+/**
+ * Indiasilvo Luxury Jewellery Design Tokens
+ */
+
+:root {
+  /* Spacing Scale */
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-4xl: 96px;
+  --space-5xl: 128px;
+
+  /* Typography Scales */
+  --font-size-2xs: 0.6875rem; /* 11px */
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.8125rem;  /* 13px */
+  --font-size-base: 0.9375rem;/* 15px */
+  --font-size-md: 1.0625rem;  /* 17px */
+  --font-size-lg: 1.25rem;    /* 20px */
+  --font-size-xl: 1.5rem;     /* 24px */
+  --font-size-2xl: 1.875rem;  /* 30px */
+  --font-size-3xl: 2.375rem;  /* 38px */
+  --font-size-4xl: 3rem;      /* 48px */
+  --font-size-5xl: 3.75rem;   /* 60px */
+
+  /* Line Heights */
+  --line-height-tight: 1.15;
+  --line-height-heading: 1.25;
+  --line-height-body: 1.6;
+
+  /* Letter Spacings */
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.05em;
+  --letter-spacing-wider: 0.1em;
+  --letter-spacing-widest: 0.18em;
+
+  /* Elevation Shadows (Restrained & Soft) */
+  --shadow-subtle: 0 2px 12px rgba(24, 22, 21, 0.04);
+  --shadow-card: 0 4px 20px rgba(24, 22, 21, 0.06);
+  --shadow-drawer: -10px 0 40px rgba(24, 22, 21, 0.12);
+  --shadow-modal: 0 20px 60px rgba(24, 22, 21, 0.16);
+
+  /* Transitions */
+  --ease-out-luxury: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-luxury: cubic-bezier(0.65, 0, 0.35, 1);
+  --transition-fast: 150ms var(--ease-out-luxury);
+  --transition-normal: 300ms var(--ease-out-luxury);
+  --transition-slow: 500ms var(--ease-out-luxury);
+
+  /* Z-Index Layers */
+  --z-base: 1;
+  --z-sticky: 100;
+  --z-header: 500;
+  --z-backdrop: 800;
+  --z-drawer: 900;
+  --z-modal: 1000;
+  --z-toast: 1100;
+}

@@ -1,0 +1,167 @@
+<div id="size-guide-modal" class="size-guide-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Silver Jewellery Size Guide">
+  <div class="size-guide-modal__dialog">
+    <div class="size-guide-modal__header">
+      <div>
+        <span class="section-header__subtitle" style="margin-bottom:2px;">Indiasilvo Atelier</span>
+        <h3 class="size-guide-modal__title">925 Silver Sizing & Measurement Guide</h3>
+      </div>
+      <button type="button" class="size-guide-modal__close" data-modal-close="size-guide" aria-label="{{ 'general.accessibility.close' | t }}">
+        {% render 'icons', icon: 'close' %}
+      </button>
+    </div>
+
+    <div class="size-guide-modal__content">
+      
+      {%- comment -%} Ring Sizing Table {%- endcomment -%}
+      <div class="size-guide-section">
+        <h4 class="size-guide-subheading">Ring Sizing Chart (Indian & International)</h4>
+        <div class="table-responsive">
+          <table class="size-table">
+            <thead>
+              <tr>
+                <th>Indian / Asian Size</th>
+                <th>Inside Diameter (mm)</th>
+                <th>Inside Circumference (mm)</th>
+                <th>US / Canada</th>
+                <th>UK / Australia</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>10</td><td>15.9 mm</td><td>50.0 mm</td><td>5.5</td><td>K 1/2</td></tr>
+              <tr><td>12</td><td>16.5 mm</td><td>51.9 mm</td><td>6.0</td><td>L 1/2</td></tr>
+              <tr><td>14</td><td>17.2 mm</td><td>54.0 mm</td><td>7.0</td><td>N 1/2</td></tr>
+              <tr><td>16</td><td>17.8 mm</td><td>56.0 mm</td><td>7.5</td><td>P</td></tr>
+              <tr><td>18</td><td>18.5 mm</td><td>58.1 mm</td><td>8.5</td><td>Q 1/2</td></tr>
+              <tr><td>20</td><td>19.1 mm</td><td>60.0 mm</td><td>9.0</td><td>R 1/2</td></tr>
+              <tr><td>22</td><td>19.7 mm</td><td>62.0 mm</td><td>10.0</td><td>T 1/2</td></tr>
+              <tr><td>24</td><td>20.4 mm</td><td>64.1 mm</td><td>11.0</td><td>V</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {%- comment -%} Necklace & Chain Length Guide {%- endcomment -%}
+      <div class="size-guide-section" style="margin-top: 2rem;">
+        <h4 class="size-guide-subheading">Silver Chain & Necklace Drop Lengths</h4>
+        <div class="table-responsive">
+          <table class="size-table">
+            <thead>
+              <tr>
+                <th>Length (Inches / cm)</th>
+                <th>Style Description</th>
+                <th>Sitting Position</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>16" (40 cm)</td><td>Choker / Collar</td><td>Sits tightly against base of throat</td></tr>
+              <tr><td>18" (45 cm)</td><td>Princess (Standard)</td><td>Sits gracefully on the collarbone</td></tr>
+              <tr><td>20" (50 cm)</td><td>Matinée</td><td>Sits just below collarbone, ideal with pendants</td></tr>
+              <tr><td>24" (60 cm)</td><td>Opera Length</td><td>Sits at the center of the bust</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {%- comment -%} Measurement Advice {%- endcomment -%}
+      <div style="background-color: var(--color-surface-alt); padding: 1.25rem; border-left: 3px solid var(--color-accent-gold); margin-top: 1.5rem; font-size: 13px; line-height: 1.6;">
+        <strong>Bespoke Sizing Consultation:</strong> Unsure of your exact size? Our silversmiths offer complimentary ring sizers or custom sizing adjustments prior to dispatch. Contact our concierge via WhatsApp or email.
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  .size-guide-modal {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-modal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-normal), visibility var(--transition-normal);
+  }
+  .size-guide-modal.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+  .size-guide-modal__dialog {
+    background: var(--color-surface);
+    width: 100%;
+    max-width: 680px;
+    max-height: 85vh;
+    border-radius: var(--border-radius, 0);
+    box-shadow: var(--shadow-modal);
+    border: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: translateY(20px);
+    transition: transform var(--transition-normal);
+  }
+  .size-guide-modal.is-open .size-guide-modal__dialog {
+    transform: translateY(0);
+  }
+  .size-guide-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.75rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .size-guide-modal__title {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    margin: 0;
+  }
+  .size-guide-modal__close {
+    background: none;
+    border: none;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    padding: 0.25rem;
+  }
+  .size-guide-modal__content {
+    padding: 1.75rem;
+    overflow-y: auto;
+  }
+  .size-guide-subheading {
+    font-family: var(--font-body);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wider);
+    color: var(--color-text-primary);
+    margin-bottom: 0.75rem;
+  }
+  .table-responsive {
+    overflow-x: auto;
+  }
+  .size-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    text-align: left;
+  }
+  .size-table th {
+    background-color: var(--color-surface-alt);
+    padding: 0.65rem 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+  }
+  .size-table td {
+    padding: 0.65rem 0.85rem;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+  }
+  .size-table tr:hover td {
+    background-color: rgba(244, 240, 235, 0.5);
+  }
+</style>

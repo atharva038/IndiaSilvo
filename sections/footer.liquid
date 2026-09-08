@@ -1,0 +1,230 @@
+<footer class="site-footer" data-section-id="{{ section.id }}" role="contentinfo">
+  <div class="container site-footer__main">
+    <div class="footer-grid">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          
+          {%- when 'brand' -%}
+            <div class="footer-block footer-block--brand" {{ block.shopify_attributes }}>
+              <div class="footer-brand-title">{{ block.settings.title | default: shop.name }}</div>
+              <div class="footer-brand-text">{{ block.settings.text }}</div>
+              
+              {%- comment -%} Social Media Links (Only display configured ones) {%- endcomment -%}
+              <div class="footer-social-links" aria-label="Social media channels">
+                {%- if settings.social_instagram_link != blank -%}
+                  <a href="{{ settings.social_instagram_link }}" class="footer-social-btn" target="_blank" rel="noopener" aria-label="Follow Indiasilvo on Instagram">
+                    {% render 'icons', icon: 'instagram' %}
+                  </a>
+                {%- endif -%}
+                {%- if settings.social_facebook_link != blank -%}
+                  <a href="{{ settings.social_facebook_link }}" class="footer-social-btn" target="_blank" rel="noopener" aria-label="Follow Indiasilvo on Facebook">
+                    {% render 'icons', icon: 'facebook' %}
+                  </a>
+                {%- endif -%}
+                {%- if settings.social_pinterest_link != blank -%}
+                  <a href="{{ settings.social_pinterest_link }}" class="footer-social-btn" target="_blank" rel="noopener" aria-label="Follow Indiasilvo on Pinterest">
+                    {% render 'icons', icon: 'pinterest' %}
+                  </a>
+                {%- endif -%}
+                {%- if settings.social_youtube_link != blank -%}
+                  <a href="{{ settings.social_youtube_link }}" class="footer-social-btn" target="_blank" rel="noopener" aria-label="Follow Indiasilvo on YouTube">
+                    {% render 'icons', icon: 'youtube' %}
+                  </a>
+                {%- endif -%}
+                {%- if settings.social_whatsapp_number != blank -%}
+                  <a href="https://wa.me/{{ settings.social_whatsapp_number }}" class="footer-social-btn" target="_blank" rel="noopener" aria-label="Contact Concierge on WhatsApp">
+                    {% render 'icons', icon: 'whatsapp' %}
+                  </a>
+                {%- endif -%}
+              </div>
+            </div>
+
+          {%- when 'menu' -%}
+            <div class="footer-block footer-block--menu" {{ block.shopify_attributes }}>
+              <div class="footer-block__header">
+                <h3 class="footer-block__title">{{ block.settings.title }}</h3>
+                <button type="button" class="footer-accordion-toggle mobile-only" aria-expanded="false" aria-label="Toggle {{ block.settings.title }} menu" onclick="const list = this.closest('.footer-block--menu').querySelector('.footer-links-list'); const isOpen = list.classList.toggle('is-open'); this.setAttribute('aria-expanded', isOpen); this.classList.toggle('is-active');">
+                  {% render 'icons', icon: 'chevron-down' %}
+                </button>
+              </div>
+              
+              {%- if block.settings.menu != blank -%}
+                <ul class="footer-links-list" id="FooterMenu-{{ block.id }}">
+                  {%- for link in linklists[block.settings.menu].links -%}
+                    <li>
+                      <a href="{{ link.url }}" class="footer-link">{{ link.title }}</a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            </div>
+
+          {%- when 'newsletter' -%}
+            <div class="footer-block footer-block--newsletter" {{ block.shopify_attributes }}>
+              <h3 class="footer-block__title">{{ block.settings.title }}</h3>
+              <p class="footer-brand-text">{{ block.settings.text }}</p>
+              
+              {%- form 'customer', class: 'footer-newsletter-form', id: 'FooterNewsletterForm' -%}
+                <input type="hidden" name="contact[tags]" value="newsletter">
+                {%- if form.posted_successfully? -%}
+                  <div class="form-success footer-newsletter-success" role="status">
+                    {% render 'icons', icon: 'check' %}
+                    <span>{{ 'sections.newsletter.success' | t }}</span>
+                  </div>
+                {%- else -%}
+                  <div class="footer-newsletter-input-group">
+                    <label for="FooterNewsletterEmail" class="visually-hidden">{{ 'sections.newsletter.placeholder' | t }}</label>
+                    <input
+                      type="email"
+                      id="FooterNewsletterEmail"
+                      name="contact[email]"
+                      class="footer-newsletter-input"
+                      value="{{ form.email }}"
+                      placeholder="{{ 'sections.newsletter.placeholder' | t }}"
+                      autocorrect="off"
+                      autocapitalize="off"
+                      aria-required="true"
+                      required
+                    >
+                    <button type="submit" class="btn btn-primary footer-newsletter-btn" aria-label="{{ 'sections.newsletter.button' | t }}">
+                      {{ 'sections.newsletter.button' | t }}
+                    </button>
+                  </div>
+                  {%- if form.errors -%}
+                    <div class="form-error footer-newsletter-error" role="alert">
+                      {{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}
+                    </div>
+                  {%- endif -%}
+                {%- endif -%}
+              {%- endform -%}
+            </div>
+
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+
+  {%- comment -%} Bottom Legal & Payment Badges Bar {%- endcomment -%}
+  <div class="site-footer__bottom">
+    <div class="container footer-bottom-flex">
+      
+      <div class="footer-copyright">
+        &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All Rights Reserved. Pure 925 Sterling Silver Jewellery.
+      </div>
+
+      {%- if shop.policies.size > 0 -%}
+        <ul class="footer-policies-list" aria-label="Legal Policies">
+          {%- for policy in shop.policies -%}
+            {%- if policy.url != blank -%}
+              <li>
+                <a href="{{ policy.url }}" class="footer-policy-link">{{ policy.title }}</a>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      <div class="footer-payment-icons">
+        {%- if section.settings.show_payment_methods -%}
+          {%- for type in shop.enabled_payment_types -%}
+            {{ type | payment_type_svg_tag: class: 'footer-payment-icon' }}
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_payment_methods",
+      "label": "Show Payment Icons",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "brand",
+      "name": "Brand Narrative",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Brand Title",
+          "default": "Indiasilvo"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Brand Narrative",
+          "default": "Curators of architectural 925 sterling silver and BIS hallmarked fine jewellery, fusing heirloom Indian filigree with modern silhouettes."
+        }
+      ]
+    },
+    {
+      "type": "menu",
+      "name": "Navigation Menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Boutique"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu Selection"
+        }
+      ]
+    },
+    {
+      "type": "newsletter",
+      "name": "Newsletter Subscription",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "The 925 Silver Circle"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Description",
+          "default": "Receive bespoke previews, secret salon invitations, and private jewellery curation direct to your inbox."
+        }
+      ]
+    }
+  ],
+  "default": {
+    "blocks": [
+      {
+        "type": "brand"
+      },
+      {
+        "type": "menu",
+        "settings": {
+          "title": "Silversmith Boutique"
+        }
+      },
+      {
+        "type": "menu",
+        "settings": {
+          "title": "Client Care"
+        }
+      },
+      {
+        "type": "newsletter"
+      }
+    ]
+  }
+}
+{% endschema %}

@@ -1,0 +1,90 @@
+{%- comment -%}
+  Product Card Snippet
+  Usage: {% render 'product-card', product: product, show_vendor: true, aspect_ratio: '4/5' %}
+{%- endcomment -%}
+
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign featured_media = product.featured_media
+  assign secondary_media = product.media[1]
+  assign aspect_ratio = aspect_ratio | default: settings.product_card_aspect_ratio | default: '4/5'
+-%}
+
+<div class="product-card" data-product-id="{{ product.id }}">
+  <div class="product-card__media-wrapper" style="--product-card-aspect-ratio: {{ aspect_ratio }};">
+    <a href="{{ product.url }}" class="product-card__link" aria-label="{{ product.title | escape }}">
+      {%- if featured_media -%}
+        <img
+          src="{{ featured_media | image_url: width: 600 }}"
+          srcset="{{ featured_media | image_url: width: 360 }} 360w,
+                  {{ featured_media | image_url: width: 540 }} 540w,
+                  {{ featured_media | image_url: width: 720 }} 720w"
+          sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
+          alt="{{ featured_media.alt | default: product.title | escape }}"
+          class="product-card__image product-card__image--primary"
+          loading="lazy"
+          width="600"
+          height="750"
+        >
+        {%- if settings.show_secondary_image_on_hover and secondary_media != blank -%}
+          <img
+            src="{{ secondary_media | image_url: width: 600 }}"
+            srcset="{{ secondary_media | image_url: width: 360 }} 360w,
+                    {{ secondary_media | image_url: width: 540 }} 540w,
+                    {{ secondary_media | image_url: width: 720 }} 720w"
+            sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
+            alt="{{ secondary_media.alt | default: product.title | escape }}"
+            class="product-card__image product-card__image--secondary"
+            loading="lazy"
+            width="600"
+            height="750"
+          >
+        {%- endif -%}
+      {%- else -%}
+        <img
+          src="{{ 'product-silver-ring.jpg' | asset_url }}"
+          alt="{{ product.title | default: '925 Sterling Silver Creation' | escape }}"
+          class="product-card__image product-card__image--primary"
+          loading="lazy"
+          width="600"
+          height="750"
+        >
+      {%- endif -%}
+    </a>
+
+    <div class="product-card__badges">
+      {%- if product.available == false -%}
+        <span class="badge badge-sold-out">{{ 'products.product.sold_out' | t }}</span>
+      {%- elsif product.compare_at_price > product.price -%}
+        <span class="badge badge-sale">{{ 'products.product.sale' | t }}</span>
+      {%- endif -%}
+    </div>
+
+    {%- if settings.show_quick_add and product.available -%}
+      <div class="product-card__quick-add">
+        {%- if product.has_only_default_variant -%}
+          <form method="post" action="{{ routes.cart_add_url }}">
+            <input type="hidden" name="id" value="{{ current_variant.id }}">
+            <button type="submit" class="product-card__quick-add-btn">
+              {{ 'products.product.quick_add' | t }}
+            </button>
+          </form>
+        {%- else -%}
+          <a href="{{ product.url }}" class="product-card__quick-add-btn" style="text-align:center; display:block;">
+            {{ 'products.product.quick_view' | t }}
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="product-card__info">
+    {%- if settings.show_vendor and product.vendor != blank -%}
+      <span class="product-card__vendor">{{ product.vendor }}</span>
+    {%- endif -%}
+    <h3 class="product-card__title">
+      <a href="{{ product.url }}">{{ product.title }}</a>
+    </h3>
+    {% render 'price', product: product %}
+  </div>
+</div>

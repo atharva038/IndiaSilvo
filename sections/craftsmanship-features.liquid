@@ -1,0 +1,152 @@
+<div class="features-section section-spacing-sm" data-section-id="{{ section.id }}" style="background-color: {{ section.settings.bg_color }}; border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);">
+  <div class="container">
+    <div class="features-grid">
+      {%- for block in section.blocks -%}
+        <div class="feature-item" {{ block.shopify_attributes }}>
+          <div class="feature-item__icon">
+            {%- case block.settings.icon -%}
+              {%- when 'shield' -%}
+                {% render 'icons', icon: 'shield-check' %}
+              {%- when 'diamond' -%}
+                {% render 'icons', icon: 'diamond' %}
+              {%- when 'truck' -%}
+                {% render 'icons', icon: 'truck' %}
+              {%- when 'sparkle' -%}
+                {% render 'icons', icon: 'sparkle' %}
+            {%- endcase -%}
+          </div>
+          <div class="feature-item__content">
+            <h4 class="feature-item__title">{{ block.settings.title | escape }}</h4>
+            <p class="feature-item__text">{{ block.settings.text | escape }}</p>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(1.5rem, 3vw, 3rem);
+  }
+  @media (min-width: 990px) {
+    .features-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .feature-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1rem 0.5rem;
+  }
+  .feature-item__icon {
+    color: var(--color-accent-gold);
+    margin-bottom: var(--space-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .feature-item__title {
+    font-family: var(--font-body);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wider);
+    margin-bottom: 4px;
+    color: var(--color-text-primary);
+  }
+  .feature-item__text {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Craftsmanship & Trust",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#F4F0EB"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature Item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "shield", "label": "Shield / Hallmark" },
+            { "value": "diamond", "label": "Diamond / Gem" },
+            { "value": "truck", "label": "Insured Shipping" },
+            { "value": "sparkle", "label": "Artisanal Sparkle" }
+          ],
+          "default": "shield"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Feature Title",
+          "default": "925 Pure Hallmark"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Description",
+          "default": "Every creation carries genuine BIS certification and laser hallmark."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Craftsmanship & Trust",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "shield",
+            "title": "925 Pure Hallmark",
+            "text": "Certified 925 sterling silver hallmarked with sovereign standards."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "diamond",
+            "title": "Artisanal Precision",
+            "text": "Hand-set gemstones and hand-burnished mirror finish."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "truck",
+            "title": "Insured Delivery",
+            "text": "Complimentary transit insurance and tamper-proof velvet packaging."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "sparkle",
+            "title": "Lifetime Re-polish",
+            "text": "Complimentary yearly sonic cleaning and rhodium re-plating service."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

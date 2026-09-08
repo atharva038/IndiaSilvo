@@ -1,0 +1,80 @@
+<div class="main-collection-section section-spacing-sm" data-section-id="{{ section.id }}">
+  <div class="container">
+    
+    <div class="section-header">
+      <h1 class="section-header__title h1">{{ collection.title | escape }}</h1>
+      {%- if collection.description != blank -%}
+        <div class="section-header__description">{{ collection.description }}</div>
+      {%- endif -%}
+      <div style="font-size: 13px; color: var(--color-text-muted); margin-top: 0.5rem;">
+        {{ 'sections.collection_template.product_count_plural' | t: count: collection.products_count }}
+      </div>
+    </div>
+
+    {%- paginate collection.products by section.settings.products_per_page -%}
+      {%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
+        {% render 'facets', results: collection %}
+      {%- endif -%}
+
+      <div class="product-grid product-grid--{{ section.settings.columns_desktop }}-col">
+        {%- if collection.products.size > 0 -%}
+          {%- for product in collection.products -%}
+            {% render 'product-card', product: product %}
+          {%- endfor -%}
+        {%- else -%}
+          <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem;">
+            <h3 class="h3">{{ 'sections.collection_template.empty' | t }}</h3>
+            <p style="margin-bottom: 2rem;">{{ 'sections.collection_template.clear_all' | t }}</p>
+            <a href="{{ collection.url }}" class="btn btn-secondary">
+              {{ 'sections.collection_template.clear_all' | t }}
+            </a>
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- if paginate.pages > 1 -%}
+        {% render 'pagination', paginate: paginate %}
+      {%- endif -%}
+    {%- endpaginate -%}
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collection Grid",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 8,
+      "max": 36,
+      "step": 4,
+      "label": "Products per page",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "columns_desktop",
+      "label": "Columns on desktop",
+      "options": [
+        { "value": "3", "label": "3 Columns" },
+        { "value": "4", "label": "4 Columns" }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_filtering",
+      "label": "Enable Faceted Filtering",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sorting",
+      "label": "Enable Sorting",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

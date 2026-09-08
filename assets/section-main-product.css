@@ -1,0 +1,221 @@
+/**
+ * Product Detail Page (PDP) Styles
+ */
+
+.product-section {
+  padding-top: clamp(2rem, 4vw, 4rem);
+  padding-bottom: clamp(3rem, 6vw, 6rem);
+}
+
+.product-layout-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(2rem, 5vw, 5rem);
+}
+
+@media (min-width: 990px) {
+  .product-layout-grid {
+    grid-template-columns: 1.15fr 0.85fr;
+    align-items: start;
+  }
+}
+
+/* Gallery Styles */
+.product-gallery {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.product-gallery__main-image-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/5;
+  background-color: var(--color-surface-alt);
+  border-radius: var(--border-radius, 0);
+  overflow: hidden;
+}
+
+.product-gallery__main-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-gallery__thumbnails {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.product-gallery__thumb {
+  width: 72px;
+  height: 90px;
+  flex-shrink: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius, 0);
+  cursor: pointer;
+  background: var(--color-surface-alt);
+  overflow: hidden;
+  transition: border-color var(--transition-fast);
+}
+
+.product-gallery__thumb.is-active,
+.product-gallery__thumb:hover {
+  border-color: var(--color-accent-gold);
+}
+
+.product-gallery__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Sticky Product Details */
+.product-info-panel {
+  position: sticky;
+  top: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.product-vendor-badge {
+  font-size: var(--font-size-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-widest);
+  color: var(--color-accent-gold);
+  font-weight: 600;
+}
+
+.product-main-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.product-pricing-row {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.product-price-current {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.product-price-compare {
+  font-size: 1.1rem;
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+}
+
+.product-tax-notice {
+  font-size: var(--font-size-2xs);
+  color: var(--color-text-muted);
+}
+
+/* Variant Pickers */
+.variant-option-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.variant-option-label {
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.variant-pill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.variant-pill {
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  padding: 0.6rem 1.25rem;
+  font-size: var(--font-size-xs);
+  cursor: pointer;
+  border-radius: var(--border-radius, 0);
+  transition: all var(--transition-fast);
+}
+
+.variant-pill:hover,
+.variant-pill.is-selected {
+  border-color: var(--color-text-primary);
+  background-color: var(--color-text-primary);
+  color: var(--color-bg);
+}
+
+/* Add to Cart Group */
+.product-add-group {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+/* Accordions (Specifications, Purity, Shipping) */
+.product-accordions {
+  border-top: 1px solid var(--color-border);
+  margin-top: 1.5rem;
+}
+
+.accordion-item {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.accordion-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.1rem 0;
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wider);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  text-align: left;
+}
+
+.accordion-header:hover {
+  color: var(--color-accent-gold);
+}
+
+.accordion-icon {
+  transition: transform var(--transition-normal);
+}
+
+.accordion-item.is-active .accordion-icon {
+  transform: rotate(180deg);
+}
+
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--transition-normal);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+.accordion-inner {
+  padding-bottom: 1.25rem;
+}

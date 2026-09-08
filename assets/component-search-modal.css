@@ -1,0 +1,93 @@
+/**
+ * Search Modal Component
+ */
+
+.search-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--color-bg);
+  z-index: var(--z-modal);
+  box-shadow: var(--shadow-modal);
+  transform: translateY(-100%);
+  transition: transform var(--transition-normal);
+  padding: clamp(2rem, 5vw, 3.5rem) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.search-modal.is-open {
+  transform: translateY(0);
+}
+
+.search-modal__inner {
+  position: relative;
+}
+
+.search-modal__close {
+  position: absolute;
+  top: -1.5rem;
+  right: 0;
+  background: none;
+  border: none;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.search-modal__form {
+  position: relative;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.search-modal__input {
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 2.5vw, 2rem) !important;
+  border: none !important;
+  border-bottom: 1px solid var(--color-border) !important;
+  border-radius: 0 !important;
+  padding: 0.75rem 3rem 0.75rem 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.search-modal__input:focus {
+  border-bottom-color: var(--color-accent-gold) !important;
+}
+
+.search-modal__submit {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.search-modal__results {
+  max-width: 720px;
+  margin: 1.5rem auto 0 auto;
+  max-height: 50vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.search-predictive-item {
+  display: grid;
+  grid-template-columns: 50px 1fr;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.5rem;
+  border-radius: var(--border-radius, 0);
+  transition: background-color var(--transition-fast);
+}
+
+.search-predictive-item:hover {
+  background-color: var(--color-surface-alt);
+}

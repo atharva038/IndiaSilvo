@@ -1,0 +1,24 @@
+{% layout none %}
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ 'gift_cards.issued.title' | default: 'Your Indiasilvo Gift Card' }}</title>
+    {% render 'head-styles' %}
+  </head>
+  <body style="background-color: var(--color-bg); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem;">
+    <div style="max-width: 500px; width: 100%; background: var(--color-surface); padding: 3rem 2rem; border: 1px solid var(--color-border); text-align: center;">
+      <span class="section-header__subtitle">Indiasilvo</span>
+      <h1 class="h2" style="margin-bottom: 1.5rem;">Gift Voucher</h1>
+      <div class="gold-divider"></div>
+      <div style="font-size: 2rem; font-weight: 600; color: var(--color-accent-gold); margin: 1.5rem 0;">
+        {{ gift_card.balance | money }}
+      </div>
+      <div style="background: var(--color-surface-alt); padding: 1rem; border: 1px dashed var(--color-border); font-family: monospace; font-size: 1.25rem; letter-spacing: 0.1em; margin-bottom: 2rem;">
+        {{ gift_card.code | format_code }}
+      </div>
+      <a href="{{ shop.url }}" class="btn btn-primary btn-full">Shop The Boutique</a>
+    </div>
+  </body>
+</html>

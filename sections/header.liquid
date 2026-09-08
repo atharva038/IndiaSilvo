@@ -1,0 +1,287 @@
+<header class="site-header-wrapper {% if section.settings.enable_sticky %}is-sticky{% endif %}" data-section-id="{{ section.id }}" data-sticky="{{ section.settings.enable_sticky }}">
+  
+  {%- comment -%} Main Header Bar {%- endcomment -%}
+  <div class="container site-header">
+    
+    {%- comment -%} Left Column (Desktop: Search | Mobile: Menu Toggle) {%- endcomment -%}
+    <div class="header-col-left">
+      <button type="button" class="mobile-menu-trigger" data-drawer-trigger="mobile-nav" aria-label="{{ 'general.accessibility.open_menu' | t }}" aria-controls="mobile-nav-drawer" aria-expanded="false">
+        {% render 'icons', icon: 'menu' %}
+      </button>
+
+      {%- if section.settings.show_search -%}
+        <button type="button" class="header-action-btn header-search-trigger desktop-only" data-modal-trigger="search" aria-label="{{ 'general.accessibility.search' | t }}" aria-controls="search-modal" aria-expanded="false">
+          {% render 'icons', icon: 'search' %}
+          <span class="header-search-label">Search</span>
+        </button>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Center Column: Brand Logo {%- endcomment -%}
+    <div class="header-col-center">
+      <a href="{{ routes.root_url }}" class="header-logo" aria-label="{{ shop.name }}">
+        {%- if section.settings.logo != blank -%}
+          <img
+            src="{{ section.settings.logo | image_url: width: 400 }}"
+            srcset="{{ section.settings.logo | image_url: width: 200 }} 1x, {{ section.settings.logo | image_url: width: 400 }} 2x"
+            alt="{{ section.settings.logo.alt | default: shop.name | escape }}"
+            width="{{ section.settings.logo_width }}"
+            height="auto"
+            class="header-logo__img desktop-logo"
+            loading="eager"
+            fetchpriority="high"
+          >
+          {%- if section.settings.mobile_logo != blank -%}
+            <img
+              src="{{ section.settings.mobile_logo | image_url: width: 260 }}"
+              alt="{{ section.settings.mobile_logo.alt | default: shop.name | escape }}"
+              width="{{ section.settings.mobile_logo_width | default: 110 }}"
+              height="auto"
+              class="header-logo__img mobile-logo"
+              loading="eager"
+            >
+          {%- endif -%}
+        {%- else -%}
+          <span class="header-logo__text">{{ shop.name }}</span>
+        {%- endif -%}
+      </a>
+    </div>
+
+    {%- comment -%} Right Column: Actions (Search on mobile, Account, Wishlist Hook, Cart Bag) {%- endcomment -%}
+    <div class="header-col-right">
+      <div class="header-actions">
+        {%- if section.settings.show_search -%}
+          <button type="button" class="header-action-btn mobile-only" data-modal-trigger="search" aria-label="{{ 'general.accessibility.search' | t }}" aria-controls="search-modal" aria-expanded="false">
+            {% render 'icons', icon: 'search' %}
+          </button>
+        {%- endif -%}
+
+        {%- if section.settings.show_account and shop.customer_accounts_enabled -%}
+          <a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" class="header-action-btn desktop-only" aria-label="{{ 'sections.header.account' | t }}">
+            {% render 'icons', icon: 'account' %}
+          </a>
+        {%- endif -%}
+
+        {%- if section.settings.show_wishlist -%}
+          <button type="button" class="header-action-btn wishlist-trigger" data-wishlist-trigger aria-label="View Wishlist">
+            {% render 'icons', icon: 'heart' %}
+            <span class="wishlist-count-badge" data-wishlist-count style="display:none;">0</span>
+          </button>
+        {%- endif -%}
+
+        <button type="button" class="header-action-btn cart-trigger" data-drawer-trigger="cart" aria-label="{{ 'general.accessibility.cart_count' | t: count: cart.item_count }}" aria-controls="cart-drawer" aria-expanded="false">
+          {% render 'icons', icon: 'bag' %}
+          <span class="cart-count-badge" data-cart-count {% if cart.item_count == 0 %}style="display: none;"{% endif %}>
+            {{ cart.item_count }}
+          </span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  {%- comment -%} Desktop Navigation Row {%- endcomment -%}
+  <nav class="desktop-navigation" role="navigation" aria-label="Main Navigation">
+    <div class="container">
+      <ul class="desktop-nav-list" role="menubar">
+        {%- if section.settings.menu != blank -%}
+          {%- for link in linklists[section.settings.menu].links -%}
+            <li class="desktop-nav-item {% if link.links != blank %}has-dropdown{% endif %}" role="none">
+              <a href="{{ link.url }}" class="desktop-nav-link {% if link.active %}is-active{% endif %}" role="menuitem" {% if link.links != blank %}aria-haspopup="true" aria-expanded="false"{% endif %}>
+                <span>{{ link.title }}</span>
+                {%- if link.links != blank -%}
+                  {% render 'icons', icon: 'chevron-down' %}
+                {%- endif -%}
+              </a>
+
+              {%- if link.links != blank -%}
+                <div class="desktop-dropdown-menu" role="menu">
+                  <div class="desktop-dropdown-inner">
+                    <ul class="desktop-dropdown-list">
+                      {%- for childlink in link.links -%}
+                        <li class="desktop-dropdown-item {% if childlink.links != blank %}has-nested-dropdown{% endif %}" role="none">
+                          <a href="{{ childlink.url }}" class="desktop-dropdown-link {% if childlink.active %}is-active{% endif %}" role="menuitem">
+                            <span>{{ childlink.title }}</span>
+                            {%- if childlink.links != blank -%}
+                              {% render 'icons', icon: 'chevron-right' %}
+                            {%- endif -%}
+                          </a>
+
+                          {%- if childlink.links != blank -%}
+                            <ul class="desktop-nested-dropdown-list" role="menu">
+                              {%- for grandchildlink in childlink.links -%}
+                                <li role="none">
+                                  <a href="{{ grandchildlink.url }}" class="desktop-dropdown-sublink {% if grandchildlink.active %}is-active{% endif %}" role="menuitem">
+                                    {{ grandchildlink.title }}
+                                  </a>
+                                </li>
+                              {%- endfor -%}
+                            </ul>
+                          {%- endif -%}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                </div>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        {%- else -%}
+          <li class="desktop-nav-item" role="none"><a href="{{ routes.all_products_collection_url }}" class="desktop-nav-link" role="menuitem">High Jewellery</a></li>
+          <li class="desktop-nav-item" role="none"><a href="{{ routes.collections_url }}" class="desktop-nav-link" role="menuitem">Collections</a></li>
+          <li class="desktop-nav-item" role="none"><a href="/pages/about" class="desktop-nav-link" role="menuitem">Maison & Craft</a></li>
+        {%- endif -%}
+      </ul>
+    </div>
+  </nav>
+
+</header>
+
+{%- comment -%} Mobile Navigation Drawer {%- endcomment -%}
+<div id="mobile-nav-drawer" class="mobile-nav-drawer" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Mobile Navigation Menu">
+  <div class="mobile-nav-header">
+    <span class="mobile-nav-brand">{{ shop.name }}</span>
+    <button type="button" class="mobile-nav-close-btn" data-drawer-close="mobile-nav" aria-label="{{ 'general.accessibility.close_menu' | t }}">
+      {% render 'icons', icon: 'close' %}
+    </button>
+  </div>
+
+  <div class="mobile-nav-content">
+    <ul class="mobile-nav-list" role="navigation">
+      {%- if section.settings.menu != blank -%}
+        {%- for link in linklists[section.settings.menu].links -%}
+          <li class="mobile-nav-item {% if link.links != blank %}has-submenu{% endif %}">
+            {%- if link.links != blank -%}
+              <div class="mobile-nav-item-header">
+                <a href="{{ link.url }}" class="mobile-nav-link">{{ link.title }}</a>
+                <button type="button" class="mobile-submenu-toggle" aria-expanded="false" aria-label="Toggle {{ link.title }} submenu" onclick="const sub = this.closest('.mobile-nav-item').querySelector('.mobile-submenu'); const isOpen = sub.classList.toggle('is-open'); this.setAttribute('aria-expanded', isOpen); this.classList.toggle('is-active');">
+                  {% render 'icons', icon: 'chevron-down' %}
+                </button>
+              </div>
+
+              <div class="mobile-submenu">
+                <ul class="mobile-submenu-list">
+                  {%- for childlink in link.links -%}
+                    <li class="mobile-submenu-item">
+                      <a href="{{ childlink.url }}" class="mobile-submenu-link">{{ childlink.title }}</a>
+                      {%- if childlink.links != blank -%}
+                        <ul class="mobile-grandchild-list">
+                          {%- for grandchildlink in childlink.links -%}
+                            <li>
+                              <a href="{{ grandchildlink.url }}" class="mobile-grandchild-link">{{ grandchildlink.title }}</a>
+                            </li>
+                          {%- endfor -%}
+                        </ul>
+                      {%- endif -%}
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </div>
+            {%- else -%}
+              <a href="{{ link.url }}" class="mobile-nav-link">{{ link.title }}</a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      {%- else -%}
+        <li class="mobile-nav-item"><a href="{{ routes.all_products_collection_url }}" class="mobile-nav-link">High Jewellery</a></li>
+        <li class="mobile-nav-item"><a href="{{ routes.collections_url }}" class="mobile-nav-link">Collections</a></li>
+        <li class="mobile-nav-item"><a href="/pages/about" class="mobile-nav-link">Maison & Craft</a></li>
+      {%- endif -%}
+    </ul>
+  </div>
+
+  <div class="mobile-nav-footer">
+    {%- if section.settings.show_account and shop.customer_accounts_enabled -%}
+      <a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" class="btn btn-secondary btn-full mobile-account-btn">
+        {% render 'icons', icon: 'account' %}
+        <span>{% if customer %}{{ 'customer.account.title' | default: 'My Account' }}{% else %}{{ 'customer.log_in' | default: 'Sign In / Register' }}{% endif %}</span>
+      </a>
+    {%- endif -%}
+    {%- if settings.social_whatsapp_number != blank -%}
+      <a href="https://wa.me/{{ settings.social_whatsapp_number }}" target="_blank" rel="noopener" class="btn btn-gold btn-full mobile-concierge-btn">
+        {% render 'icons', icon: 'whatsapp' %}
+        <span>Concierge Consultation</span>
+      </a>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_sticky",
+      "label": "Enable Sticky Header",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Logo Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Desktop Logo Image"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 80,
+      "max": 260,
+      "step": 5,
+      "unit": "px",
+      "label": "Desktop Logo Width",
+      "default": 140
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_logo",
+      "label": "Mobile Logo Image (Optional)"
+    },
+    {
+      "type": "range",
+      "id": "mobile_logo_width",
+      "min": 60,
+      "max": 180,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Logo Width",
+      "default": 110
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Main Navigation Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "header",
+      "content": "Action Controls"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show Search Button",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "Show Account Link",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_wishlist",
+      "label": "Enable Wishlist Button Hook",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

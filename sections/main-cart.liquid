@@ -1,0 +1,80 @@
+<div class="cart-page-section section-spacing" data-section-id="{{ section.id }}">
+  <div class="container container-narrow">
+    <h1 class="h2" style="text-align:center; margin-bottom: 2.5rem;">{{ 'sections.cart.title' | t }}</h1>
+
+    {%- if cart.item_count > 0 -%}
+      <form action="{{ routes.cart_url }}" method="post" id="cart-form">
+        <div class="cart-page-items" style="display: flex; flex-direction: column; gap: 1.5rem; border-top: 1px solid var(--color-border); padding-top: 1.5rem;">
+          {%- for item in cart.items -%}
+            <div class="cart-item" style="grid-template-columns: 100px 1fr; padding-bottom: 1.5rem;">
+              <div class="cart-item__image-wrap">
+                {%- if item.image -%}
+                  <img src="{{ item.image | image_url: width: 200 }}" alt="{{ item.title | escape }}" loading="lazy" width="100" height="100">
+                {%- endif -%}
+              </div>
+              <div class="cart-item__details">
+                <a href="{{ item.url }}" class="cart-item__title" style="font-size: 1.25rem;">{{ item.product.title }}</a>
+                {%- unless item.product.has_only_default_variant -%}
+                  <span class="cart-item__variant">{{ item.variant.title }}</span>
+                {%- endunless -%}
+                <div class="cart-item__price" style="font-size: 1rem;">{{ item.final_line_price | money }}</div>
+
+                <div class="cart-item__actions" style="margin-top: 1rem;">
+                  <div class="quantity-stepper">
+                    <button type="button" class="quantity-stepper__btn" data-cart-qty-change="-1" data-key="{{ item.key }}" data-current-qty="{{ item.quantity }}">
+                      {% render 'icons', icon: 'minus' %}
+                    </button>
+                    <span class="quantity-stepper__input">{{ item.quantity }}</span>
+                    <button type="button" class="quantity-stepper__btn" data-cart-qty-change="1" data-key="{{ item.key }}" data-current-qty="{{ item.quantity }}">
+                      {% render 'icons', icon: 'plus' %}
+                    </button>
+                  </div>
+                  <button type="button" class="cart-item__remove-btn" data-cart-remove data-key="{{ item.key }}">
+                    {% render 'icons', icon: 'trash' %}
+                    {{ 'sections.cart.remove' | t }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+
+        <div style="margin-top: 2rem; background-color: var(--color-surface); padding: 2rem; border: 1px solid var(--color-border);">
+          {%- if settings.cart_show_notes -%}
+            <div style="margin-bottom: 1.5rem;">
+              <label for="CartPageNote">{{ 'sections.cart.note' | t }}</label>
+              <textarea name="note" id="CartPageNote" rows="3" placeholder="{{ 'sections.cart.note_placeholder' | t }}">{{ cart.note }}</textarea>
+            </div>
+          {%- endif -%}
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <span style="font-family: var(--font-heading); font-size: 1.4rem;">{{ 'sections.cart.subtotal' | t }}</span>
+            <span style="font-size: 1.3rem; font-weight: 600;">{{ cart.total_price | money }}</span>
+          </div>
+
+          <p style="font-size: 12px; color: var(--color-text-muted); margin-bottom: 1.5rem;">
+            {{ 'sections.cart.taxes_and_shipping_policy_at_checkout_html' | t }}
+          </p>
+
+          <button type="submit" name="checkout" class="btn btn-primary btn-full" style="height: 50px;">
+            {{ 'sections.cart.checkout' | t }}
+          </button>
+        </div>
+      </form>
+    {%- else -%}
+      <div style="text-align: center; padding: 4rem 1rem;">
+        <p style="font-size: 1.15rem; margin-bottom: 2rem;">{{ 'sections.cart.empty' | t }}</p>
+        <a href="{{ routes.all_products_collection_url }}" class="btn btn-primary">
+          {{ 'sections.cart.continue_shopping' | t }}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Cart Page",
+  "settings": []
+}
+{% endschema %}

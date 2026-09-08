@@ -1,0 +1,28 @@
+<div id="search-modal" class="search-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="{{ 'general.accessibility.search' | t }}">
+  <div class="container search-modal__inner">
+    <button type="button" class="search-modal__close" data-modal-close="search" aria-label="{{ 'general.accessibility.close' | t }}">
+      {% render 'icons', icon: 'close' %}
+    </button>
+
+    <form action="{{ routes.search_url }}" method="get" role="search" class="search-modal__form">
+      <input
+        type="search"
+        name="q"
+        value="{{ search.terms | escape }}"
+        placeholder="{{ 'sections.header.search_placeholder' | t }}"
+        class="search-modal__input"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+      >
+      <input type="hidden" name="type" value="product">
+      <input type="hidden" name="options[prefix]" value="last">
+      <button type="submit" class="search-modal__submit" aria-label="{{ 'general.accessibility.search' | t }}">
+        {% render 'icons', icon: 'search' %}
+      </button>
+    </form>
+
+    <div class="search-modal__results" aria-live="polite"></div>
+  </div>
+</div>

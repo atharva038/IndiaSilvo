@@ -1,0 +1,44 @@
+<div class="search-page-section section-spacing" data-section-id="{{ section.id }}">
+  <div class="container">
+    
+    <div class="section-header">
+      <h1 class="h2">{{ 'templates.search.title' | t }}</h1>
+      <form action="{{ routes.search_url }}" method="get" style="max-width: 500px; margin: 1.5rem auto 0 auto; display: flex; gap: 0.5rem;">
+        <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'sections.header.search_placeholder' | t }}">
+        <button type="submit" class="btn btn-primary">{{ 'general.accessibility.search' | t }}</button>
+      </form>
+    </div>
+
+    {%- if search.performed -%}
+      <div style="margin-bottom: 2rem; text-align: center; color: var(--color-text-secondary);">
+        {%- if search.results_count > 0 -%}
+          <p>{{ 'templates.search.results_with_count' | t: count: search.results_count, terms: search.terms }}</p>
+        {%- else -%}
+          <p>{{ 'templates.search.no_results' | t: terms: search.terms }}</p>
+        {%- endif -%}
+      </div>
+
+      {%- paginate search.results by 16 -%}
+        <div class="product-grid product-grid--4-col">
+          {%- for item in search.results -%}
+            {%- if item.object_type == 'product' -%}
+              {% render 'product-card', product: item %}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+          {% render 'pagination', paginate: paginate %}
+        {%- endif -%}
+      {%- endpaginate -%}
+    {%- endif -%}
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Search Results",
+  "settings": []
+}
+{% endschema %}
