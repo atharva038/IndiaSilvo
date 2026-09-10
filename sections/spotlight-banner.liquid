@@ -39,14 +39,9 @@
             >
           </picture>
         {%- else -%}
-          <img
-            src="{{ 'hero-silver-jewellery.jpg' | asset_url }}"
-            alt="{{ section.settings.heading | default: 'Indiasilvo Pure Sterling Silver' | escape }}"
-            class="spotlight-banner-img"
-            loading="lazy"
-            width="1800"
-            height="800"
-          >
+          <div class="placeholder-svg-wrapper" style="background: #252220; width:100%; height:100%;">
+            {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg spotlight-banner-img' }}
+          </div>
         {%- endif -%}
         
         <div
