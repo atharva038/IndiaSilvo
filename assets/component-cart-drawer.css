@@ -235,44 +235,67 @@
 .cart-drawer .quantity-stepper {
   display: inline-flex;
   align-items: center;
+  justify-content: space-between;
   border: 1px solid var(--color-border);
   background-color: var(--color-surface);
   border-radius: var(--border-radius, 0);
   height: 32px;
+  min-width: 90px;
+  max-width: 100px;
+  padding: 0 2px;
+  box-sizing: border-box;
 }
 
 .cart-drawer .quantity-stepper__btn {
   background: none;
   border: none;
-  width: 28px;
-  height: 100%;
+  width: 26px;
+  height: 28px;
   cursor: pointer;
   color: var(--color-text-primary);
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   font-size: 14px;
-  transition: background-color var(--transition-fast);
+  padding: 0;
+  margin: 0;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+  border-radius: var(--border-radius, 0);
+  flex-shrink: 0;
 }
 
 .cart-drawer .quantity-stepper__btn:hover {
   background-color: var(--color-surface-alt);
+  color: var(--color-accent-gold);
 }
 
 .cart-drawer .quantity-stepper__btn svg {
   width: 10px;
   height: 10px;
+  display: block;
 }
 
-.cart-drawer .quantity-stepper__input {
-  width: 32px;
-  text-align: center;
+.cart-drawer .quantity-stepper__input,
+.cart-drawer span.quantity-stepper__input,
+.cart-drawer input.quantity-stepper__input {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 1 !important;
+  width: 32px !important;
+  height: 100% !important;
+  text-align: center !important;
   border: none !important;
   box-shadow: none !important;
-  font-size: var(--font-size-xs) !important;
+  font-family: var(--font-body) !important;
+  font-size: 13px !important;
   background: transparent !important;
-  font-weight: 600;
-  line-height: 1;
+  font-weight: 600 !important;
+  color: var(--color-text-primary) !important;
+  line-height: 1 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  vertical-align: middle !important;
 }
 
 /* Empty Cart State */

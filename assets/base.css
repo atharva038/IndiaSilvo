@@ -346,11 +346,15 @@ input:focus, textarea:focus, select:focus {
 }
 
 .quantity-stepper input[type="number"].quantity-stepper__input,
+.quantity-stepper span.quantity-stepper__input,
 .quantity-stepper__input {
   flex: 1;
   width: 36px !important;
   min-width: 0;
   height: 100% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   border: none !important;
   background: transparent !important;
   text-align: center;
@@ -359,6 +363,9 @@ input:focus, textarea:focus, select:focus {
   font-weight: 600;
   color: var(--color-text-primary);
   padding: 0 !important;
+  margin: 0 !important;
+  line-height: 1 !important;
+  vertical-align: middle !important;
   box-shadow: none !important;
   -moz-appearance: textfield;
 }

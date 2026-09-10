@@ -42,7 +42,7 @@
 
       <div style="margin-bottom: 1rem;">
         <label for="ContactPhone">{{ 'sections.contact.form.phone' | t }}</label>
-        <input type="tel" id="ContactPhone" name="contact[{{ 'sections.contact.form.phone' | t }}]" value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}">
+        <input type="tel" id="ContactPhone" name="contact[{{ 'sections.contact.form.phone' | t }}]" value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}" required>
       </div>
 
       <div style="margin-bottom: 1.5rem;">
