@@ -47,8 +47,8 @@
       "note_placeholder": "Add a complimentary gift message or bespoke instructions...",
       "quantity": "Quantity",
       "update": "Update Bag",
-      "free_shipping_congrats": "Complimentary Insured Shipping Unlocked",
-      "free_shipping_progress": "Add {{ amount }} more for Complimentary Insured Shipping"
+      "free_shipping_congrats": "🎉 Free Delivery Unlocked!",
+      "free_shipping_progress": "Add {{ amount }} more for Free Delivery"
     },
     "featured_collection": {
       "view_all": "View All Pieces"

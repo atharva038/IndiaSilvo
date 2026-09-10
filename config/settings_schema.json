@@ -210,20 +210,20 @@
       {
         "type": "number",
         "id": "free_shipping_threshold",
-        "label": "Free Shipping Threshold (Amount in store currency, e.g. 1500)",
-        "default": 2000
+        "label": "Free Delivery Threshold (Amount in store currency, e.g. 500)",
+        "default": 500
       },
       {
         "type": "text",
         "id": "free_shipping_message",
-        "label": "Free Shipping Progress Message",
-        "default": "Add [amount] more to unlock Complimentary Insured Shipping"
+        "label": "Free Delivery Progress Message",
+        "default": "Add [amount] more to unlock Free Delivery"
       },
       {
         "type": "text",
         "id": "free_shipping_achieved",
-        "label": "Free Shipping Achieved Message",
-        "default": "You have unlocked Complimentary Insured Express Shipping!"
+        "label": "Free Delivery Achieved Message",
+        "default": "🎉 You have unlocked Free Delivery!"
       }
     ]
   },
