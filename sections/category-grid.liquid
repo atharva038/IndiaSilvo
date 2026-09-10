@@ -1,19 +1,21 @@
 <section id="CategoryGrid-{{ section.id }}" class="category-grid-section section-spacing" data-section-id="{{ section.id }}" style="background-color: {{ section.settings.bg_color }};">
   <div class="container">
     
-    <div class="section-header">
-      {%- if section.settings.eyebrow != blank -%}
-        <span class="section-header__subtitle">{{ section.settings.eyebrow | escape }}</span>
-      {%- endif -%}
-      {%- if section.settings.heading != blank -%}
-        <h2 class="section-header__title h2">{{ section.settings.heading | escape }}</h2>
-      {%- endif -%}
-      {%- if section.settings.description != blank -%}
-        <p class="section-header__description">{{ section.settings.description | escape }}</p>
-      {%- endif -%}
-    </div>
+    {%- if section.settings.heading != blank or section.settings.eyebrow != blank -%}
+      <div class="section-header">
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="section-header__subtitle">{{ section.settings.eyebrow | escape }}</span>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="section-header__title h2">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.description != blank -%}
+          <p class="section-header__description">{{ section.settings.description | escape }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
 
-    <div class="category-tiles-grid">
+    <div class="category-tiles-grid category-tiles-grid--{{ section.settings.card_style | default: 'editorial_card' }}">
       {%- if section.blocks.size > 0 -%}
         {%- for block in section.blocks -%}
           {%- liquid
@@ -116,6 +118,9 @@
 </section>
 
 <style>
+  .category-grid-section {
+    position: relative;
+  }
   .category-tiles-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -130,7 +135,14 @@
   .category-tile-item {
     position: relative;
     overflow: hidden;
-    border-radius: var(--border-radius, 0);
+    border-radius: 4px;
+    background-color: #1A1715;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+  }
+  .category-tile-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
   }
 
   .category-tile-link {
@@ -152,7 +164,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform var(--transition-slow);
+    transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
   }
   .category-tile-item:hover .category-tile-img {
     transform: scale(1.06);
@@ -161,11 +173,11 @@
   .category-tile-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(24, 22, 21, 0.75) 0%, rgba(24, 22, 21, 0.1) 60%, transparent 100%);
-    transition: background-color var(--transition-normal);
+    background: linear-gradient(to top, rgba(24, 22, 21, 0.75) 0%, rgba(24, 22, 21, 0.1) 50%, transparent 100%);
+    transition: background 0.4s ease;
   }
   .category-tile-item:hover .category-tile-overlay {
-    background: linear-gradient(to top, rgba(24, 22, 21, 0.85) 0%, rgba(24, 22, 21, 0.2) 60%, transparent 100%);
+    background: linear-gradient(to top, rgba(24, 22, 21, 0.85) 0%, rgba(24, 22, 21, 0.2) 50%, transparent 100%);
   }
 
   .category-tile-info {
@@ -179,20 +191,29 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    z-index: 2;
   }
 
   .category-tile-title {
     font-family: var(--font-heading);
-    font-size: clamp(1.2rem, 1.8vw, 1.55rem);
+    font-size: clamp(1.15rem, 1.6vw, 1.45rem);
     color: #FAF8F5;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
     line-height: 1.25;
+    letter-spacing: 0.02em;
+    font-weight: 400;
   }
 
   .category-tile-btn {
     color: #FAF8F5 !important;
     border-color: rgba(250, 248, 245, 0.7) !important;
     font-size: 11px !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase;
+  }
+  .category-tile-item:hover .category-tile-btn {
+    color: #C8A876 !important;
+    border-color: #C8A876 !important;
   }
 </style>
 

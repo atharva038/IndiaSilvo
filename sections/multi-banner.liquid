@@ -1,0 +1,1221 @@
+{%- comment -%}
+  Indiasilvo - Haute Multi-Banner Section
+  Supports:
+  - 2-Column Split Banners (50/50, 60/40, 40/60)
+  - 3-Column Promotional Banners
+  - 4-Column Banner Grid
+  - Bento / Editorial Mosaic Layout
+  - Interactive Multi-Banner Hero Slideshow / Carousel with touch swipe & autoplay
+{%- endcomment -%}
+
+<section
+  id="MultiBanner-{{ section.id }}"
+  class="multi-banner-section section-padding-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  data-layout-mode="{{ section.settings.layout_mode }}"
+  data-autoplay="{{ section.settings.slider_autoplay }}"
+  data-autoplay-speed="{{ section.settings.slider_speed | times: 1000 }}"
+  data-transition="{{ section.settings.slider_transition }}"
+  style="background-color: {{ section.settings.bg_color }};"
+>
+  <div class="{% if section.settings.container_width == 'full_width' %}multi-banner-fullwidth{% elsif section.settings.container_width == 'wide' %}container-wide{% else %}container{% endif %}">
+    
+    {%- if section.settings.heading != blank or section.settings.eyebrow != blank or section.settings.description != blank -%}
+      <div class="section-header multi-banner-header text-{{ section.settings.header_alignment }}">
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="section-header__subtitle">{{ section.settings.eyebrow | escape }}</span>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="section-header__title h2">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.description != blank -%}
+          <p class="section-header__description">{{ section.settings.description | escape }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.layout_mode == 'slider' -%}
+      {%- comment -%} ================= SLIDER / CAROUSEL MODE ================= {%- endcomment -%}
+      <div class="multi-banner-slider-wrapper" data-slider-root>
+        <div class="multi-banner-slider" role="region" aria-label="{{ section.settings.heading | default: 'Featured Banners' | escape }}">
+          <div class="multi-banner-slider__track" data-slider-track>
+            {%- for block in section.blocks -%}
+              <div
+                class="multi-banner-slide {% if forloop.first %}is-active{% endif %}"
+                data-slide-index="{{ forloop.index0 }}"
+                {{ block.shopify_attributes }}
+              >
+                {% render 'multi-banner-card', block: block, section_settings: section.settings, is_slide: true %}
+              </div>
+            {%- endfor -%}
+          </div>
+        </div>
+
+        {%- if section.blocks.size > 1 -%}
+          {%- if section.settings.slider_show_arrows -%}
+            <button
+              type="button"
+              class="multi-banner-arrow multi-banner-arrow--prev"
+              data-slider-prev
+              aria-label="Previous Slide"
+            >
+              {% render 'icons', icon: 'chevron-left' %}
+            </button>
+            <button
+              type="button"
+              class="multi-banner-arrow multi-banner-arrow--next"
+              data-slider-next
+              aria-label="Next Slide"
+            >
+              {% render 'icons', icon: 'chevron-right' %}
+            </button>
+          {%- endif -%}
+
+          <div class="multi-banner-pagination multi-banner-pagination--{{ section.settings.slider_pagination_style }}" data-slider-pagination>
+            {%- if section.settings.slider_pagination_style == 'numbers' -%}
+              <span class="multi-banner-counter">
+                <span class="multi-banner-counter__current" data-slider-counter-current>01</span>
+                <span class="multi-banner-counter__divider">/</span>
+                <span class="multi-banner-counter__total">{{ section.blocks.size | prepend: '0' | slice: -2, 2 }}</span>
+              </span>
+            {%- elsif section.settings.slider_pagination_style == 'progress' -%}
+              <div class="multi-banner-progress-bar">
+                <div class="multi-banner-progress-bar__fill" data-slider-progress-fill style="width: {{ 100 | divided_by: section.blocks.size }}%;"></div>
+              </div>
+            {%- else -%}
+              {%- for block in section.blocks -%}
+                <button
+                  type="button"
+                  class="multi-banner-dot {% if forloop.first %}is-active{% endif %}"
+                  data-slider-dot="{{ forloop.index0 }}"
+                  aria-label="Go to slide {{ forloop.index }}"
+                ></button>
+              {%- endfor -%}
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+    {%- else -%}
+      {%- comment -%} ================= GRID / BENTO MODE ================= {%- endcomment -%}
+      <div
+        class="multi-banner-grid multi-banner-grid--{{ section.settings.grid_columns }} multi-banner-grid--gap-{{ section.settings.grid_gap }} multi-banner-grid--mobile-{{ section.settings.mobile_layout }}"
+        data-grid-root
+      >
+        {%- for block in section.blocks -%}
+          <div
+            class="multi-banner-grid-item multi-banner-grid-item--{{ forloop.index }} {% if section.settings.grid_columns == 'bento' and forloop.first %}multi-banner-grid-item--bento-hero{% endif %}"
+            {{ block.shopify_attributes }}
+          >
+            {% render 'multi-banner-card', block: block, section_settings: section.settings, is_slide: false %}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{%- comment -%} Snippet Component for Banner Card Output {%- endcomment -%}
+{%- capture dummy -%}
+{%- endcapture -%}
+
+<style>
+  .section-padding-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  @media (max-width: 767px) {
+    .section-padding-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top | times: 0.7 | round }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.7 | round }}px;
+    }
+  }
+
+  .multi-banner-section {
+    position: relative;
+    overflow: hidden;
+  }
+  .multi-banner-fullwidth {
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .multi-banner-header {
+    margin-bottom: clamp(2rem, 3.5vw, 3.5rem);
+  }
+  .multi-banner-header.text-left { text-align: left; margin-left: 0; }
+  .multi-banner-header.text-center { text-align: center; margin-left: auto; margin-right: auto; }
+  .multi-banner-header.text-right { text-align: right; margin-left: auto; margin-right: 0; }
+
+  /* Grid Layouts */
+  .multi-banner-grid {
+    display: grid;
+    width: 100%;
+  }
+  .multi-banner-grid--gap-none { gap: 0; }
+  .multi-banner-grid--gap-small { gap: 12px; }
+  .multi-banner-grid--gap-medium { gap: 24px; }
+  .multi-banner-grid--gap-large { gap: 36px; }
+
+  .multi-banner-grid--2_cols {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .multi-banner-grid--split_60_40 {
+    grid-template-columns: 1.5fr 1fr;
+  }
+  .multi-banner-grid--split_40_60 {
+    grid-template-columns: 1fr 1.5fr;
+  }
+  .multi-banner-grid--3_cols {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .multi-banner-grid--4_cols {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .multi-banner-grid--bento {
+    grid-template-columns: repeat(12, 1fr);
+  }
+  .multi-banner-grid--bento .multi-banner-grid-item--1 {
+    grid-column: span 7;
+  }
+  .multi-banner-grid--bento .multi-banner-grid-item--2 {
+    grid-column: span 5;
+  }
+  .multi-banner-grid--bento .multi-banner-grid-item--3 {
+    grid-column: span 5;
+  }
+  .multi-banner-grid--bento .multi-banner-grid-item--4 {
+    grid-column: span 7;
+  }
+  .multi-banner-grid--bento .multi-banner-grid-item:nth-child(n+5) {
+    grid-column: span 6;
+  }
+
+  /* Card Component Styles */
+  .multi-banner-card {
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    background-color: #1A1715;
+    border-radius: var(--banner-radius, 0px);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .multi-banner-card--radius-none { --banner-radius: 0px; }
+  .multi-banner-card--radius-subtle { --banner-radius: 4px; }
+  .multi-banner-card--radius-rounded { --banner-radius: 8px; }
+  .multi-banner-card--radius-modern { --banner-radius: 16px; }
+
+  /* Height presets */
+  .multi-banner-card--height-small { min-height: 360px; }
+  .multi-banner-card--height-medium { min-height: 480px; }
+  .multi-banner-card--height-large { min-height: 620px; }
+  .multi-banner-card--height-full { min-height: 80vh; }
+  .multi-banner-card--height-ratio-16-9 { aspect-ratio: 16 / 9; }
+  .multi-banner-card--height-ratio-4-5 { aspect-ratio: 4 / 5; }
+  .multi-banner-card--height-ratio-1-1 { aspect-ratio: 1 / 1; }
+
+  /* Media Background */
+  .multi-banner-card__media {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+  }
+  .multi-banner-card__img,
+  .multi-banner-card__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  .multi-banner-card--hover-zoom:hover .multi-banner-card__img,
+  .multi-banner-card--hover-zoom:hover .multi-banner-card__video {
+    transform: scale(1.05);
+  }
+  .multi-banner-card--hover-lift:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.18);
+  }
+
+  .multi-banner-card__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    transition: opacity 0.4s ease;
+  }
+
+  /* Content Wrapper */
+  .multi-banner-card__content {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: clamp(1.5rem, 3.5vw, 3.5rem);
+    pointer-events: none;
+  }
+  .multi-banner-card__content > * {
+    pointer-events: auto;
+  }
+
+  /* Vertical Alignments */
+  .multi-banner-card__content--v-top { justify-content: flex-start; }
+  .multi-banner-card__content--v-middle { justify-content: center; }
+  .multi-banner-card__content--v-bottom { justify-content: flex-end; }
+
+  /* Horizontal Alignments */
+  .multi-banner-card__content--h-left { align-items: flex-start; text-align: left; }
+  .multi-banner-card__content--h-center { align-items: center; text-align: center; }
+  .multi-banner-card__content--h-right { align-items: flex-end; text-align: right; }
+
+  /* Content Themes */
+  .multi-banner-card--theme-dark .multi-banner-card__heading,
+  .multi-banner-card--theme-dark .multi-banner-card__desc {
+    color: #FAF8F5;
+  }
+  .multi-banner-card--theme-dark .multi-banner-card__eyebrow {
+    color: #D4AF37;
+  }
+  .multi-banner-card--theme-light .multi-banner-card__heading,
+  .multi-banner-card--theme-light .multi-banner-card__desc {
+    color: #181615;
+  }
+  .multi-banner-card--theme-light .multi-banner-card__eyebrow {
+    color: #8C6D3F;
+  }
+
+  /* Typography & Elements */
+  .multi-banner-card__badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.85rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    border-radius: 999px;
+    margin-bottom: 1rem;
+    line-height: 1;
+    background: rgba(212, 175, 55, 0.9);
+    color: #181615;
+    backdrop-filter: blur(4px);
+    width: fit-content;
+  }
+  .multi-banner-card__badge--dark {
+    background: rgba(24, 22, 21, 0.85);
+    color: #FAF8F5;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .multi-banner-card__badge--gold {
+    background: #D4AF37;
+    color: #181615;
+  }
+  .multi-banner-card__badge--white {
+    background: #FFFFFF;
+    color: #181615;
+  }
+
+  .multi-banner-card__eyebrow {
+    font-size: var(--font-size-xs, 0.75rem);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-weight: 500;
+    margin-bottom: 0.6rem;
+    display: block;
+  }
+
+  .multi-banner-card__heading {
+    margin-bottom: 0.8rem;
+    font-weight: 400;
+    line-height: 1.18;
+    letter-spacing: 0.02em;
+  }
+  .multi-banner-card__heading--display { font-size: clamp(2rem, 4vw, 3.25rem); }
+  .multi-banner-card__heading--h2 { font-size: clamp(1.6rem, 2.5vw, 2.3rem); }
+  .multi-banner-card__heading--h3 { font-size: clamp(1.3rem, 2vw, 1.8rem); }
+  .multi-banner-card__heading--h4 { font-size: clamp(1.1rem, 1.5vw, 1.35rem); }
+
+  .multi-banner-card__desc {
+    font-size: var(--font-size-base, 0.95rem);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    max-width: 480px;
+    opacity: 0.9;
+  }
+
+  .multi-banner-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    align-items: center;
+  }
+
+  .multi-banner-card__link-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    text-indent: -9999px;
+    overflow: hidden;
+  }
+
+  /* Slider Structure */
+  .multi-banner-slider-wrapper {
+    position: relative;
+    width: 100%;
+  }
+  .multi-banner-slider {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+  .multi-banner-slider__track {
+    display: flex;
+    width: 100%;
+    transition: transform 0.65s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  .multi-banner-slide {
+    flex: 0 0 100%;
+    width: 100%;
+    opacity: 0.4;
+    transition: opacity 0.65s ease;
+  }
+  .multi-banner-slide.is-active {
+    opacity: 1;
+  }
+
+  /* Slider Controls */
+  .multi-banner-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(24, 22, 21, 0.65);
+    color: #FAF8F5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .multi-banner-arrow:hover {
+    background: #D4AF37;
+    color: #181615;
+    border-color: #D4AF37;
+    transform: translateY(-50%) scale(1.08);
+  }
+  .multi-banner-arrow--prev { left: 24px; }
+  .multi-banner-arrow--next { right: 24px; }
+
+  .multi-banner-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 1.5rem;
+  }
+  .multi-banner-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(24, 22, 21, 0.25);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .multi-banner-dot.is-active {
+    background: #181615;
+    width: 28px;
+    border-radius: 10px;
+  }
+  .multi-banner-counter {
+    font-family: var(--font-heading, serif);
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+    color: var(--color-text-primary, #181615);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .multi-banner-counter__current {
+    font-weight: 600;
+  }
+  .multi-banner-counter__divider {
+    opacity: 0.4;
+  }
+  .multi-banner-counter__total {
+    opacity: 0.6;
+  }
+  .multi-banner-progress-bar {
+    width: 160px;
+    height: 2px;
+    background: rgba(24, 22, 21, 0.15);
+    position: relative;
+    overflow: hidden;
+  }
+  .multi-banner-progress-bar__fill {
+    height: 100%;
+    background: #181615;
+    transition: width 0.4s ease, transform 0.4s ease;
+  }
+
+  /* Responsive Rules */
+  @media (max-width: 989px) {
+    .multi-banner-grid--3_cols,
+    .multi-banner-grid--4_cols {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .multi-banner-grid--bento {
+      grid-template-columns: 1fr;
+    }
+    .multi-banner-grid--bento .multi-banner-grid-item--1,
+    .multi-banner-grid--bento .multi-banner-grid-item--2,
+    .multi-banner-grid--bento .multi-banner-grid-item--3,
+    .multi-banner-grid--bento .multi-banner-grid-item--4,
+    .multi-banner-grid--bento .multi-banner-grid-item:nth-child(n+5) {
+      grid-column: span 1;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .multi-banner-grid--2_cols,
+    .multi-banner-grid--split_60_40,
+    .multi-banner-grid--split_40_60,
+    .multi-banner-grid--3_cols,
+    .multi-banner-grid--4_cols {
+      grid-template-columns: 1fr;
+    }
+
+    .multi-banner-grid--mobile-2_columns {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    .multi-banner-grid--mobile-slider {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 1rem;
+    }
+    .multi-banner-grid--mobile-slider .multi-banner-grid-item {
+      flex: 0 0 85%;
+      scroll-snap-align: start;
+    }
+
+    .multi-banner-arrow {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    function initMultiBanner(sectionEl) {
+      if (!sectionEl) return;
+      const layoutMode = sectionEl.dataset.layoutMode;
+      if (layoutMode !== 'slider') return;
+
+      const sliderRoot = sectionEl.querySelector('[data-slider-root]');
+      if (!sliderRoot) return;
+
+      const track = sliderRoot.querySelector('[data-slider-track]');
+      const slides = Array.from(sliderRoot.querySelectorAll('.multi-banner-slide'));
+      const prevBtn = sliderRoot.querySelector('[data-slider-prev]');
+      const nextBtn = sliderRoot.querySelector('[data-slider-next]');
+      const dots = Array.from(sliderRoot.querySelectorAll('[data-slider-dot]'));
+      const counterCurrent = sliderRoot.querySelector('[data-slider-counter-current]');
+      const progressFill = sliderRoot.querySelector('[data-slider-progress-fill]');
+
+      if (slides.length <= 1) return;
+
+      let currentIndex = 0;
+      let autoplayTimer = null;
+      const autoplay = sectionEl.dataset.autoplay === 'true';
+      const speed = parseInt(sectionEl.dataset.autoplaySpeed, 10) || 5000;
+
+      function updateSlide(index) {
+        if (index < 0) index = slides.length - 1;
+        if (index >= slides.length) index = 0;
+        currentIndex = index;
+
+        track.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+        slides.forEach((slide, i) => {
+          slide.classList.toggle('is-active', i === currentIndex);
+        });
+
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('is-active', i === currentIndex);
+        });
+
+        if (counterCurrent) {
+          counterCurrent.textContent = (currentIndex + 1).toString().padStart(2, '0');
+        }
+
+        if (progressFill) {
+          const progressPercent = ((currentIndex + 1) / slides.length) * 100;
+          progressFill.style.width = `${progressPercent}%`;
+        }
+      }
+
+      function nextSlide() {
+        updateSlide(currentIndex + 1);
+      }
+
+      function prevSlide() {
+        updateSlide(currentIndex - 1);
+      }
+
+      function startAutoplay() {
+        if (!autoplay) return;
+        stopAutoplay();
+        autoplayTimer = setInterval(nextSlide, speed);
+      }
+
+      function stopAutoplay() {
+        if (autoplayTimer) {
+          clearInterval(autoplayTimer);
+          autoplayTimer = null;
+        }
+      }
+
+      if (prevBtn) prevBtn.addEventListener('click', () => { prevSlide(); startAutoplay(); });
+      if (nextBtn) nextBtn.addEventListener('click', () => { nextSlide(); startAutoplay(); });
+
+      dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => {
+          updateSlide(i);
+          startAutoplay();
+        });
+      });
+
+      // Pause on hover
+      sliderRoot.addEventListener('mouseenter', stopAutoplay);
+      sliderRoot.addEventListener('mouseleave', startAutoplay);
+
+      // Touch / Swipe support
+      let touchStartX = 0;
+      let touchEndX = 0;
+
+      sliderRoot.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        stopAutoplay();
+      }, { passive: true });
+
+      sliderRoot.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        if (touchStartX - touchEndX > 45) {
+          nextSlide();
+        } else if (touchEndX - touchStartX > 45) {
+          prevSlide();
+        }
+        startAutoplay();
+      }, { passive: true });
+
+      // Initialize
+      updateSlide(0);
+      startAutoplay();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.multi-banner-section').forEach(initMultiBanner);
+    });
+
+    if (window.Shopify && Shopify.designMode) {
+      document.addEventListener('shopify:section:load', (e) => {
+        if (e.target.classList.contains('multi-banner-section')) {
+          initMultiBanner(e.target);
+        }
+      });
+      document.addEventListener('shopify:block:select', (e) => {
+        const slide = e.target.closest('.multi-banner-slide');
+        if (slide) {
+          const index = parseInt(slide.dataset.slideIndex, 10);
+          const section = e.target.closest('.multi-banner-section');
+          if (section) {
+            const track = section.querySelector('[data-slider-track]');
+            if (track && !isNaN(index)) {
+              track.style.transform = `translateX(-${index * 100}%)`;
+            }
+          }
+        }
+      });
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Multi-Banner Showcase",
+  "tag": "section",
+  "class": "section-multi-banner",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow / Subtitle",
+      "default": "Curated Luxury Edits"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The Sovereign Silver Collections"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Discover hallmarked 925 sterling silver statements handcrafted for modern elegance."
+    },
+    {
+      "type": "select",
+      "id": "header_alignment",
+      "label": "Header Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
+      "type": "select",
+      "id": "layout_mode",
+      "label": "Display Mode",
+      "options": [
+        { "value": "grid", "label": "Multi-Banner Grid" },
+        { "value": "slider", "label": "Interactive Slideshow / Hero Slider" }
+      ],
+      "default": "grid"
+    },
+    {
+      "type": "select",
+      "id": "grid_columns",
+      "label": "Grid Columns (Desktop)",
+      "options": [
+        { "value": "2_cols", "label": "2 Equal Columns (50 / 50)" },
+        { "value": "split_60_40", "label": "2 Columns Split (60 / 40)" },
+        { "value": "split_40_60", "label": "2 Columns Split (40 / 60)" },
+        { "value": "3_cols", "label": "3 Equal Columns" },
+        { "value": "4_cols", "label": "4 Columns Row" },
+        { "value": "bento", "label": "Bento / Editorial Mosaic" }
+      ],
+      "default": "3_cols"
+    },
+    {
+      "type": "select",
+      "id": "grid_gap",
+      "label": "Grid Spacing / Gap",
+      "options": [
+        { "value": "none", "label": "Flush (0px)" },
+        { "value": "small", "label": "Compact (12px)" },
+        { "value": "medium", "label": "Standard (24px)" },
+        { "value": "large", "label": "Spacious (36px)" }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "select",
+      "id": "container_width",
+      "label": "Container Width",
+      "options": [
+        { "value": "standard", "label": "Standard Container (1360px)" },
+        { "value": "wide", "label": "Wide Container (1560px)" },
+        { "value": "full_width", "label": "Edge-to-Edge Full Width" }
+      ],
+      "default": "wide"
+    },
+    {
+      "type": "select",
+      "id": "card_radius",
+      "label": "Card Border Radius",
+      "options": [
+        { "value": "none", "label": "Sharp Luxury (0px)" },
+        { "value": "subtle", "label": "Subtle (4px)" },
+        { "value": "rounded", "label": "Rounded (8px)" },
+        { "value": "modern", "label": "Modern Soft (16px)" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Mobile Layout (Grid Mode)",
+      "options": [
+        { "value": "stack", "label": "Vertical Stack (1 Column)" },
+        { "value": "slider", "label": "Horizontal Swipe Carousel" },
+        { "value": "2_columns", "label": "2 Columns Compact" }
+      ],
+      "default": "stack"
+    },
+    {
+      "type": "header",
+      "content": "Slider Settings (When in Slideshow Mode)"
+    },
+    {
+      "type": "checkbox",
+      "id": "slider_autoplay",
+      "label": "Enable Autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "slider_speed",
+      "label": "Autoplay Speed (seconds)",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "checkbox",
+      "id": "slider_show_arrows",
+      "label": "Show Navigation Arrows",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "slider_pagination_style",
+      "label": "Pagination Style",
+      "options": [
+        { "value": "dots", "label": "Luxury Dots" },
+        { "value": "numbers", "label": "Editorial Numbers (01 / 03)" },
+        { "value": "progress", "label": "Progress Line" }
+      ],
+      "default": "dots"
+    },
+    {
+      "type": "header",
+      "content": "Section Styling"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FAF8F5"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top Padding (px)",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom Padding (px)",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "banner",
+      "name": "Banner Card",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Media"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Desktop Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "Mobile Image (Optional)"
+        },
+        {
+          "type": "url",
+          "id": "video_url",
+          "label": "Background Video URL (.mp4)"
+        },
+        {
+          "type": "select",
+          "id": "card_height",
+          "label": "Card Height / Proportion",
+          "options": [
+            { "value": "height-small", "label": "Small (360px)" },
+            { "value": "height-medium", "label": "Medium (480px)" },
+            { "value": "height-large", "label": "Large (620px)" },
+            { "value": "height-full", "label": "Full Screen (80vh)" },
+            { "value": "height-ratio-16-9", "label": "Widescreen (16:9)" },
+            { "value": "height-ratio-4-5", "label": "Portrait (4:5)" },
+            { "value": "height-ratio-1-1", "label": "Square (1:1)" }
+          ],
+          "default": "height-medium"
+        },
+        {
+          "type": "select",
+          "id": "hover_effect",
+          "label": "Hover Animation",
+          "options": [
+            { "value": "hover-zoom", "label": "Subtle Image Zoom" },
+            { "value": "hover-lift", "label": "Card Lift & Shadow" },
+            { "value": "none", "label": "None" }
+          ],
+          "default": "hover-zoom"
+        },
+        {
+          "type": "header",
+          "content": "Banner Content"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge Tag",
+          "default": "EXCLUSIVE DROP"
+        },
+        {
+          "type": "select",
+          "id": "badge_style",
+          "label": "Badge Style",
+          "options": [
+            { "value": "gold", "label": "Gold Pill" },
+            { "value": "dark", "label": "Dark Glass" },
+            { "value": "white", "label": "White Crisp" }
+          ],
+          "default": "gold"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow",
+          "default": "925 Pure Silver"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Artisan Solitaire Rings"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "label": "Heading Size",
+          "options": [
+            { "value": "display", "label": "Display (Huge)" },
+            { "value": "h2", "label": "H2 (Large)" },
+            { "value": "h3", "label": "H3 (Medium)" },
+            { "value": "h4", "label": "H4 (Compact)" }
+          ],
+          "default": "h2"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Precision cast and prong-set with brilliant-cut AAA solitaires."
+        },
+        {
+          "type": "header",
+          "content": "Primary Action"
+        },
+        {
+          "type": "text",
+          "id": "button_1_text",
+          "label": "Button 1 Label",
+          "default": "Shop Rings"
+        },
+        {
+          "type": "url",
+          "id": "button_1_url",
+          "label": "Button 1 Link",
+          "default": "/collections/all"
+        },
+        {
+          "type": "select",
+          "id": "button_1_style",
+          "label": "Button 1 Style",
+          "options": [
+            { "value": "btn-primary", "label": "Primary Black/Dark" },
+            { "value": "btn-secondary", "label": "Secondary Outline" },
+            { "value": "btn-gold", "label": "Lustrous Gold" },
+            { "value": "btn-link", "label": "Editorial Underlined Link" }
+          ],
+          "default": "btn-primary"
+        },
+        {
+          "type": "header",
+          "content": "Secondary Action (Optional)"
+        },
+        {
+          "type": "text",
+          "id": "button_2_text",
+          "label": "Button 2 Label"
+        },
+        {
+          "type": "url",
+          "id": "button_2_url",
+          "label": "Button 2 Link"
+        },
+        {
+          "type": "select",
+          "id": "button_2_style",
+          "label": "Button 2 Style",
+          "options": [
+            { "value": "btn-primary", "label": "Primary Black/Dark" },
+            { "value": "btn-secondary", "label": "Secondary Outline" },
+            { "value": "btn-gold", "label": "Lustrous Gold" },
+            { "value": "btn-link", "label": "Editorial Underlined Link" }
+          ],
+          "default": "btn-secondary"
+        },
+        {
+          "type": "checkbox",
+          "id": "link_entire_card",
+          "label": "Make Entire Banner Card Clickable",
+          "default": false,
+          "info": "Links the whole card to Button 1 URL"
+        },
+        {
+          "type": "header",
+          "content": "Card Positioning & Appearance"
+        },
+        {
+          "type": "select",
+          "id": "content_theme",
+          "label": "Content Theme",
+          "options": [
+            { "value": "dark", "label": "Dark (Light Text / Dark Overlay)" },
+            { "value": "light", "label": "Light (Dark Text / Light Overlay)" }
+          ],
+          "default": "dark"
+        },
+        {
+          "type": "select",
+          "id": "v_align",
+          "label": "Vertical Alignment",
+          "options": [
+            { "value": "top", "label": "Top" },
+            { "value": "middle", "label": "Middle" },
+            { "value": "bottom", "label": "Bottom" }
+          ],
+          "default": "bottom"
+        },
+        {
+          "type": "select",
+          "id": "h_align",
+          "label": "Horizontal Alignment",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "center", "label": "Center" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "color",
+          "id": "overlay_color",
+          "label": "Overlay Tint Color",
+          "default": "#181615"
+        },
+        {
+          "type": "range",
+          "id": "overlay_opacity",
+          "label": "Overlay Opacity (%)",
+          "min": 0,
+          "max": 90,
+          "step": 5,
+          "default": 35
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Multi-Banner Grid (3 Banners)",
+      "settings": {
+        "layout_mode": "grid",
+        "grid_columns": "3_cols",
+        "container_width": "wide"
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "badge": "SOLITAIRE SERIES",
+            "eyebrow": "Sovereign Purity",
+            "heading": "925 Silver Rings",
+            "description": "Architectural solitaires cast in pure hallmarked sterling silver.",
+            "button_1_text": "Explore Rings",
+            "button_1_url": "/collections/all"
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "badge": "NEW DROP",
+            "eyebrow": "Filigree Atelier",
+            "heading": "Pendants & Lockets",
+            "description": "Intricate sterling silver openwork with diamond-cut chains.",
+            "button_1_text": "Discover Pendants",
+            "button_1_url": "/collections/all"
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "badge": "HERITAGE CUFFS",
+            "eyebrow": "Artisan Kada",
+            "heading": "Silver Cuffs & Kada",
+            "description": "Bold, substantial hand-burnished statements with anti-tarnish finish.",
+            "button_1_text": "View Kada & Cuffs",
+            "button_1_url": "/collections/all"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dual Promotional Banners (2 Split)",
+      "settings": {
+        "layout_mode": "grid",
+        "grid_columns": "2_cols",
+        "container_width": "wide"
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "badge": "SIGNATURE EDIT",
+            "eyebrow": "Sovereign 925",
+            "heading": "Timeless Solitaires",
+            "description": "Handset stones with mirror-luster liquid rhodium polish.",
+            "button_1_text": "Shop Solitaires",
+            "button_1_url": "/collections/all"
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "badge": "BRIDAL & OCCASION",
+            "eyebrow": "Modern Keepsakes",
+            "heading": "Bridal Silver Sets",
+            "description": "Heirloom craftsmanship designed for life's most luminous celebrations.",
+            "button_1_text": "Explore Bridal",
+            "button_1_url": "/collections/all"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bento Editorial Mosaic",
+      "settings": {
+        "layout_mode": "grid",
+        "grid_columns": "bento",
+        "container_width": "wide"
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "badge": "FEATURED CAMPAIGN",
+            "eyebrow": "The Silversmith Legacy",
+            "heading": "Haute 925 Sterling Silver",
+            "description": "Sculpted by hand, protected with triple liquid rhodium, and hallmarked for eternity.",
+            "button_1_text": "Explore Collection",
+            "button_1_url": "/collections/all",
+            "card_height": "height-large"
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "badge": "NEW DROP",
+            "eyebrow": "Hand-set Pavé",
+            "heading": "Earrings & Drops",
+            "description": "Lightweight pure silver earrings with surgical posts.",
+            "button_1_text": "Shop Earrings",
+            "button_1_url": "/collections/all",
+            "card_height": "height-large"
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "badge": "ARTISAN SERIES",
+            "eyebrow": "Architectural Form",
+            "heading": "Hand-Forged Cuffs",
+            "description": "Bold silversmithing with mirror polish.",
+            "button_1_text": "Shop Cuffs",
+            "button_1_url": "/collections/all",
+            "card_height": "height-medium"
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "badge": "LIMITED RUN",
+            "eyebrow": "Purity Benchmark",
+            "heading": "Certified 925 Bullion Jewellery",
+            "description": "Laser hallmarked by Bureau of Indian Standards.",
+            "button_1_text": "Learn More",
+            "button_1_url": "/pages/about",
+            "card_height": "height-medium"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Multi-Banner Hero Slideshow",
+      "settings": {
+        "layout_mode": "slider",
+        "container_width": "full_width",
+        "slider_autoplay": true,
+        "slider_speed": 6,
+        "slider_pagination_style": "dots"
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "badge": "NEW LAUNCH",
+            "eyebrow": "925 Pure Sterling Silver",
+            "heading": "Poetry in Sterling Silver",
+            "description": "Architectural silhouettes cast in sovereign-grade 925 sterling silver.",
+            "button_1_text": "Explore Creations",
+            "button_1_url": "/collections/all",
+            "card_height": "height-full"
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "badge": "SOLITAIRE ATELIER",
+            "eyebrow": "Certified 925 BIS",
+            "heading": "Hand-Set Pavé & Solitaires",
+            "description": "Triple rhodium protection for eternal brilliance without tarnishing.",
+            "button_1_text": "Shop Solitaires",
+            "button_1_url": "/collections/all",
+            "card_height": "height-full"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

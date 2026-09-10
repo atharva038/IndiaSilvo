@@ -29,7 +29,8 @@
 
 @media (min-width: 1024px) {
   .footer-grid {
-    grid-template-columns: 1.5fr 1fr 1fr 1.35fr;
+    grid-template-columns: 1.8fr 1fr 1fr;
+    gap: clamp(2rem, 5vw, 5rem);
   }
 }
 

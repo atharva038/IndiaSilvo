@@ -1,77 +1,139 @@
 {
   "sections": {
-    "hero": {
-      "type": "hero",
-      "settings": {
-        "height": "large",
-        "full_width": true,
-        "eyebrow": "925 Pure Sterling Silver",
-        "heading": "Poetry in Sterling Silver",
-        "description": "Architectural silhouettes cast in sovereign-grade 925 sterling silver, hand-burnished for a mirror luster that never fades.",
-        "content_position": "middle",
-        "text_alignment": "center",
-        "content_max_width": 700,
-        "overlay_color": "#181615",
-        "overlay_opacity": 30,
-        "button_1_text": "Explore 925 Silver",
-        "button_1_link": "/collections/all",
-        "button_2_text": "Silversmith Atelier",
-        "button_2_link": "/pages/about"
-      }
-    },
-    "brand_introduction": {
-      "type": "brand-introduction",
-      "settings": {
-        "bg_color": "#FAF8F5",
-        "eyebrow": "Crafted With Intention",
-        "heading": "Fine 925 sterling silver sculpted for your most meaningful moments.",
-        "description": "Every Indiasilvo piece embodies a reverence for purity. Cast strictly from sovereign 925 silver, hand-burnished by master silversmiths, and protected with liquid rhodium for eternal brilliance.",
-        "link_text": "Read Our Craft Story",
-        "link_url": "/pages/about"
-      }
-    },
-    "featured_collections": {
-      "type": "featured-collections",
+    "multi_banner": {
+      "type": "multi-banner",
       "blocks": {
-        "col_1": {
-          "type": "collection_block",
+        "slide_1": {
+          "type": "banner",
           "settings": {
-            "eyebrow": "Solitaire Series",
-            "title": "925 Silver Rings",
-            "description": "Architectural solitaires and pavé statement bands.",
-            "button_label": "Explore Rings"
+            "badge": "NEW DROP",
+            "badge_style": "gold",
+            "eyebrow": "Sovereign 925 Pure Silver",
+            "heading": "Poetry in Sterling Silver",
+            "heading_size": "display",
+            "description": "Architectural silhouettes cast in sovereign-grade 925 sterling silver, hand-burnished for mirror luster.",
+            "button_1_text": "Explore 925 Silver",
+            "button_1_url": "/collections/all",
+            "button_1_style": "btn-primary",
+            "button_2_text": "Silversmith Atelier",
+            "button_2_url": "/pages/about",
+            "button_2_style": "btn-secondary",
+            "card_height": "height-full",
+            "v_align": "middle",
+            "h_align": "center",
+            "content_theme": "dark",
+            "overlay_color": "#181615",
+            "overlay_opacity": 35
           }
         },
-        "col_2": {
-          "type": "collection_block",
+        "slide_2": {
+          "type": "banner",
           "settings": {
-            "eyebrow": "Filigree Series",
-            "title": "Pendants & Chains",
-            "description": "Intricate openwork medallions and delicate drops.",
-            "button_label": "Explore Pendants"
-          }
-        },
-        "col_3": {
-          "type": "collection_block",
-          "settings": {
-            "eyebrow": "Artisan Series",
-            "title": "Cuffs & Kada",
-            "description": "Substantial chiselled silver bracelets and geometric cuffs.",
-            "button_label": "Explore Cuffs"
+            "badge": "SOLITAIRE SERIES",
+            "badge_style": "gold",
+            "eyebrow": "Hand-Set Brilliance",
+            "heading": "Certified 925 BIS Hallmarked",
+            "heading_size": "display",
+            "description": "Triple electro-plated in liquid rhodium for eternal tarnish resistance and everyday elegance.",
+            "button_1_text": "Shop Solitaires",
+            "button_1_url": "/collections/all",
+            "button_1_style": "btn-primary",
+            "card_height": "height-full",
+            "v_align": "middle",
+            "h_align": "center",
+            "content_theme": "dark",
+            "overlay_color": "#181615",
+            "overlay_opacity": 35
           }
         }
       },
       "block_order": [
-        "col_1",
-        "col_2",
-        "col_3"
+        "slide_1",
+        "slide_2"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "",
+        "description": "",
+        "header_alignment": "center",
+        "layout_mode": "slider",
+        "container_width": "full_width",
+        "card_radius": "none",
+        "slider_autoplay": true,
+        "slider_speed": 5,
+        "slider_show_arrows": true,
+        "slider_pagination_style": "dots",
+        "bg_color": "#FAF8F5",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "category_grid": {
+      "type": "category-grid",
+      "blocks": {
+        "cat_1": {
+          "type": "category",
+          "settings": {
+            "title": "925 Silver Rings"
+          }
+        },
+        "cat_2": {
+          "type": "category",
+          "settings": {
+            "title": "Pendants & Chains"
+          }
+        },
+        "cat_3": {
+          "type": "category",
+          "settings": {
+            "title": "Earrings & Jhumkas"
+          }
+        },
+        "cat_4": {
+          "type": "category",
+          "settings": {
+            "title": "Cuffs & Kada"
+          }
+        }
+      },
+      "block_order": [
+        "cat_1",
+        "cat_2",
+        "cat_3",
+        "cat_4"
       ],
       "settings": {
         "bg_color": "#FAF8F5",
-        "eyebrow": "Curated Silhouettes",
-        "heading": "Signature 925 Silver Collections",
-        "description": "Explore architectural statements handcrafted from hallmarked sterling silver and handset gemstones.",
-        "highlight_first": false
+        "eyebrow": "Shop By Category",
+        "heading": "Explore Silver Silhouettes",
+        "description": "Handcrafted 925 sterling silver creations curated for every occasion."
+      }
+    },
+    "spotlight_banner": {
+      "type": "spotlight-banner",
+      "settings": {
+        "badge": "SIGNATURE EDIT",
+        "badge_style": "gold",
+        "eyebrow": "Crafted In 925 Sterling Silver",
+        "heading": "Sculpted Radiance, Made for Everyday",
+        "description": "Explore delicate solitaires, diamond-cut pendants, and anti-tarnish rhodium silver statements designed to elevate your everyday glow.",
+        "button_1_text": "Shop The Collection",
+        "button_1_link": "/collections/all",
+        "button_1_style": "btn-primary",
+        "button_2_text": "Discover Craft",
+        "button_2_link": "/pages/about",
+        "button_2_style": "btn-secondary",
+        "full_width": false,
+        "height": "height-medium",
+        "card_radius": "subtle",
+        "content_max_width": 640,
+        "v_align": "middle",
+        "h_align": "left",
+        "overlay_color": "#181615",
+        "overlay_opacity": 40,
+        "bg_color": "#FAF8F5",
+        "padding_top": 40,
+        "padding_bottom": 40
       }
     },
     "featured_products": {
@@ -86,18 +148,6 @@
         "columns_desktop": "4",
         "show_view_all": true,
         "view_all_label": "View All Creations"
-      }
-    },
-    "editorial_story": {
-      "type": "editorial-story",
-      "settings": {
-        "bg_color": "#F4F0EB",
-        "image_position": "left",
-        "eyebrow": "The Silversmith's Eye",
-        "heading": "Sculpted by Hand, Hallmarked for Eternity",
-        "description": "<p>In our atelier, silver is not treated as a substitute for gold, but as a sovereign canvas of light. We hand-carve waxes, cast certified 925 bullion, and set each gemstone under microscopic scrutiny.</p><p>Finished with a protective bath of liquid rhodium, each piece maintains its mirror brilliance without tarnishing over time.</p>",
-        "button_text": "Explore The Craft",
-        "button_link": "/pages/about"
       }
     },
     "craftsmanship": {
@@ -149,58 +199,16 @@
         "description": "Every creation is built to sovereign metallurgical benchmarks, certified for purity, and finished for a lifetime of brilliance."
       }
     },
-    "category_grid": {
-      "type": "category-grid",
-      "blocks": {
-        "cat_1": {
-          "type": "category",
-          "settings": {
-            "title": "925 Silver Rings"
-          }
-        },
-        "cat_2": {
-          "type": "category",
-          "settings": {
-            "title": "Pendants & Chains"
-          }
-        },
-        "cat_3": {
-          "type": "category",
-          "settings": {
-            "title": "Earrings & Jhumkas"
-          }
-        },
-        "cat_4": {
-          "type": "category",
-          "settings": {
-            "title": "Cuffs & Kada"
-          }
-        }
-      },
-      "block_order": [
-        "cat_1",
-        "cat_2",
-        "cat_3",
-        "cat_4"
-      ],
+    "editorial_story": {
+      "type": "editorial-story",
       "settings": {
-        "bg_color": "#FAF8F5",
-        "eyebrow": "Bespoke Categories",
-        "heading": "Shop By Silver Silhouette",
-        "description": "Curated collections designed to harmonize with your personal aesthetic."
-      }
-    },
-    "brand_story": {
-      "type": "brand-story",
-      "settings": {
-        "bg_color": "#FAF8F5",
+        "bg_color": "#F4EFEA",
         "image_position": "left",
-        "subtitle": "The Silversmith Heritage",
-        "title": "Honoring Pure Sterling Silver",
-        "text": "<p>Indiasilvo was founded on a singular passion: celebrating sterling silver as the ultimate medium of modern fine jewellery. We blend royal Indian silver-craft traditions with architectural minimalism.</p><p>Each creation is cast strictly in BIS hallmarked 925 sterling silver, electro-coated with liquid rhodium for lifetime tarnish resistance, and finished by fifth-generation master artisans.</p>",
-        "show_details": true,
-        "button_text": "Discover Our Atelier",
-        "button_url": "/pages/about"
+        "eyebrow": "The Silversmith's Eye",
+        "heading": "Sculpted by Hand, Hallmarked for Eternity",
+        "description": "<p>In our atelier, silver is not treated as a substitute for gold, but as a sovereign canvas of light. We hand-carve waxes, cast certified 925 bullion, and set each gemstone under microscopic scrutiny.</p><p>Finished with a protective bath of liquid rhodium, each piece maintains its mirror brilliance without tarnishing over time.</p>",
+        "button_text": "Explore The Craft",
+        "button_link": "/pages/about"
       }
     },
     "testimonials": {
@@ -258,14 +266,12 @@
     }
   },
   "order": [
-    "hero",
-    "brand_introduction",
-    "featured_collections",
-    "featured_products",
-    "editorial_story",
-    "craftsmanship",
+    "multi_banner",
     "category_grid",
-    "brand_story",
+    "spotlight_banner",
+    "featured_products",
+    "craftsmanship",
+    "editorial_story",
     "testimonials",
     "final_cta"
   ]

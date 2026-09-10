@@ -1,0 +1,148 @@
+{%- comment -%}
+  Indiasilvo - Multi Banner Card Snippet
+  Accepts:
+  - block: Shopify block object
+  - section_settings: Parent section settings
+  - is_slide: Boolean
+{%- endcomment -%}
+
+{%- liquid
+  assign bs = block.settings
+  assign card_height_class = bs.card_height | default: 'height-medium'
+  assign hover_effect_class = bs.hover_effect | default: 'hover-zoom'
+  assign radius_class = 'multi-banner-card--radius-' | append: section_settings.card_radius | default: 'multi-banner-card--radius-none'
+  assign theme_class = 'multi-banner-card--theme-' | append: bs.content_theme | default: 'multi-banner-card--theme-dark'
+  assign v_align_class = 'multi-banner-card__content--v-' | append: bs.v_align | default: 'multi-banner-card__content--v-bottom'
+  assign h_align_class = 'multi-banner-card__content--h-' | append: bs.h_align | default: 'multi-banner-card__content--h-left'
+  assign heading_size_class = 'multi-banner-card__heading--' | append: bs.heading_size | default: 'multi-banner-card__heading--h2'
+-%}
+
+<div class="multi-banner-card multi-banner-card--{{ card_height_class }} {{ radius_class }} {{ theme_class }} multi-banner-card--{{ hover_effect_class }}">
+
+  {%- comment -%} Media Layer {%- endcomment -%}
+  <div class="multi-banner-card__media">
+    {%- if bs.video_url != blank -%}
+      <video
+        class="multi-banner-card__video"
+        autoplay
+        loop
+        muted
+        playsinline
+        preload="metadata"
+      >
+        <source src="{{ bs.video_url }}" type="video/mp4">
+      </video>
+    {%- elsif bs.image != blank -%}
+      <picture>
+        {%- if bs.mobile_image != blank -%}
+          <source
+            media="(max-width: 767px)"
+            srcset="{{ bs.mobile_image | image_url: width: 450 }} 450w,
+                    {{ bs.mobile_image | image_url: width: 750 }} 750w"
+            sizes="100vw"
+          >
+        {%- endif -%}
+        <img
+          src="{{ bs.image | image_url: width: 1400 }}"
+          srcset="{{ bs.image | image_url: width: 600 }} 600w,
+                  {{ bs.image | image_url: width: 1000 }} 1000w,
+                  {{ bs.image | image_url: width: 1400 }} 1400w,
+                  {{ bs.image | image_url: width: 2000 }} 2000w"
+          sizes="(min-width: 1200px) 50vw, 100vw"
+          alt="{{ bs.image.alt | default: bs.heading | escape }}"
+          class="multi-banner-card__img"
+          loading="lazy"
+          width="1400"
+          height="900"
+        >
+      </picture>
+    {%- else -%}
+      {%- comment -%} Fallback High-End Photography {%- endcomment -%}
+      {%- case block.type -%}
+        {%- when 'banner' -%}
+          <img
+            src="{{ 'hero-silver-jewellery.jpg' | asset_url }}"
+            alt="{{ bs.heading | default: 'Indiasilvo 925 Sterling Silver' | escape }}"
+            class="multi-banner-card__img"
+            loading="lazy"
+            width="1400"
+            height="900"
+          >
+        {%- else -%}
+          <div class="placeholder-svg-wrapper" style="background: #252220; width:100%; height:100%; min-height:360px;"></div>
+      {%- endcase -%}
+    {%- endif -%}
+
+    {%- comment -%} Overlay Tint {%- endcomment -%}
+    <div
+      class="multi-banner-card__overlay"
+      style="background-color: {{ bs.overlay_color | default: '#181615' }}; opacity: {{ bs.overlay_opacity | default: 35 | divided_by: 100.0 }};"
+    ></div>
+  </div>
+
+  {%- comment -%} Content Layer {%- endcomment -%}
+  <div class="multi-banner-card__content {{ v_align_class }} {{ h_align_class }}">
+    
+    {%- if bs.badge != blank -%}
+      <div class="multi-banner-card__badge multi-banner-card__badge--{{ bs.badge_style | default: 'gold' }}">
+        {{ bs.badge | escape }}
+      </div>
+    {%- endif -%}
+
+    {%- if bs.eyebrow != blank -%}
+      <span class="multi-banner-card__eyebrow">{{ bs.eyebrow | escape }}</span>
+    {%- endif -%}
+
+    {%- if bs.heading != blank -%}
+      <h3 class="multi-banner-card__heading {{ heading_size_class }} display-title">
+        {{ bs.heading | escape }}
+      </h3>
+    {%- endif -%}
+
+    {%- if bs.description != blank -%}
+      <p class="multi-banner-card__desc">{{ bs.description | escape }}</p>
+    {%- endif -%}
+
+    {%- if bs.button_1_text != blank or bs.button_2_text != blank -%}
+      <div class="multi-banner-card__actions">
+        {%- if bs.button_1_text != blank -%}
+          <a
+            href="{{ bs.button_1_url | default: routes.all_products_collection_url }}"
+            class="btn {{ bs.button_1_style | default: 'btn-primary' }}"
+          >
+            <span>{{ bs.button_1_text | escape }}</span>
+            {%- if bs.button_1_style == 'btn-link' -%}
+              {% render 'icons', icon: 'arrow-right' %}
+            {%- endif -%}
+          </a>
+        {%- endif -%}
+
+        {%- if bs.button_2_text != blank -%}
+          <a
+            href="{{ bs.button_2_url | default: '/pages/about' }}"
+            class="btn {{ bs.button_2_style | default: 'btn-secondary' }}"
+          >
+            <span>{{ bs.button_2_text | escape }}</span>
+            {%- if bs.button_2_style == 'btn-link' -%}
+              {% render 'icons', icon: 'arrow-right' %}
+            {%- endif -%}
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+  </div>
+
+  {%- comment -%} Optional Entire Card Clickable Link {%- endcomment -%}
+  {%- if bs.link_entire_card and bs.button_1_url != blank -%}
+    <a
+      href="{{ bs.button_1_url }}"
+      class="multi-banner-card__link-overlay"
+      aria-label="{{ bs.heading | default: 'View Collection' | escape }}"
+      tabindex="-1"
+    >
+      {{ bs.heading | default: 'View Collection' | escape }}
+    </a>
+  {%- endif -%}
+
+</div>

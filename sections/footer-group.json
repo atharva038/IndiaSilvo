@@ -25,20 +25,12 @@
             "title": "Client Care",
             "menu": "footer"
           }
-        },
-        "newsletter_block": {
-          "type": "newsletter",
-          "settings": {
-            "title": "The Private Circle",
-            "text": "Receive bespoke previews, secret salon invitations, and private jewellery curation direct to your inbox."
-          }
         }
       },
       "block_order": [
         "brand_block",
         "menu_boutique",
-        "menu_services",
-        "newsletter_block"
+        "menu_services"
       ],
       "settings": {
         "show_payment_methods": true

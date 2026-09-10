@@ -1,0 +1,487 @@
+{%- comment -%}
+  Indiasilvo - Spotlight Single Banner Section
+  Inspired by Zavya luxury jewellery editorial spotlight banners.
+{%- endcomment -%}
+
+<section
+  id="SpotlightBanner-{{ section.id }}"
+  class="spotlight-banner-section section-padding-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  style="background-color: {{ section.settings.bg_color }};"
+>
+  <div class="{% if section.settings.full_width %}spotlight-banner-fullwidth{% else %}container-wide{% endif %}">
+    <div class="spotlight-banner-card spotlight-banner-card--{{ section.settings.height }} spotlight-banner-card--radius-{{ section.settings.card_radius }}">
+      
+      {%- comment -%} Media Layer {%- endcomment -%}
+      <div class="spotlight-banner-media">
+        {%- if section.settings.image != blank -%}
+          <picture>
+            {%- if section.settings.mobile_image != blank -%}
+              <source
+                media="(max-width: 767px)"
+                srcset="{{ section.settings.mobile_image | image_url: width: 450 }} 450w,
+                        {{ section.settings.mobile_image | image_url: width: 750 }} 750w"
+                sizes="100vw"
+              >
+            {%- endif -%}
+            <img
+              src="{{ section.settings.image | image_url: width: 1800 }}"
+              srcset="{{ section.settings.image | image_url: width: 750 }} 750w,
+                      {{ section.settings.image | image_url: width: 1200 }} 1200w,
+                      {{ section.settings.image | image_url: width: 1800 }} 1800w,
+                      {{ section.settings.image | image_url: width: 2400 }} 2400w"
+              sizes="100vw"
+              alt="{{ section.settings.image.alt | default: section.settings.heading | escape }}"
+              class="spotlight-banner-img"
+              loading="lazy"
+              width="1800"
+              height="800"
+            >
+          </picture>
+        {%- else -%}
+          <img
+            src="{{ 'hero-silver-jewellery.jpg' | asset_url }}"
+            alt="{{ section.settings.heading | default: 'Indiasilvo Pure Sterling Silver' | escape }}"
+            class="spotlight-banner-img"
+            loading="lazy"
+            width="1800"
+            height="800"
+          >
+        {%- endif -%}
+        
+        <div
+          class="spotlight-banner-overlay"
+          style="background-color: {{ section.settings.overlay_color }}; opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"
+        ></div>
+      </div>
+
+      {%- comment -%} Content Area {%- endcomment -%}
+      <div class="spotlight-banner-content-wrap spotlight-banner-content--v-{{ section.settings.v_align }} spotlight-banner-content--h-{{ section.settings.h_align }}">
+        <div class="spotlight-banner-content-box text-{{ section.settings.h_align }}" style="max-width: {{ section.settings.content_max_width }}px;">
+          
+          {%- if section.settings.badge != blank -%}
+            <span class="spotlight-banner-badge spotlight-banner-badge--{{ section.settings.badge_style }}">
+              {{ section.settings.badge | escape }}
+            </span>
+          {%- endif -%}
+
+          {%- if section.settings.eyebrow != blank -%}
+            <span class="spotlight-banner-eyebrow">{{ section.settings.eyebrow | escape }}</span>
+          {%- endif -%}
+
+          {%- if section.settings.heading != blank -%}
+            <h2 class="spotlight-banner-heading display-title">{{ section.settings.heading | escape }}</h2>
+          {%- endif -%}
+
+          {%- if section.settings.description != blank -%}
+            <p class="spotlight-banner-desc">{{ section.settings.description | escape }}</p>
+          {%- endif -%}
+
+          {%- if section.settings.button_1_text != blank or section.settings.button_2_text != blank -%}
+            <div class="spotlight-banner-actions">
+              {%- if section.settings.button_1_text != blank -%}
+                <a
+                  href="{{ section.settings.button_1_link | default: routes.all_products_collection_url }}"
+                  class="btn {{ section.settings.button_1_style | default: 'btn-primary' }}"
+                >
+                  <span>{{ section.settings.button_1_text | escape }}</span>
+                  {%- if section.settings.button_1_style == 'btn-link' -%}
+                    {% render 'icons', icon: 'arrow-right' %}
+                  {%- endif -%}
+                </a>
+              {%- endif -%}
+
+              {%- if section.settings.button_2_text != blank -%}
+                <a
+                  href="{{ section.settings.button_2_link | default: '/pages/about' }}"
+                  class="btn {{ section.settings.button_2_style | default: 'btn-secondary' }}"
+                >
+                  <span>{{ section.settings.button_2_text | escape }}</span>
+                  {%- if section.settings.button_2_style == 'btn-link' -%}
+                    {% render 'icons', icon: 'arrow-right' %}
+                  {%- endif -%}
+                </a>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .section-padding-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  @media (max-width: 767px) {
+    .section-padding-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top | times: 0.6 | round }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.6 | round }}px;
+    }
+  }
+
+  .spotlight-banner-fullwidth {
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .spotlight-banner-card {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    display: flex;
+    background-color: #1A1715;
+  }
+  .spotlight-banner-card--radius-none { border-radius: 0; }
+  .spotlight-banner-card--radius-subtle { border-radius: 4px; }
+  .spotlight-banner-card--radius-rounded { border-radius: 8px; }
+  .spotlight-banner-card--radius-modern { border-radius: 16px; }
+
+  .spotlight-banner-card--height-small { min-height: 380px; }
+  .spotlight-banner-card--height-medium { min-height: 480px; }
+  .spotlight-banner-card--height-large { min-height: 620px; }
+  .spotlight-banner-card--height-full { min-height: 75vh; }
+
+  .spotlight-banner-media {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  .spotlight-banner-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  .spotlight-banner-card:hover .spotlight-banner-img {
+    transform: scale(1.03);
+  }
+
+  .spotlight-banner-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+  }
+
+  .spotlight-banner-content-wrap {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    width: 100%;
+    padding: clamp(2rem, 5vw, 5rem);
+  }
+  .spotlight-banner-content--v-top { align-items: flex-start; }
+  .spotlight-banner-content--v-middle { align-items: center; }
+  .spotlight-banner-content--v-bottom { align-items: flex-end; }
+
+  .spotlight-banner-content--h-left { justify-content: flex-start; }
+  .spotlight-banner-content--h-center { justify-content: center; }
+  .spotlight-banner-content--h-right { justify-content: flex-end; }
+
+  .spotlight-banner-content-box {
+    width: 100%;
+    color: #FAF8F5;
+  }
+  .spotlight-banner-content-box.text-left { text-align: left; }
+  .spotlight-banner-content-box.text-center { text-align: center; }
+  .spotlight-banner-content-box.text-right { text-align: right; }
+
+  .spotlight-banner-badge {
+    display: inline-block;
+    padding: 0.35rem 0.85rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    border-radius: 999px;
+    margin-bottom: 1rem;
+    line-height: 1;
+  }
+  .spotlight-banner-badge--gold {
+    background: #C8A876;
+    color: #181615;
+  }
+  .spotlight-banner-badge--dark {
+    background: rgba(24, 22, 21, 0.85);
+    color: #FAF8F5;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .spotlight-banner-badge--white {
+    background: #FFFFFF;
+    color: #181615;
+  }
+
+  .spotlight-banner-eyebrow {
+    display: block;
+    font-size: var(--font-size-xs, 0.75rem);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #C8A876;
+    margin-bottom: 0.6rem;
+    font-weight: 500;
+  }
+
+  .spotlight-banner-heading {
+    color: #FAF8F5;
+    font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+    line-height: 1.15;
+    margin-bottom: 1rem;
+  }
+
+  .spotlight-banner-desc {
+    color: #E2DBD2;
+    font-size: var(--font-size-base, 1rem);
+    line-height: 1.65;
+    margin-bottom: 1.75rem;
+    max-width: 580px;
+  }
+  .spotlight-banner-content-box.text-center .spotlight-banner-desc {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .spotlight-banner-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+  }
+  .spotlight-banner-content-box.text-center .spotlight-banner-actions {
+    justify-content: center;
+  }
+  .spotlight-banner-content-box.text-right .spotlight-banner-actions {
+    justify-content: flex-end;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Spotlight Banner",
+  "tag": "section",
+  "class": "section-spotlight-banner",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Desktop Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile Image (Optional)"
+    },
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Badge Tag",
+      "default": "SIGNATURE EDIT"
+    },
+    {
+      "type": "select",
+      "id": "badge_style",
+      "label": "Badge Style",
+      "options": [
+        { "value": "gold", "label": "Gold Pill" },
+        { "value": "dark", "label": "Dark Glass" },
+        { "value": "white", "label": "Crisp White" }
+      ],
+      "default": "gold"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Subtitle",
+      "default": "Handcrafted In 925 Sterling Silver"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Banner Heading",
+      "default": "Sculpted Radiance, Made for Everyday"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description Text",
+      "default": "Explore delicate solitaires, diamond-cut pendants, and anti-tarnish rhodium silver statements crafted to elevate every moment."
+    },
+    {
+      "type": "header",
+      "content": "Primary CTA"
+    },
+    {
+      "type": "text",
+      "id": "button_1_text",
+      "label": "Button 1 Label",
+      "default": "Explore Collection"
+    },
+    {
+      "type": "url",
+      "id": "button_1_link",
+      "label": "Button 1 URL",
+      "default": "/collections/all"
+    },
+    {
+      "type": "select",
+      "id": "button_1_style",
+      "label": "Button 1 Style",
+      "options": [
+        { "value": "btn-primary", "label": "Primary Dark" },
+        { "value": "btn-secondary", "label": "Secondary Outline" },
+        { "value": "btn-gold", "label": "Lustrous Gold" },
+        { "value": "btn-link", "label": "Minimal Underlined Link" }
+      ],
+      "default": "btn-primary"
+    },
+    {
+      "type": "header",
+      "content": "Secondary CTA"
+    },
+    {
+      "type": "text",
+      "id": "button_2_text",
+      "label": "Button 2 Label"
+    },
+    {
+      "type": "url",
+      "id": "button_2_link",
+      "label": "Button 2 URL"
+    },
+    {
+      "type": "select",
+      "id": "button_2_style",
+      "label": "Button 2 Style",
+      "options": [
+        { "value": "btn-primary", "label": "Primary Dark" },
+        { "value": "btn-secondary", "label": "Secondary Outline" },
+        { "value": "btn-gold", "label": "Lustrous Gold" },
+        { "value": "btn-link", "label": "Minimal Underlined Link" }
+      ],
+      "default": "btn-secondary"
+    },
+    {
+      "type": "header",
+      "content": "Layout & Styling"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width (Edge-to-Edge)",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Banner Height",
+      "options": [
+        { "value": "height-small", "label": "Small (380px)" },
+        { "value": "height-medium", "label": "Medium (480px)" },
+        { "value": "height-large", "label": "Large (620px)" },
+        { "value": "height-full", "label": "Full Screen (75vh)" }
+      ],
+      "default": "height-medium"
+    },
+    {
+      "type": "select",
+      "id": "card_radius",
+      "label": "Card Border Radius",
+      "options": [
+        { "value": "none", "label": "Sharp (0px)" },
+        { "value": "subtle", "label": "Subtle (4px)" },
+        { "value": "rounded", "label": "Rounded (8px)" },
+        { "value": "modern", "label": "Modern Soft (16px)" }
+      ],
+      "default": "subtle"
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "label": "Content Box Max Width (px)",
+      "min": 400,
+      "max": 800,
+      "step": 20,
+      "default": 640
+    },
+    {
+      "type": "select",
+      "id": "v_align",
+      "label": "Vertical Alignment",
+      "options": [
+        { "value": "top", "label": "Top" },
+        { "value": "middle", "label": "Middle" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "middle"
+    },
+    {
+      "type": "select",
+      "id": "h_align",
+      "label": "Horizontal Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Color",
+      "default": "#181615"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay Opacity (%)",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "default": 35
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background",
+      "default": "#FAF8F5"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top Padding (px)",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom Padding (px)",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Spotlight Banner",
+      "settings": {
+        "badge": "SIGNATURE EDIT",
+        "eyebrow": "Handcrafted In 925 Sterling Silver",
+        "heading": "Sculpted Radiance, Made for Everyday",
+        "description": "Explore delicate solitaires, diamond-cut pendants, and anti-tarnish rhodium silver statements crafted to elevate every moment.",
+        "button_1_text": "Explore Collection",
+        "button_1_link": "/collections/all"
+      }
+    }
+  ]
+}
+{% endschema %}
