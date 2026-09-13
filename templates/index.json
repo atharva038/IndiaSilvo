@@ -1,55 +1,76 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "multi_banner": {
       "type": "multi-banner",
       "blocks": {
-        "slide_1": {
+        "banner_EB7BVp": {
           "type": "banner",
           "settings": {
-            "badge": "NEW DROP",
+            "image": "shopify://shop_images/16732e31-5724-4c0e-9e22-f9161014929c_afd3a731-aadb-4d4d-8cb1-0532392420e7.jpg",
+            "video_url": "",
+            "card_height": "height-large",
+            "hover_effect": "hover-zoom",
+            "badge": "",
             "badge_style": "gold",
-            "eyebrow": "Sovereign 925 Pure Silver",
-            "heading": "Poetry in Sterling Silver",
-            "heading_size": "display",
-            "description": "Architectural silhouettes cast in sovereign-grade 925 sterling silver, hand-burnished for mirror luster.",
-            "button_1_text": "Explore 925 Silver",
-            "button_1_url": "/collections/all",
+            "eyebrow": "925 Pure Silver",
+            "heading": "",
+            "heading_size": "h2",
+            "description": "",
+            "button_1_text": "",
+            "button_1_url": "shopify://collections/all",
             "button_1_style": "btn-primary",
-            "button_2_text": "Silversmith Atelier",
-            "button_2_url": "/pages/about",
+            "button_2_text": "",
+            "button_2_url": "",
             "button_2_style": "btn-secondary",
-            "card_height": "height-full",
-            "v_align": "middle",
-            "h_align": "center",
+            "link_entire_card": true,
             "content_theme": "dark",
+            "v_align": "bottom",
+            "h_align": "left",
             "overlay_color": "#181615",
-            "overlay_opacity": 35
+            "overlay_opacity": 10
           }
         },
-        "slide_2": {
+        "banner_cqQmqi": {
           "type": "banner",
           "settings": {
-            "badge": "SOLITAIRE SERIES",
+            "image": "shopify://shop_images/rn-image_picker_lib_temp_72a8e1ab-e2d6-4286-aa35-5487a6f456fd.jpg",
+            "mobile_image": "shopify://shop_images/rn-image_picker_lib_temp_72a8e1ab-e2d6-4286-aa35-5487a6f456fd.jpg",
+            "video_url": "",
+            "card_height": "height-large",
+            "hover_effect": "hover-zoom",
+            "badge": "",
             "badge_style": "gold",
-            "eyebrow": "Hand-Set Brilliance",
-            "heading": "Certified 925 BIS Hallmarked",
-            "heading_size": "display",
-            "description": "Triple electro-plated in liquid rhodium for eternal tarnish resistance and everyday elegance.",
-            "button_1_text": "Shop Solitaires",
-            "button_1_url": "/collections/all",
+            "eyebrow": "925 Pure Silver",
+            "heading": "",
+            "heading_size": "h2",
+            "description": "",
+            "button_1_text": "",
+            "button_1_url": "shopify://collections/all",
             "button_1_style": "btn-primary",
-            "card_height": "height-full",
-            "v_align": "middle",
-            "h_align": "center",
+            "button_2_text": "",
+            "button_2_url": "",
+            "button_2_style": "btn-secondary",
+            "link_entire_card": true,
             "content_theme": "dark",
+            "v_align": "bottom",
+            "h_align": "left",
             "overlay_color": "#181615",
-            "overlay_opacity": 35
+            "overlay_opacity": 10
           }
         }
       },
       "block_order": [
-        "slide_1",
-        "slide_2"
+        "banner_EB7BVp",
+        "banner_cqQmqi"
       ],
       "settings": {
         "eyebrow": "",
@@ -57,41 +78,49 @@
         "description": "",
         "header_alignment": "center",
         "layout_mode": "slider",
+        "grid_columns": "3_cols",
+        "grid_gap": "medium",
         "container_width": "full_width",
         "card_radius": "none",
+        "mobile_layout": "stack",
         "slider_autoplay": true,
         "slider_speed": 5,
         "slider_show_arrows": true,
         "slider_pagination_style": "dots",
-        "bg_color": "#FAF8F5",
+        "bg_color": "#faf8f5",
         "padding_top": 0,
         "padding_bottom": 0
       }
     },
     "category_grid": {
       "type": "category-grid",
+      "disabled": true,
       "blocks": {
         "cat_1": {
           "type": "category",
           "settings": {
+            "collection": "",
             "title": "925 Silver Rings"
           }
         },
         "cat_2": {
           "type": "category",
           "settings": {
+            "collection": "",
             "title": "Pendants & Chains"
           }
         },
         "cat_3": {
           "type": "category",
           "settings": {
+            "collection": "",
             "title": "Earrings & Jhumkas"
           }
         },
         "cat_4": {
           "type": "category",
           "settings": {
+            "collection": "",
             "title": "Cuffs & Kada"
           }
         }
@@ -103,7 +132,7 @@
         "cat_4"
       ],
       "settings": {
-        "bg_color": "#FAF8F5",
+        "bg_color": "#faf8f5",
         "eyebrow": "Shop By Category",
         "heading": "Explore Silver Silhouettes",
         "description": "Handcrafted 925 sterling silver creations curated for every occasion."
@@ -131,7 +160,7 @@
         "h_align": "left",
         "overlay_color": "#181615",
         "overlay_opacity": 40,
-        "bg_color": "#FAF8F5",
+        "bg_color": "#faf8f5",
         "padding_top": 40,
         "padding_bottom": 40
       }
@@ -139,12 +168,12 @@
     "featured_products": {
       "type": "featured-products",
       "settings": {
-        "bg_color": "#FAF8F5",
-        "eyebrow": "Best Sellers",
-        "heading": "Icons of Sterling Silver",
-        "description": "Hand-forged 925 sterling silver statements designed for modern luxury and heirloom longevity.",
+        "bg_color": "#faf8f5",
+        "eyebrow": "Sovereign 925 Silver",
+        "heading": "All Creations",
+        "description": "Handcrafted pure 925 sterling silver statements hallmarked for authenticity.",
         "collection": "all",
-        "products_to_show": 4,
+        "products_to_show": 24,
         "columns_desktop": "4",
         "show_view_all": true,
         "view_all_label": "View All Creations"
@@ -193,7 +222,7 @@
         "pillar_4"
       ],
       "settings": {
-        "bg_color": "#FAF8F5",
+        "bg_color": "#faf8f5",
         "eyebrow": "The Indiasilvo Standard",
         "heading": "Uncompromising Quality & Authenticity",
         "description": "Every creation is built to sovereign metallurgical benchmarks, certified for purity, and finished for a lifetime of brilliance."
@@ -202,7 +231,7 @@
     "editorial_story": {
       "type": "editorial-story",
       "settings": {
-        "bg_color": "#F4EFEA",
+        "bg_color": "#f4efea",
         "image_position": "left",
         "eyebrow": "The Silversmith's Eye",
         "heading": "Sculpted by Hand, Hallmarked for Eternity",
@@ -245,7 +274,7 @@
         "test_3"
       ],
       "settings": {
-        "bg_color": "#FAF8F5",
+        "bg_color": "#faf8f5",
         "subtitle": "Patron Praises",
         "title": "Words From Our Collectors"
       }
@@ -267,9 +296,9 @@
   },
   "order": [
     "multi_banner",
+    "featured_products",
     "category_grid",
     "spotlight_banner",
-    "featured_products",
     "craftsmanship",
     "editorial_story",
     "testimonials",

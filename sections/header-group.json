@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "name": "Header Group",
   "type": "header",
@@ -7,15 +16,24 @@
       "settings": {
         "show_announcement": true,
         "text": "Complimentary Insured Shipping & Hallmarking on all Orders",
+        "link": "",
+        "alignment": "center",
+        "show_close_button": false,
         "bg_color": "#181615",
-        "text_color": "#FAF8F5"
+        "text_color": "#faf8f5"
       }
     },
     "header": {
       "type": "header",
       "settings": {
+        "enable_sticky": true,
+        "logo": "shopify://shop_images/Indiasilvo-nobg.png",
         "logo_width": 140,
-        "menu": "main-menu"
+        "mobile_logo_width": 110,
+        "menu": "main-menu",
+        "show_search": true,
+        "show_account": true,
+        "show_wishlist": false
       }
     }
   },

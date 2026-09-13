@@ -13,7 +13,23 @@
       {%- endif -%}
     </div>
 
-    {%- assign featured_collection = section.settings.collection | default: collections['all'] -%}
+    {%- liquid
+      assign target_collection = section.settings.collection
+      if target_collection == blank or target_collection.products.size == 0
+        assign target_collection = collections['all']
+      endif
+      if target_collection == blank or target_collection.products.size == 0
+        assign target_collection = collections.all
+      endif
+      if target_collection == blank or target_collection.products.size == 0
+        for coll in collections
+          if coll.products.size > 0
+            assign target_collection = coll
+            break
+          endif
+        endfor
+      endif
+    -%}
 
     <div class="product-grid product-grid--{{ section.settings.columns_desktop }}-col">
       {%- if section.blocks.size > 0 -%}
@@ -22,20 +38,31 @@
             {% render 'product-card', product: block.settings.product %}
           {%- endif -%}
         {%- endfor -%}
-      {%- elsif featured_collection != blank and featured_collection.products_count > 0 -%}
-        {%- for product in featured_collection.products limit: section.settings.products_to_show -%}
+      {%- elsif target_collection != blank and target_collection.products.size > 0 -%}
+        {%- for product in target_collection.products limit: section.settings.products_to_show -%}
           {% render 'product-card', product: product %}
         {%- endfor -%}
-      {%- elsif collections.all.products_count > 0 -%}
-        {%- for product in collections.all.products limit: section.settings.products_to_show -%}
-          {% render 'product-card', product: product %}
+      {%- else -%}
+        {%- for i in (1..section.settings.products_to_show) -%}
+          <div class="product-card">
+            <div class="product-card__media-wrapper" style="--product-card-aspect-ratio: 4/5;">
+              <div class="placeholder-svg-wrapper" style="background: #252220; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                {{ 'product-' | append: forloop.index | placeholder_svg_tag: 'placeholder-svg product-card__image' }}
+              </div>
+            </div>
+            <div class="product-card__info">
+              <span class="product-card__vendor">925 Pure Silver</span>
+              <h3 class="product-card__title"><a href="#">Sterling Silver Creation {{ i }}</a></h3>
+              <div class="price"><span class="price-item price-item--regular">₹2,499</span></div>
+            </div>
+          </div>
         {%- endfor -%}
       {%- endif -%}
     </div>
 
-    {%- if section.settings.show_view_all -%}
+    {%- if section.settings.show_view_all and target_collection != blank and target_collection.products.size > section.settings.products_to_show -%}
       <div style="text-align: center; margin-top: clamp(2.5rem, 4vw, 4rem);">
-        <a href="{{ featured_collection.url | default: routes.all_products_collection_url }}" class="btn btn-secondary">
+        <a href="{{ target_collection.url | default: routes.all_products_collection_url }}" class="btn btn-secondary">
           {{ section.settings.view_all_label | default: 'View All Creations' }}
         </a>
       </div>
@@ -64,7 +91,7 @@
       "type": "text",
       "id": "heading",
       "label": "Section Heading",
-      "default": "Icons of Sterling Silver"
+      "default": "All Sterling Silver Creations"
     },
     {
       "type": "textarea",
@@ -80,11 +107,11 @@
     {
       "type": "range",
       "id": "products_to_show",
-      "min": 2,
-      "max": 12,
-      "step": 1,
+      "min": 4,
+      "max": 24,
+      "step": 2,
       "label": "Products to Show from Collection",
-      "default": 4
+      "default": 16
     },
     {
       "type": "select",

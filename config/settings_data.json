@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "current": {
     "color_bg": "#FAF8F5",
@@ -16,8 +25,8 @@
     "color_badge_sale_text": "#FFFFFF",
     "font_body_base_size": 15,
     "heading_scale": 100,
-    "page_max_width": 1360,
-    "page_wide_max_width": 1560,
+    "page_max_width": 1440,
+    "page_wide_max_width": 1680,
     "border_radius": 0,
     "enable_subtle_grain": false,
     "cart_type": "drawer",
@@ -32,7 +41,8 @@
     "social_instagram_link": "https://instagram.com/indiasilvo",
     "social_facebook_link": "https://facebook.com/indiasilvo",
     "social_pinterest_link": "https://pinterest.com/indiasilvo",
-    "social_whatsapp_number": "+919876543210"
+    "social_whatsapp_number": "+919876543210",
+    "content_for_index": []
   },
   "presets": {
     "Default": {
